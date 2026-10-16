@@ -47,3 +47,9 @@
 - 재작업: ✓
 - 참조: firebase.json headers source가 /index.html이라 / 경로에 보안 헤더·no-cache가 빠지던 키트 템플릿 문제를 ** 로 수정
 - 일반화 후보: firebase.json.example의 문서 헤더 규칙 source는 "**"(뒤의 /assets 규칙이 캐시를 덮어씀)
+
+### 요청 3
+- 내용: 네이버 클라우드 Maps 키 등록 (Client ID → env·CI 변수, Client Secret → Secret Manager)
+- 카테고리: 메타/배포
+- 결과: 완료
+- 재작업: ✓

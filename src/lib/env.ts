@@ -13,6 +13,8 @@ const envSchema = z.object({
   VITE_FIREBASE_STORAGE_BUCKET: z.string().min(1),
   VITE_FIREBASE_MESSAGING_SENDER_ID: z.string().min(1),
   VITE_FIREBASE_APP_ID: z.string().min(1),
+  // 네이버 지도 JS용 Client ID — 공개 값(웹 서비스 URL로 제한). Client Secret은 Functions 시크릿 NAVER_MAP_CLIENT_SECRET에만
+  VITE_NAVER_MAP_CLIENT_ID: z.string().min(1),
   VITE_SENTRY_DSN: z.string().optional(), // DSN은 공개 가능 값 — 미설정이면 Sentry 비활성
   VITE_USE_EMULATORS: z
     .string()
