@@ -71,16 +71,16 @@
 
 - [x] **P1** Hosting 연결 (SPA rewrite + 캐시·보안 헤더, CSP에 네이버 지도 도메인) — 사이트: `jeonnam-trip`
 - [x] **P2** `.github/workflows/firebase-hosting-deploy.yml` 설치 (PR preview + main live)
-- [ ] **P3** GitHub Actions Secret `FIREBASE_SERVICE_ACCOUNT` 등록 + preview 채널 1회 배포 `[Secret·VITE_FIREBASE_* 변수 등록 완료(2026-10-16), preview 배포는 W1·W2(로고) 뒤]`
+- [x] **P3** GitHub Actions Secret `FIREBASE_SERVICE_ACCOUNT` 등록 + 첫 배포 — preview 대신 firebase CLI로 라이브 배포(2026-10-16, https://jeonnam-trip.web.app)
 - [-] **P4** 프로덕션 도메인 연결 — `jeonnam-trip.web.app` 기본 도메인 사용 (커스텀 도메인 없음)
 
 ## 6. 웹 에셋 · SEO
 
-- [ ] **W1** 마스터 로고 등록 — `web-assets/logo-source/logo.png`(또는 svg)
-- [ ] **W2** `/generate-web-assets` 실행 — 파비콘 세트·PWA 아이콘·OG 이미지
-- [ ] **W3** index.html 메타(title·description·og:*)와 `<Seo>`의 SITE_NAME이 실제 서비스 문구 + 주요 라우트에 배선
+- [x] **W1** 마스터 로고 등록 (에이전트 시안 — 갑 제공 로고 수령 시 교체) — `web-assets/logo-source/logo.png`(또는 svg)
+- [x] **W2** `/generate-web-assets` 실행 — 파비콘 세트·PWA 아이콘·OG 이미지
+- [ ] **W3** index.html 메타(title·description·og:*)와 `<Seo>`의 SITE_NAME이 실제 서비스 문구 + 주요 라우트에 배선 `[index.html 메타·SITE_NAME 완료, 라우트 배선은 화면 작업 때]`
 - [ ] **W4** `public/robots.txt` 정책 — `[프로덕션 허용 / 스테이징 차단]`
-- [ ] **W5** og:image 절대 URL (P4 도메인 확정 뒤)
+- [x] **W5** og:image 절대 URL — https://jeonnam-trip.web.app/og-image.png
 
 ## 7. 시크릿 · 보안 (`.secrets/` + `.env.local` — 커밋 금지)
 
@@ -92,7 +92,7 @@
 
 ## 8. MCP (등록하면 새 세션부터 보인다)
 
-- [ ] **M1** Firebase MCP — `.mcp.json` 작성 완료. 등록 제품: `firestore, auth, storage` `[새 세션 시작 후 체크]`
+- [-] **M1** Firebase MCP — 사용하지 않음. Firebase 작업은 firebase CLI로 한다 (`.mcp.json` 제거, 2026-10-16)
 - [ ] **M2** (새 MCP를 붙이면 여기에 추가)
 
 ## 9. Ops Loop (파일은 항상 설치 · 켜는 건 준비됐을 때)

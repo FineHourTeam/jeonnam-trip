@@ -39,3 +39,11 @@
 - 결과: 완료
 - 재작업: ✓
 - 참조: -
+
+### 요청 2
+- 내용: 로고 시안 제작 + 웹 에셋 생성, Firebase MCP 대신 CLI 사용으로 전환, Hosting 라이브 배포
+- 카테고리: 디자인/배포/메타
+- 결과: 완료
+- 재작업: ✓
+- 참조: firebase.json headers source가 /index.html이라 / 경로에 보안 헤더·no-cache가 빠지던 키트 템플릿 문제를 ** 로 수정
+- 일반화 후보: firebase.json.example의 문서 헤더 규칙 source는 "**"(뒤의 /assets 규칙이 캐시를 덮어씀)

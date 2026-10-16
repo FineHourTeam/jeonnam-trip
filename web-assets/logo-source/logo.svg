@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <!-- 머물전남. — 장소 핀(머무를 곳) + 마침표(서비스명의 ".") · 브랜드색 #805117 -->
+  <rect width="1024" height="1024" rx="232" fill="#805117"/>
+  <path d="M480 836C398 736 270 612 270 446a210 210 0 0 1 420 0c0 166-128 290-210 390z" fill="#ffffff"/>
+  <circle cx="480" cy="446" r="80" fill="#805117"/>
+  <circle cx="770" cy="776" r="62" fill="#ffffff"/>
+</svg>
