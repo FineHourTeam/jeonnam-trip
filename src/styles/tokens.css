@@ -186,3 +186,8 @@
     }
   }
 }
+
+/* iOS 홈 인디케이터 영역 — 하단 고정 내비게이션용 */
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}

@@ -61,3 +61,9 @@
 - 재작업: ✓
 - 근본원인: 키트 index.html.example의 인라인 테마 스크립트와 firebase.json.example의 CSP(script-src 'self', unsafe-inline 없음)가 서로 충돌한다. 첫 배포 때 콘솔을 확인하지 않아 놓쳤다
 - 일반화 후보: 테마 초기화 스크립트는 public/theme-init.js로 두고 동기 로드한다 (CSP 해시 관리 불필요)
+
+### 요청 5
+- 내용: 병렬 개발을 위한 공통 기반 — 도메인 타입·라우터·앱 셸·보안 규칙·인덱스·trips 저장소·샘플 시드·shadcn 공용 컴포넌트
+- 카테고리: 기능/메타
+- 결과: 완료
+- 재작업: ✓

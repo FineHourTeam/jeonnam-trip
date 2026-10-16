@@ -19,6 +19,8 @@ const app = initializeApp({
 
 export const auth = getAuth(app);
 export const db = initializeFirestore(app, {
+  // 도메인 타입에 선택 필드가 많다 — undefined 필드가 있어도 쓰기가 실패하지 않게
+  ignoreUndefinedProperties: true,
   // 웹 오프라인 캐시는 기본 OFF — 필요해지면 persistentLocalCache 옵션을 여기서만 결정
   // (unknown-unknowns #3). 멀티탭이면 persistentMultipleTabManager까지.
 });

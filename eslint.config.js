@@ -48,6 +48,11 @@ export default tseslint.config(
         },
       ],
       // any 차단 — unknown + 좁히기 (rules.md § UI 금지)
+      // 구조분해로 prop을 빼낼 때(rest 형제) 쓰지 않는 변수는 허용 — shadcn 래퍼에서 흔한 패턴
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { ignoreRestSiblings: true, argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
+      ],
       "@typescript-eslint/no-explicit-any": "error",
       // @ts-ignore 금지, @ts-expect-error는 사유 필수
       "@typescript-eslint/ban-ts-comment": [

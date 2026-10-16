@@ -1,13 +1,16 @@
+import { QueryClientProvider } from "@tanstack/react-query";
+import { RouterProvider } from "react-router";
+import { router } from "@/app/router";
 import { Toaster } from "@/components/ui/sonner";
+import { queryClient } from "@/lib/query-client";
+import "@/lib/i18n";
 
 function App() {
   return (
-    <>
-      <main className="bg-background text-foreground min-h-dvh p-6">
-        <h1 className="text-2xl font-semibold">머물전남.</h1>
-      </main>
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
       <Toaster />
-    </>
+    </QueryClientProvider>
   );
 }
 
