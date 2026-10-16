@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- 다크모드 초기화 — localStorage > OS 선호 순서. 첫 페인트 전에 실행되어야 깜빡임이 없다 -->
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t === "dark" || (!t && matchMedia("(prefers-color-scheme: dark)").matches)) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
+
+    <title>머물전남.</title>
+    <meta name="description" content="전남 축제와 가고 싶은 장소로 만드는 여행 일정" />
+
+    <!-- 아이콘·매니페스트 — /generate-web-assets 스킬이 생성, scripts/check-web-assets.mjs가 배포 전 검사.
+         순서 유지: ICO/PNG를 SVG보다 먼저 (Google 검색 결과 아이콘은 SVG를 지원하지 않음 + 48px보다 큰 ICO/PNG 권장) -->
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/icons/icon-192.png" type="image/png" sizes="192x192" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <!-- OG (카카오톡·슬랙 미리보기 — og:image는 절대 URL 필수) -->
+    <meta property="og:title" content="머물전남." />
+    <meta property="og:description" content="전남 축제와 가고 싶은 장소로 만드는 여행 일정" />
+    <meta property="og:image" content="https://jeonnam-trip.web.app/og-image.png" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Pretendard Variable — 로컬 번들 우선(assets/fonts), CDN은 폴백 선택지 -->
+    <link
+      rel="preload"
+      href="/fonts/PretendardVariable.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <style>
+      @font-face {
+        font-family: "Pretendard Variable";
+        src: url("/fonts/PretendardVariable.woff2") format("woff2-variations");
+        font-weight: 45 920;
+        font-display: swap;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

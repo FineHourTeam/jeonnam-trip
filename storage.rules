@@ -1,0 +1,9 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // 전부 막힘으로 시작 — 기능을 만들 때 그 경로만 연다
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

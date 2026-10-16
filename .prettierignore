@@ -1,0 +1,15 @@
+# 빌드 산출물
+dist/
+coverage/
+.firebase/
+
+# 루프 시스템 문서 — 에이전트가 append하는 로그·지식 문서는 포맷 강제 대상 아님
+# (CI의 `prettier --check .`가 이 문서들까지 잡으면 첫 push부터 레드 — 2026-07 실제 프로젝트 실측)
+CLAUDE.md
+README.md
+docs/
+knowledge/
+.claude/
+
+# 폰트 등 정적 에셋
+public/fonts/

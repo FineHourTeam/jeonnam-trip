@@ -1,0 +1,39 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+# ── fine-harness-react-kit 표준 .gitignore 추가분 ──
+# 시크릿 (서비스 계정 키·API 키 — 절대 커밋 금지)
+.secrets/
+# 개인 로컬 환경변수 (.env는 공개 가능 기본값이라 커밋 O, *.local만 제외)
+.env.local
+.env.*.local
+# 디자인시스템·내보내기 로컬 캐시
+.cache/
+# humanize-korean(im-not-ai) 윤문 작업 폴더 — 산문 카피 점검 시 cwd에 생성됨
+_workspace/
+# Firebase 에뮬레이터 산출물
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+.firebase/

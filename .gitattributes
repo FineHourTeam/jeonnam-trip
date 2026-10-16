@@ -1,0 +1,2 @@
+# bash 스크립트(.claude/hooks/ 등)는 CRLF로 변환되면 실행이 깨짐 — 모든 플랫폼에서 LF 고정
+*.sh text eol=lf
