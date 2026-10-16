@@ -4,15 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
-    <!-- 다크모드 초기화 — localStorage > OS 선호 순서. 첫 페인트 전에 실행되어야 깜빡임이 없다 -->
-    <script>
-      (function () {
-        var t = localStorage.getItem("theme");
-        if (t === "dark" || (!t && matchMedia("(prefers-color-scheme: dark)").matches)) {
-          document.documentElement.classList.add("dark");
-        }
-      })();
-    </script>
+    <!-- 다크모드 초기화 — 첫 페인트 전 동기 실행. 인라인 금지(CSP) → public/theme-init.js -->
+    <script src="/theme-init.js"></script>
 
     <title>머물전남.</title>
     <meta name="description" content="전남 축제와 가고 싶은 장소로 만드는 여행 일정" />
