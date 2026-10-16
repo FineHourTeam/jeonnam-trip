@@ -43,7 +43,7 @@
 
 - [x] **Q1** 검증 4종(`npm run lint` · `typecheck` · `test` · `build`)이 이 머신에서 한 번씩 통과
 - [x] **Q2** `.github/workflows/react-ci.yml` 설치 (`templates/ci/react-ci.yml` 기반)
-- [ ] **Q3** 첫 push에서 CI 그린 확인
+- [x] **Q3** 첫 push에서 CI 그린 확인 (React CI 2026-10-16 성공)
 - [ ] **Q4** 의존성 자동 업데이트(Dependabot 또는 Renovate) 켜기
 
 ## 3. 디자인 시스템
@@ -71,7 +71,7 @@
 
 - [x] **P1** Hosting 연결 (SPA rewrite + 캐시·보안 헤더, CSP에 네이버 지도 도메인) — 사이트: `jeonnam-trip`
 - [x] **P2** `.github/workflows/firebase-hosting-deploy.yml` 설치 (PR preview + main live)
-- [ ] **P3** GitHub Actions Secret `FIREBASE_SERVICE_ACCOUNT` 등록 + preview 채널 1회 배포
+- [ ] **P3** GitHub Actions Secret `FIREBASE_SERVICE_ACCOUNT` 등록 + preview 채널 1회 배포 `[Secret·VITE_FIREBASE_* 변수 등록 완료(2026-10-16), preview 배포는 W1·W2(로고) 뒤]`
 - [-] **P4** 프로덕션 도메인 연결 — `jeonnam-trip.web.app` 기본 도메인 사용 (커스텀 도메인 없음)
 
 ## 6. 웹 에셋 · SEO

@@ -21,7 +21,8 @@
 
 ## 시작 전 읽을 파일
 작업 시작 시 knowledge/INDEX.md 먼저 로드 → 가리키는 상황별 파일만 선택적 로드.
-있으면 참고: docs/navigator.md(조감) · plan.md(기획) · feature-spec.jsx(스펙) · DESIGN.md(디자인·톤)
+기획 문서: docs/proposal/ 제안서 v1.4 — 04 서비스기획(기획) · 03 기능명세(스펙, FES-01 등 ID) · 05 화면설계 · 02 요구사항.
+제안서에 있어도 작업지시서 "제외" 항목(도보 경로 등)은 범위 밖. 있으면 참고: docs/DESIGN.md(디자인·톤)
 
 ## 아키텍처 (얇은 레이어)
 `Page → hooks(TanStack Query/Zustand) → api(repository) → Firebase/AI`
