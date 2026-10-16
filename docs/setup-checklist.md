@@ -64,7 +64,7 @@
 - [ ] **F7** CORS — Storage 파일을 fetch·canvas로 쓸 때만 `cors.json` 적용 (`docs/CORS.md`)
 - [ ] **F8** 프로덕션 QA 계정(앱스토어 심사 등)이 필요하면 콘솔 테스트 번호 등록 — `TEST_ACCOUNTS.md` 하단 기록
 - [ ] **F9** App Check — 배포가 안정된 뒤 모니터링 모드부터
-- [ ] **F10** 소셜 로그인 공급자 1종(작업지시서 ACC — 계약 전 확정) 콘솔에서 사용 설정 — `[공급자 미정]`
+- [x] **F10** 소셜 로그인 공급자 1종 — Google 사용 설정 완료(2026-10-16, API로 활성 확인). 공급자 확정 시 교체 가능하게 구현
 - [x] **F11** Blaze 플랜 (네이버 Directions 프록시용 Cloud Functions) — 사용자 확인
 
 ## 5. 배포 (Hosting · 도메인)
