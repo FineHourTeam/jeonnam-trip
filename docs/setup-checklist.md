@@ -88,7 +88,7 @@
 - [x] **S2** `VITE_` 변수에 시크릿 없음 (번들에 공개된다 — config·DSN 같은 공개 값만)
 - [-] **S3** AI API 키 — AI 기능 없음
 - [x] **S5** 네이버 클라우드 Maps (Application `jeonnam-trip`, 갑 계정) — Client ID는 `.env`·저장소 Variables `VITE_NAVER_MAP_CLIENT_ID`(공개 값), Client Secret은 Secret Manager `NAVER_MAP_CLIENT_SECRET`(Functions에서 `defineSecret`). Directions는 `https://maps.apigw.ntruss.com/map-direction/v1/driving`으로 호출 확인(2026-10-16, 구 naveropenapi 도메인은 210 Permission Denied)
-- [ ] **S6** NCP 콘솔 → Maps → Application `jeonnam-trip` → Web 서비스 URL에 `http://localhost:5173`·`https://jeonnam-trip.web.app` 등록 (없으면 지도 JS 인증 실패)
+- [ ] **S6** NCP 콘솔 → Maps → Application `jeonnam-trip` → Web 서비스 URL — `https://jeonnam-trip.web.app` 등록 완료(2026-10-16), `http://localhost:5173` 미등록 (로컬 개발에서 지도 인증 실패)
 - [-] **S4** Figma Access Token — `[미등록 — Figma를 쓰게 되면]`
 
 ## 8. MCP (등록하면 새 세션부터 보인다)
