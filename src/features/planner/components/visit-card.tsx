@@ -24,9 +24,22 @@ import { cn } from "@/lib/utils";
 import type { VisitItem } from "@/shared/domain";
 import { fromMinutes } from "@/shared/lib/date";
 import { issueHint, issueText } from "../lib/issue-labels";
-import { CONFLICT_KINDS, type ScheduledItem } from "../lib/schedule";
+import { CONFLICT_KINDS, type ScheduledItem, type Slot } from "../lib/schedule";
 
 const t = (n: number | null) => (n === null ? "계산 전" : fromMinutes(n));
+
+/** "11:00~15:00(주문 마감 14:30), 17:00~21:00" — 여러 구간이면 그 사이가 브레이크타임 */
+function slotsText(slots: Slot[] | null): string {
+  if (slots === null) return "확인되지 않았어요";
+  if (slots.length === 0) return "휴무";
+  return slots
+    .map(
+      (x) =>
+        `${fromMinutes(x.open)}~${fromMinutes(x.close)}` +
+        (x.lastOrder === undefined ? "" : `(주문·입장 마감 ${fromMinutes(x.lastOrder)})`),
+    )
+    .join(", ");
+}
 
 export interface VisitCardActions {
   onEditStay: () => void;
@@ -110,17 +123,7 @@ export function VisitCard(props: VisitCardProps) {
       <details className="text-sm">
         <summary className="text-muted-foreground cursor-pointer">영업 조건과 시간 한도</summary>
         <ul className="text-muted-foreground mt-2 flex flex-col gap-1">
-          <li>
-            영업구간:{" "}
-            {s.slot
-              ? `${fromMinutes(s.slot.open)}~${fromMinutes(s.slot.close)}`
-              : fixed
-                ? "고정 프로그램"
-                : "확인되지 않았어요"}
-          </li>
-          {s.slot?.lastOrder !== undefined && (
-            <li>주문·입장 마감: {fromMinutes(s.slot.lastOrder)}</li>
-          )}
+          <li>영업구간: {fixed ? "고정 프로그램" : slotsText(s.slots)}</li>
           <li>
             이용 시작 한도:{" "}
             {s.latestStart === null ? "역산할 수 없어요" : fromMinutes(s.latestStart)}

@@ -227,4 +227,16 @@ describe("computeDaySchedule — 경로 조회 상태", () => {
     });
     expect(r.status).toBe("calculating");
   });
+
+  it("좌표 미확인 장소는 경로 실패가 아니라 위치 확인 필요로 알린다", () => {
+    const hours = everyDay([{ open: "09:00", close: "21:00" }]);
+    const noLoc = place("전망대", "cafe", hours, 45);
+    noLoc.snapshot = { ...noLoc.snapshot, location: null };
+    const r = computeDaySchedule({
+      day: day([place("카페", "cafe", hours, 45), noLoc]),
+      legs: [{ status: "skipped" }],
+    });
+    expect(kinds(r.items[1] as never)).toEqual(["no_location"]);
+    expect(r.items[1]?.arrive).toBeNull();
+  });
 });

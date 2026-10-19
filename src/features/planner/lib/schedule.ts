@@ -77,6 +77,8 @@ export interface ScheduledItem {
   latestDepart: number | null;
   /** 배정에 쓴 영업 구간 */
   slot: Slot | null;
+  /** 그날의 영업 구간 전체 (브레이크타임 표시용). null = 미확인, [] = 휴무 */
+  slots: Slot[] | null;
   issues: Issue[];
 }
 
@@ -135,7 +137,8 @@ function legDuration(leg: LegInput | undefined): number | null {
 
 function legIssue(leg: LegInput): Issue | null {
   if (leg.status === "pending") return { kind: "route_pending" };
-  if (leg.status === "failed" || leg.status === "skipped") return { kind: "route_failed" };
+  // skipped(좌표 미확인)는 해당 장소의 no_location이 이유를 설명한다
+  if (leg.status === "failed") return { kind: "route_failed" };
   return null;
 }
 
@@ -318,6 +321,7 @@ export function computeDaySchedule(input: ScheduleInput): DaySchedule {
       latestStart: finiteOrNull(latestStart),
       latestDepart: finiteOrNull(latestDepart),
       slot,
+      slots,
       issues,
     });
     prevDepart = depart;
