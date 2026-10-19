@@ -71,3 +71,4 @@ import { DeleteIcon } from "@/components/icons";
 | `SearchIcon` | 검색 | 2026-10-16 |
 | `ChevronLeftIcon` | 이전·뒤로 (달력 등) | 2026-10-16 |
 | `ChevronUpIcon` | 접기·위로 (셀렉트 스크롤) | 2026-10-16 |
+| `MoreIcon` | 더보기 메뉴 (카드별 동작) | 2026-10-19 |

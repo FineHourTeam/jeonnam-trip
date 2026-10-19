@@ -17,3 +17,4 @@ export { EditIcon } from "./edit-icon";
 export { SearchIcon } from "./search-icon";
 export { ChevronLeftIcon } from "./chevron-left-icon";
 export { ChevronUpIcon } from "./chevron-up-icon";
+export { MoreIcon } from "./more-icon";

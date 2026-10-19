@@ -13,6 +13,8 @@ import { expect, test } from "@playwright/test";
 const ROUTES: { path: string; expectText?: RegExp }[] = [
   { path: "/" },
   { path: "/login" },
+  { path: "/trips/new", expectText: /여행 만들기/ },
+  { path: "/trips/draft", expectText: /작성 중인 코스가 없어요/ },
   // { path: "/notices", expectText: /공지/ },   // 예시 — 기능 추가 시 등록
 ];
 

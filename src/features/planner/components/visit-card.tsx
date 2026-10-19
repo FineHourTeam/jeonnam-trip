@@ -1,0 +1,220 @@
+// 시간표 카드 — 도착(대기)·이용·출발과 영업 조건, 충돌 이유와 할 수 있는 동작을 보여 준다.
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  DeleteIcon,
+  EditIcon,
+  ErrorIcon,
+  MoreIcon,
+  WarningIcon,
+} from "@/components/icons";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
+import type { VisitItem } from "@/shared/domain";
+import { fromMinutes } from "@/shared/lib/date";
+import { issueHint, issueText } from "../lib/issue-labels";
+import { CONFLICT_KINDS, type ScheduledItem } from "../lib/schedule";
+
+const t = (n: number | null) => (n === null ? "계산 전" : fromMinutes(n));
+
+export interface VisitCardActions {
+  onEditStay: () => void;
+  onMove: (dir: -1 | 1) => void;
+  onMoveToDay: (dayIndex: number) => void;
+  onRemove: () => void;
+}
+
+interface VisitCardProps extends VisitCardActions {
+  order: number;
+  item: VisitItem;
+  scheduled: ScheduledItem;
+  isFirst: boolean;
+  isLast: boolean;
+  /** 옮길 수 있는 다른 일차 (index·라벨) */
+  otherDays: { index: number; label: string }[];
+  selected: boolean;
+  onSelect: () => void;
+  nameOf: (itemId: string) => string | undefined;
+}
+
+export function VisitCard(props: VisitCardProps) {
+  const { order, item, scheduled: s, selected, nameOf } = props;
+  const conflicts = s.issues.filter((i) => CONFLICT_KINDS.has(i.kind));
+  const warnings = s.issues.filter(
+    (i) => !CONFLICT_KINDS.has(i.kind) && i.kind !== "route_pending",
+  );
+  const fixed = item.fixedStart !== undefined;
+
+  return (
+    <article
+      className={cn(
+        "bg-card text-card-foreground flex flex-col gap-3 rounded-lg border p-4",
+        conflicts.length > 0 ? "border-destructive" : "border-border",
+        selected && "ring-ring ring-2",
+      )}
+      aria-label={`${String(order)}번째 방문 ${item.snapshot.name}`}
+    >
+      <header className="flex items-start gap-3">
+        <button
+          type="button"
+          onClick={props.onSelect}
+          className="bg-primary text-primary-foreground flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold"
+          aria-label={`지도에서 ${item.snapshot.name} 보기`}
+        >
+          {order}
+        </button>
+        <div className="flex min-w-0 flex-1 flex-col gap-1">
+          <h3 className="font-semibold break-words">{item.snapshot.name}</h3>
+          <div className="flex flex-wrap gap-1">
+            {fixed && (
+              <Badge variant="outline">
+                {item.fixedStart}
+                {item.fixedEnd ? `~${item.fixedEnd}` : ""} 고정
+              </Badge>
+            )}
+            {item.stayLocked && <Badge variant="outline">체류 고정</Badge>}
+          </div>
+        </div>
+        <CardMenu {...props} fixed={fixed} />
+      </header>
+
+      <dl className="grid grid-cols-3 gap-2 text-sm">
+        <div>
+          <dt className="text-muted-foreground text-xs">도착</dt>
+          <dd className="font-medium tabular-nums">{t(s.arrive)}</dd>
+          {s.waitMin > 0 && <dd className="text-muted-foreground text-xs">대기 {s.waitMin}분</dd>}
+        </div>
+        <div>
+          <dt className="text-muted-foreground text-xs">이용</dt>
+          <dd className="font-medium tabular-nums">
+            {t(s.start)} · {s.stayMin}분
+          </dd>
+        </div>
+        <div>
+          <dt className="text-muted-foreground text-xs">출발</dt>
+          <dd className="font-medium tabular-nums">{t(s.depart)}</dd>
+        </div>
+      </dl>
+
+      <details className="text-sm">
+        <summary className="text-muted-foreground cursor-pointer">영업 조건과 시간 한도</summary>
+        <ul className="text-muted-foreground mt-2 flex flex-col gap-1">
+          <li>
+            영업구간:{" "}
+            {s.slot
+              ? `${fromMinutes(s.slot.open)}~${fromMinutes(s.slot.close)}`
+              : fixed
+                ? "고정 프로그램"
+                : "확인되지 않았어요"}
+          </li>
+          {s.slot?.lastOrder !== undefined && (
+            <li>주문·입장 마감: {fromMinutes(s.slot.lastOrder)}</li>
+          )}
+          <li>
+            이용 시작 한도:{" "}
+            {s.latestStart === null ? "역산할 수 없어요" : fromMinutes(s.latestStart)}
+          </li>
+          <li>
+            최종 출발 한도:{" "}
+            {s.latestDepart === null ? "역산할 수 없어요" : fromMinutes(s.latestDepart)}
+          </li>
+        </ul>
+      </details>
+
+      {(conflicts.length > 0 || warnings.length > 0) && (
+        <ul className="flex flex-col gap-1 text-sm">
+          {conflicts.map((issue) => (
+            <li key={issue.kind} className="text-destructive flex flex-col gap-0.5">
+              <span className="flex items-center gap-1 font-medium">
+                <ErrorIcon size="sm" />
+                {issueText(issue, nameOf)}
+              </span>
+              {issueHint(issue.kind) && (
+                <span className="text-muted-foreground pl-5">{issueHint(issue.kind)}</span>
+              )}
+            </li>
+          ))}
+          {warnings.map((issue) => (
+            <li key={issue.kind} className="flex items-center gap-1">
+              <WarningIcon size="sm" />
+              {issueText(issue, nameOf)}
+            </li>
+          ))}
+        </ul>
+      )}
+    </article>
+  );
+}
+
+function CardMenu(props: VisitCardProps & { fixed: boolean }) {
+  const isFestival = props.item.ref.kind === "festival";
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon-sm" aria-label={`${props.item.snapshot.name} 더보기`}>
+          <MoreIcon size="sm" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        {!props.fixed && (
+          <DropdownMenuItem onSelect={props.onEditStay}>
+            <EditIcon size="sm" />
+            체류시간 수정
+          </DropdownMenuItem>
+        )}
+        <DropdownMenuItem
+          disabled={props.isFirst}
+          onSelect={() => {
+            props.onMove(-1);
+          }}
+        >
+          <ChevronUpIcon size="sm" />
+          위로
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          disabled={props.isLast}
+          onSelect={() => {
+            props.onMove(1);
+          }}
+        >
+          <ChevronDownIcon size="sm" />
+          아래로
+        </DropdownMenuItem>
+        {/* 축제 운영시간은 방문일 기준 사본이라 다른 날로 옮기지 않는다 — 축제 화면에서 날짜를 골라 다시 담는다 */}
+        {props.otherDays.length > 0 && !isFestival && (
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>다른 일차로</DropdownMenuSubTrigger>
+            <DropdownMenuSubContent>
+              {props.otherDays.map((d) => (
+                <DropdownMenuItem
+                  key={d.index}
+                  onSelect={() => {
+                    props.onMoveToDay(d.index);
+                  }}
+                >
+                  {d.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
+        )}
+        <DropdownMenuSeparator />
+        <DropdownMenuItem variant="destructive" onSelect={props.onRemove}>
+          <DeleteIcon size="sm" />
+          일정에서 빼기
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
