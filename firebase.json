@@ -4,6 +4,13 @@
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
+        "source": "/api/**",
+        "function": {
+          "functionId": "api",
+          "region": "asia-northeast3"
+        }
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }
@@ -59,6 +66,14 @@
     ],
     "site": "jeonnam-trip"
   },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": ["node_modules", ".git", "*.local", "src", "tsconfig.json"],
+      "predeploy": ["npm --prefix functions run build"]
+    }
+  ],
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
@@ -69,6 +84,9 @@
   "emulators": {
     "auth": {
       "port": 9099
+    },
+    "functions": {
+      "port": 5001
     },
     "firestore": {
       "port": 8080
