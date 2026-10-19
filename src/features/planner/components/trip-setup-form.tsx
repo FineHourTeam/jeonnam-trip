@@ -37,14 +37,21 @@ export interface TripSetupValues {
   pace: TripPace;
 }
 
-export function TripSetupForm({ onSubmit }: { onSubmit: (values: TripSetupValues) => void }) {
+export function TripSetupForm({
+  onSubmit,
+  defaultDate,
+}: {
+  onSubmit: (values: TripSetupValues) => void;
+  /** 축제에서 왔을 때 방문일로 시작·종료일을 채운다 */
+  defaultDate?: string;
+}) {
   const today = todayKst();
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
       title: "",
-      startDate: today,
-      endDate: addDays(today, 1),
+      startDate: defaultDate ?? today,
+      endDate: defaultDate ?? addDays(today, 1),
       siguns: [],
       pace: "none",
     },
