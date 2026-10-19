@@ -13,6 +13,10 @@
 @import "tw-animate-css"; /* shadcn 컴포넌트 열림·닫힘 애니메이션 (bootstrap이 설치) */
 
 @custom-variant dark (&:where(.dark, .dark *));
+/* shadcn 4.x 컴포넌트의 data-horizontal:/data-vertical: 변형을 Radix의 data-orientation 속성에 연결한다
+ * (없으면 [data-horizontal] 속성을 찾아 탭·구분선·스크롤 영역의 방향 스타일이 적용되지 않는다) */
+@custom-variant data-horizontal (&[data-orientation="horizontal"]);
+@custom-variant data-vertical (&[data-orientation="vertical"]);
 
 :root {
   /* ── 브랜드 ──
