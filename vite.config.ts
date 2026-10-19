@@ -27,16 +27,15 @@ export default defineConfig({
     },
   },
   // 로컬 dev CORS 회피 — /api 호출을 에뮬레이터 함수로 프록시 (docs/CORS.md § 4).
-  // Cloud Function을 쓸 때만 주석 해제하고 target의 project/region을 실제 값으로.
-  // server: {
-  //   proxy: {
-  //     "/api": {
-  //       target: "http://127.0.0.1:5001/jeonnam-trip/asia-northeast3",
-  //       changeOrigin: true,
-  //       rewrite: (p) => p.replace(/^\/api/, ""),
-  //     },
-  //   },
-  // },
+  // 함수 이름이 `api`라 접두사를 지우지 않는다: /api/directions → …/asia-northeast3/api/directions.
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://127.0.0.1:5001/jeonnam-trip/asia-northeast3",
+        changeOrigin: true,
+      },
+    },
+  },
   build: {
     sourcemap: "hidden", // Sentry 업로드용 생성, dist에서 참조 주석은 제거
     rollupOptions: {
