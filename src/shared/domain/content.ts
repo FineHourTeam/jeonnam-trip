@@ -101,6 +101,8 @@ export interface Place {
     pets: boolean | null;
   };
   phone?: string;
+  /** 소개 글 (출처 원문 요약) */
+  summary?: string;
   photos: string[];
   sources: SourceLink[];
   checks: {
