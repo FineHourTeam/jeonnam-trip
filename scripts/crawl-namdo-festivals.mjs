@@ -9,17 +9,23 @@
 // - 축제전체일정 표에만 있는 축제: 날짜가 정확히 적힌 것만 이름·시군·기간으로 (주소·사진 없음)
 // - 자동 수집이라 확인 상태는 전부 unverified. 출처·수집일을 checks에 남긴다 (기능명세 § 정보 정확성)
 // - 문서 id는 출처 기준으로 고정(nd-<축제ID> / nd-s-<해시>)이라 다시 돌려도 같은 문서를 덮어쓴다
-// - 사이트 저작물은 공공누리 제4유형(출처표시·상업적 이용금지·변경금지). 사진은 원본 그대로 올린다
+// - 사이트 저작물은 공공누리 제4유형(출처표시·상업적 이용금지·변경금지). 사진은 사이트가 내려주는 그대로 올린다
 //
 // ponytail: HTML을 정규식으로 읽는다 — 사이트 마크업이 바뀌면 깨지므로, 깨지면 dry-run 결과부터 확인한다
 import { createHash } from "node:crypto";
 import { writeFileSync } from "node:fs";
-
-const SITE = "https://www.namdokorea.com";
-const SOURCE_LABEL = "남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형";
-const UA = "jeonnam-trip-content-bot/1.0 (+https://jeonnam-trip.web.app)";
-const PROJECT = "jeonnam-trip";
-const BUCKET = process.env.STORAGE_BUCKET ?? "jeonnam-trip.firebasestorage.app";
+import { commitDocs, uploadImage } from "./lib/firebase-rest.mjs";
+import {
+  SIGUN,
+  SITE,
+  SOURCE_LABEL,
+  TODAY,
+  UA,
+  geocode,
+  get,
+  text,
+  thumbUrl,
+} from "./lib/namdo.mjs";
 
 const args = process.argv.slice(2);
 const arg = (name) => {
@@ -29,56 +35,6 @@ const arg = (name) => {
 const YEAR = Number(arg("--year") ?? new Date().getFullYear());
 const WRITE = args.includes("--write");
 const OUT = arg("--out");
-const TODAY = new Date(Date.now() + 9 * 3600_000).toISOString().slice(0, 10);
-
-const SIGUN = {
-  목포: "mokpo",
-  여수: "yeosu",
-  순천: "suncheon",
-  나주: "naju",
-  광양: "gwangyang",
-  담양: "damyang",
-  곡성: "gokseong",
-  구례: "gurye",
-  고흥: "goheung",
-  보성: "boseong",
-  화순: "hwasun",
-  장흥: "jangheung",
-  강진: "gangjin",
-  해남: "haenam",
-  영암: "yeongam",
-  무안: "muan",
-  함평: "hampyeong",
-  영광: "yeonggwang",
-  장성: "jangseong",
-  완도: "wando",
-  진도: "jindo",
-  신안: "sinan",
-};
-
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-
-async function get(url) {
-  await sleep(400); // 원 사이트에 부담을 주지 않게 천천히
-  const res = await fetch(url, { headers: { "User-Agent": UA } });
-  if (!res.ok) throw new Error(`${res.status} ${url}`);
-  return res;
-}
-
-const text = (html) =>
-  html
-    .replace(/<!--[\s\S]*?-->/g, " ")
-    .replace(/<br\s*\/?>/gi, "\n")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/[ \t]+/g, " ")
-    .replace(/\s*\n\s*/g, "\n")
-    .trim();
 
 function dateRange(start, end) {
   const out = [];
@@ -152,8 +108,7 @@ async function multimediaImage(multimediaId) {
     await get(`${SITE}/tour/multimedia/ajaxMultimediaSelect.do?multimediaId=${multimediaId}`)
   ).json();
   const f = data?.resultMap?.multimediaVO?.fileMap;
-  // 원본 경로는 공개되지 않고 600px 썸네일만 내려준다 (사이트 화면과 같은 이미지)
-  return f ? `${SITE}${f.filePath}/thumb/${f.fileNm}_600.${f.fileExt}` : null;
+  return f ? thumbUrl(f) : null;
 }
 
 // ── 3) 축제전체일정 표 ──
@@ -195,23 +150,6 @@ async function scheduleTable() {
     rows.push({ sigunLabel, name: m[1].trim(), note: remark, ...dates });
   }
   return { rows, skipped };
-}
-
-// ── 지오코딩 ──
-async function geocode(address) {
-  if (!process.env.NCP_ID || !process.env.NCP_SECRET || !address) return null;
-  const res = await fetch(
-    `https://maps.apigw.ntruss.com/map-geocode/v2/geocode?query=${encodeURIComponent(address)}`,
-    {
-      headers: {
-        "x-ncp-apigw-api-key-id": process.env.NCP_ID,
-        "x-ncp-apigw-api-key": process.env.NCP_SECRET,
-      },
-    },
-  );
-  if (!res.ok) return null;
-  const a = (await res.json()).addresses?.[0];
-  return a ? { lat: Number(a.y), lng: Number(a.x) } : null;
 }
 
 // ── 변환 ──
@@ -256,57 +194,6 @@ function toFestival({
     status: "published",
     updatedAt: new Date().toISOString(),
   };
-}
-
-// ── 쓰기 (REST, gcloud 토큰 — 보안 규칙이 아니라 IAM으로 인가) ──
-function enc(v) {
-  if (v === null) return { nullValue: null };
-  if (Array.isArray(v)) return { arrayValue: { values: v.map(enc) } };
-  if (typeof v === "boolean") return { booleanValue: v };
-  if (typeof v === "number")
-    return Number.isInteger(v) ? { integerValue: String(v) } : { doubleValue: v };
-  if (typeof v === "string") return { stringValue: v };
-  return {
-    mapValue: {
-      fields: Object.fromEntries(
-        Object.entries(v)
-          .filter(([, x]) => x !== undefined)
-          .map(([k, x]) => [k, enc(x)]),
-      ),
-    },
-  };
-}
-
-const auth = () => ({ Authorization: `Bearer ${process.env.GCP_TOKEN}` });
-
-async function putFestival(f) {
-  const { id, ...data } = f;
-  const res = await fetch(
-    `https://firestore.googleapis.com/v1/projects/${PROJECT}/databases/(default)/documents/festivals/${id}`,
-    {
-      method: "PATCH",
-      headers: { ...auth(), "Content-Type": "application/json" },
-      body: JSON.stringify({ fields: enc(data).mapValue.fields }),
-    },
-  );
-  if (!res.ok) throw new Error(`festivals/${id}: ${res.status} ${await res.text()}`);
-}
-
-/** 원본 사진을 받아 content/festivals/{id}/ 아래에 올리고 공개 URL을 돌려준다 */
-async function uploadPhoto(festivalId, srcUrl, index) {
-  const img = await get(srcUrl);
-  const type = img.headers.get("content-type") ?? "image/jpeg";
-  if (!type.startsWith("image/")) throw new Error(`이미지가 아님: ${srcUrl}`);
-  const buf = Buffer.from(await img.arrayBuffer());
-  if (buf.length >= 10 * 1024 * 1024) throw new Error(`10MB 초과: ${srcUrl}`);
-  const ext = type.split("/")[1]?.replace("jpeg", "jpg") ?? "jpg";
-  const path = `content/festivals/${festivalId}/${String(index + 1).padStart(2, "0")}.${ext}`;
-  const res = await fetch(
-    `https://storage.googleapis.com/upload/storage/v1/b/${BUCKET}/o?uploadType=media&name=${encodeURIComponent(path)}`,
-    { method: "POST", headers: { ...auth(), "Content-Type": type }, body: buf },
-  );
-  if (!res.ok) throw new Error(`upload ${path}: ${res.status} ${await res.text()}`);
-  return `https://firebasestorage.googleapis.com/v0/b/${BUCKET}/o/${encodeURIComponent(path)}?alt=media`;
 }
 
 // ── 실행 ──
@@ -388,21 +275,24 @@ async function main() {
 
   if (WRITE) {
     for (const f of festivals) {
-      try {
-        const photos = [];
-        for (const [i, src] of f.photoSources.entries()) {
-          try {
-            photos.push(await uploadPhoto(f.festival.id, src, i));
-          } catch (e) {
-            report.errors.push(`사진 ${f.festival.id}: ${e.message}`);
-          }
+      for (const [i, src] of f.photoSources.entries()) {
+        try {
+          f.festival.photos.push(
+            await uploadImage(
+              `content/festivals/${f.festival.id}/${String(i + 1).padStart(2, "0")}`,
+              src,
+              { "User-Agent": UA },
+            ),
+          );
+        } catch (e) {
+          report.errors.push(`사진 ${f.festival.id}: ${e.message}`);
         }
-        report.photos += photos.length;
-        await putFestival({ ...f.festival, photos });
-      } catch (e) {
-        report.errors.push(e.message);
       }
+      report.photos += f.festival.photos.length;
     }
+    await commitDocs(
+      festivals.map(({ festival: { id, ...data } }) => ({ collection: "festivals", id, data })),
+    );
   }
 
   if (OUT) writeFileSync(OUT, JSON.stringify({ festivals, report }, null, 2));
