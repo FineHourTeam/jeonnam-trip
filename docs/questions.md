@@ -73,7 +73,7 @@
 ### 요청 6
 - 내용: 네이버 Directions 5(driving) 프록시 Cloud Function `api` (POST /api/directions) + Hosting /api/** rewrite
 - 카테고리: 기능/배포
-- 결과: 완료 (함수 배포는 사용자 확인 대기)
+- 결과: 완료 — 사용자 지시로 functions·hosting 배포, 라이브 /api/directions 계약 응답 확인 (Artifact Registry 정리 정책은 미설정)
 - 재작업: ↩×1
 - 근본원인: 네이버 Directions 5는 실패 결과 코드(1 출발=도착, 2 도로 아님 등)를 HTTP 400 + `{ error: { errorCode, code, message } }`로 돌려주는데, 문서 예시만 보고 200 + 최상위 code로 가정했다. 에뮬레이터 실호출로 발견
 - 일반화 후보: 외부 API 응답 변환 테스트는 실호출로 확인한 실패 응답 모양을 모킹 데이터로 쓴다
