@@ -62,7 +62,7 @@ test("인가 코드 → 토큰 → 사용자 → uid kakao:<회원번호> 커스
   assert.deepEqual(upserts, [
     {
       uid: "kakao:1234567890",
-      profile: { id: "1234567890", nickname: "목포여행", photoUrl: "https://k.kakaocdn.net/p.jpg" },
+      profile: { id: "1234567890", nickname: "목포여행" },
     },
   ]);
   const form = new URLSearchParams(String(calls[0]?.init?.body));
@@ -70,11 +70,10 @@ test("인가 코드 → 토큰 → 사용자 → uid kakao:<회원번호> 커스
   assert.equal(form.get("client_secret"), "secret");
   assert.equal(form.get("redirect_uri"), redirectUri);
   assert.equal(form.get("code"), "abc_DEF-1");
-  assert.match(calls[1]?.url ?? "", /secure_resource=true/);
   assert.deepEqual(calls[1]?.init?.headers, { Authorization: "Bearer at" });
 });
 
-test("기본 프로필 사진·빈 닉네임은 null", async () => {
+test("빈 닉네임은 null", async () => {
   const user = {
     id: 1,
     kakao_account: {
@@ -84,7 +83,7 @@ test("기본 프로필 사진·빈 닉네임은 null", async () => {
   const { impl } = fakeFetch(json(200, { access_token: "at" }), json(200, user));
   const { store, upserts } = memoryStore();
   await signInWithKakaoCode({ code: "c", redirectUri }, creds, store, impl);
-  assert.deepEqual(upserts[0]?.profile, { id: "1", nickname: null, photoUrl: null });
+  assert.deepEqual(upserts[0]?.profile, { id: "1", nickname: null });
 });
 
 test("등록하지 않은 redirect_uri·이상한 코드는 카카오를 부르기 전에 400", async () => {

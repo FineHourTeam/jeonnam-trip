@@ -64,15 +64,34 @@ export class NaverMapsLoadError extends Error {
 }
 
 let loading: Promise<NaverMapsApi> | null = null;
+// 인증 실패는 스크립트 onload 뒤에 올 수 있다(등록하지 않은 도메인·키 문제). 그 뒤 SDK는 반쯤 해체돼
+// LatLng·Marker 등 모든 호출이 예외를 던지므로, 한 번 실패하면 이 페이지에서는 지도를 다시 그리지 않는다.
+let authFailed = false;
+const authFailureListeners = new Set<() => void>();
+
+export function naverMapsAuthFailed(): boolean {
+  return authFailed;
+}
+
+/** 인증 실패 알림 구독 — 해지 함수를 돌려준다 */
+export function onNaverMapsAuthFailure(listener: () => void): () => void {
+  authFailureListeners.add(listener);
+  return () => {
+    authFailureListeners.delete(listener);
+  };
+}
 
 export function loadNaverMaps(): Promise<NaverMapsApi> {
+  if (authFailed) return Promise.reject(new NaverMapsLoadError("auth"));
   if (window.naver?.maps) return Promise.resolve(window.naver.maps);
   loading ??= new Promise<NaverMapsApi>((resolve, reject) => {
     const script = document.createElement("script");
     script.src = `https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${encodeURIComponent(env.VITE_NAVER_MAP_CLIENT_ID)}`;
     script.async = true;
     window.navermap_authFailure = () => {
-      reject(new NaverMapsLoadError("auth"));
+      authFailed = true;
+      reject(new NaverMapsLoadError("auth")); // 이미 onload로 성공했으면 아무 일도 없다 — 구독자에게 따로 알린다
+      for (const listener of authFailureListeners) listener();
     };
     script.onload = () => {
       if (window.naver?.maps) resolve(window.naver.maps);

@@ -40,7 +40,8 @@ export function useDrivingLegs(requests: (LegRequest | null)[]) {
       }),
       isFetching: results.some((q) => q.isFetching),
       retryFailed: () => {
-        for (const q of results) if (q.isError) void q.refetch();
+        // 서버는 구간 실패를 오류가 아니라 {status:"failed"} 데이터로 돌려준다 — 둘 다 다시 조회한다
+        for (const q of results) if (q.isError || q.data?.status === "failed") void q.refetch();
       },
     }),
   });

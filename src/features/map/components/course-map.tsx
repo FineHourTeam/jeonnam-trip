@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import type { LatLng } from "@/shared/domain";
 import { useNaverMaps } from "../hooks/use-naver-maps";
-import type { NMap, NOverlay } from "../lib/naver-maps";
+import { naverMapsAuthFailed, type NMap, type NOverlay } from "../lib/naver-maps";
 
 export interface CourseMapPoint {
   id: string;
@@ -45,9 +45,10 @@ export function CourseMap({ points, paths, selectedId, onSelect, className }: Co
     [points],
   );
 
+  // 인증 실패 뒤의 SDK는 어떤 호출이든 예외를 던진다 — 그리기·정리 모두 건너뛴다 (지도 대신 오류 안내가 뜬다)
   useEffect(() => {
     const naver = sdk.data;
-    if (!naver || !elRef.current) return;
+    if (!naver || !elRef.current || naverMapsAuthFailed()) return;
     setMap(
       new naver.Map(elRef.current, {
         center: new naver.LatLng(JEONNAM_CENTER.lat, JEONNAM_CENTER.lng),
@@ -58,7 +59,7 @@ export function CourseMap({ points, paths, selectedId, onSelect, className }: Co
 
   useEffect(() => {
     const naver = sdk.data;
-    if (!naver || !map) return;
+    if (!naver || !map || naverMapsAuthFailed()) return;
     const overlays: NOverlay[] = [];
     const listeners: object[] = [];
     const color = cssVar("--primary");
@@ -94,6 +95,7 @@ export function CourseMap({ points, paths, selectedId, onSelect, className }: Co
       }
     }
     return () => {
+      if (naverMapsAuthFailed()) return;
       for (const l of listeners) naver.Event.removeListener(l);
       for (const o of overlays) o.setMap(null);
     };
@@ -105,7 +107,7 @@ export function CourseMap({ points, paths, selectedId, onSelect, className }: Co
     .join("|");
   useEffect(() => {
     const naver = sdk.data;
-    if (!naver || !map || located.length === 0) return;
+    if (!naver || !map || located.length === 0 || naverMapsAuthFailed()) return;
     const lats = located.map((p) => p.location.lat);
     const lngs = located.map((p) => p.location.lng);
     if (located.length === 1) {

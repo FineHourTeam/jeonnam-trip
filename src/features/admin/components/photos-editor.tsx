@@ -101,7 +101,10 @@ export function PhotosEditor({ kind, contentId }: { kind: AdminKind; contentId: 
                 </label>
               </Button>
               <span className="text-muted-foreground text-sm">
-                10MB 미만 이미지 · 사진 출처는 정보 출처 칸에 적어 주세요
+                10MB 미만 이미지 · 사진 출처는{" "}
+                {kind === "festivals"
+                  ? "아래 사진 출처 칸에 적어 주세요 (사진을 바꾸면 함께 고쳐 주세요)"
+                  : "정보 출처 칸에 적어 주세요"}
               </span>
             </div>
           </div>

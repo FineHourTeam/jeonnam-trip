@@ -1,6 +1,7 @@
 // 카카오 로그인 → Firebase 커스텀 토큰.
 // 브라우저가 카카오 JavaScript SDK(JS 키)로 받은 인가 코드를 넘기면, 같은 앱의 REST API 키·클라이언트 시크릿으로 토큰을 받고
 // (/oauth/token) 사용자(/v2/user/me)를 확인한 뒤 uid "kakao:<회원번호>"의 커스텀 토큰을 돌려준다.
+// 앱이 쓰는 개인정보는 닉네임뿐이다 — 프로필 사진·이메일은 받아도 저장하지 않는다.
 // "JS 키로 인가, REST API 키로 교환"이 카카오 공식 경로다 (developers.kakao.com/docs/ko/kakaologin/js).
 
 import { logger } from "firebase-functions/logger";
@@ -12,7 +13,7 @@ export const KAKAO_REDIRECT_URIS = [
 ];
 
 const TOKEN_URL = "https://kauth.kakao.com/oauth/token";
-const USER_URL = "https://kapi.kakao.com/v2/user/me?secure_resource=true";
+const USER_URL = "https://kapi.kakao.com/v2/user/me";
 const KAKAO_TIMEOUT_MS = 8000;
 export const MAX_BODY_BYTES = 4 * 1024;
 
@@ -40,8 +41,6 @@ export interface KakaoProfile {
   /** 카카오 회원번호 */
   id: string;
   nickname: string | null;
-  /** https 프로필 사진. 기본 이미지면 null */
-  photoUrl: string | null;
 }
 
 export interface KakaoSignInBody {
@@ -103,7 +102,7 @@ export async function exchangeCode(
   return data.access_token;
 }
 
-/** 액세스 토큰 → 회원번호·닉네임·프로필 사진 */
+/** 액세스 토큰 → 회원번호·닉네임 */
 export async function fetchKakaoProfile(
   accessToken: string,
   fetchImpl: typeof fetch = fetch,
@@ -123,17 +122,12 @@ export async function fetchKakaoProfile(
     typeof profile.nickname === "string" && profile.nickname.trim()
       ? profile.nickname.trim()
       : null;
-  const image = profile.profile_image_url;
-  const photoUrl =
-    profile.is_default_image !== true && typeof image === "string" && image.startsWith("https://")
-      ? image
-      : null;
-  return { id: String(data.id), nickname, photoUrl };
+  return { id: String(data.id), nickname };
 }
 
 /** Firebase Admin 쪽 동작 — 테스트에서 바꿔 끼운다 */
 export interface KakaoUserStore {
-  /** 없으면 만들고, 있으면 이름·사진을 카카오 프로필로 맞춘다 */
+  /** 없으면 만들고, 있으면 이름을 카카오 닉네임으로 맞춘다 */
   upsert(uid: string, profile: KakaoProfile): Promise<void>;
   createCustomToken(uid: string): Promise<string>;
 }

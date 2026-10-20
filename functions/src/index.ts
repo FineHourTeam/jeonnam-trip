@@ -69,15 +69,11 @@ const kakaoUsers: KakaoUserStore = {
   async upsert(uid, profile) {
     const auth = getAuth();
     try {
-      // null은 값을 지운다 — 카카오에서 사진을 기본 이미지로 바꾸면 여기서도 지운다
-      await auth.updateUser(uid, { displayName: profile.nickname, photoURL: profile.photoUrl });
+      // null은 값을 지운다 — 카카오에서 닉네임을 비우면 여기서도 비운다
+      await auth.updateUser(uid, { displayName: profile.nickname });
     } catch (err) {
       if ((err as { code?: string }).code !== "auth/user-not-found") throw err;
-      await auth.createUser({
-        uid,
-        displayName: profile.nickname ?? undefined,
-        photoURL: profile.photoUrl ?? undefined,
-      });
+      await auth.createUser({ uid, displayName: profile.nickname ?? undefined });
     }
   },
   createCustomToken: (uid) => getAuth().createCustomToken(uid),
