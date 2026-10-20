@@ -16,6 +16,7 @@ const ROUTES: { path: string; expectText?: RegExp; live?: boolean }[] = [
   { path: "/login" },
   { path: "/festivals", expectText: /축제 \d+개/, live: true },
   { path: "/places", expectText: /장소 [\d,]+곳/, live: true },
+  { path: "/creators", expectText: /코스 \d+개/, live: true },
   { path: "/trips/new", expectText: /여행 만들기/ },
   { path: "/trips/draft", expectText: /작성 중인 코스가 없어요/ },
   { path: "/s/not-a-real-share", expectText: /열 수 없는 코스예요|불러오지 못했어요/ },
