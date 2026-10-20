@@ -15,16 +15,10 @@ import {
   type CreatorCourse,
   type Place,
 } from "@/shared/domain";
-import { formatDateKo } from "@/shared/lib/date";
+import { formatDotDate, safeHttpUrl } from "@/shared/lib/format";
 import { CourseNotFoundError } from "../api/creators-api";
 import { useCoursePlaces, useCreatorCourse } from "../hooks/use-creator-courses";
-import {
-  closedWeekdaysLabel,
-  courseDayCount,
-  formatDays,
-  hoursUnknown,
-  safeHttpUrl,
-} from "../lib/course";
+import { closedWeekdaysLabel, courseDayCount, formatDays, hoursUnknown } from "../lib/course";
 
 const ORDER_BASIS_TEXT: Record<CourseOrderBasis, string> = {
   editor_suggested: "편집자가 구성한 순서예요. 실제로 이 순서대로 다녀온 기록은 아니에요.",
@@ -135,7 +129,7 @@ function CourseDetail({ course }: { course: CreatorCourse }) {
         </p>
         <p className="text-muted-foreground">{ORDER_BASIS_TEXT[course.orderBasis]}</p>
         {course.reviewedAt && (
-          <p className="text-muted-foreground">운영팀 확인일 {formatDateKo(course.reviewedAt)}</p>
+          <p className="text-muted-foreground">운영팀 확인일 {formatDotDate(course.reviewedAt)}</p>
         )}
       </div>
 

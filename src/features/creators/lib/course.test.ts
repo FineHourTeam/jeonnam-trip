@@ -7,8 +7,8 @@ import {
   courseDayCount,
   filterCourses,
   hoursUnknown,
-  safeHttpUrl,
 } from "./course";
+import { safeHttpUrl } from "@/shared/lib/format";
 
 function place(id: string): Place {
   return {

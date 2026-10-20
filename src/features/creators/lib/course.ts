@@ -45,17 +45,6 @@ export function closedWeekdaysLabel(place: Pick<Place, "hours">): string | null 
   return closed.length > 0 ? `${closed.join("·")} 휴무` : null;
 }
 
-/** http/https 주소만 링크로 쓴다 (javascript: URI 차단) */
-export function safeHttpUrl(url: string | undefined): string | null {
-  if (!url) return null;
-  try {
-    const u = new URL(url);
-    return u.protocol === "http:" || u.protocol === "https:" ? u.href : null;
-  } catch {
-    return null;
-  }
-}
-
 /**
  * 원본 코스의 장소·순서를 빈 개인 초안에 옮긴다. 일차 번호가 여행 기간을 넘으면 미배치 후보로 보존한다.
  * places에 없는 장소(비공개·삭제)는 담지 않고 missing으로, 같은 일차에 두 번 나온 장소는 한 번만 담고
