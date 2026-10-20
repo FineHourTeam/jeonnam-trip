@@ -19,6 +19,8 @@ interface EditActionsProps {
   status: ContentStatus | null;
   hasDraft: boolean;
   pending: ContentAction | null;
+  /** 사진을 올리는 중 — 저장하면 올리던 사진이 빠지므로 저장·공개를 막는다 */
+  uploading?: boolean;
   onAction: (action: ContentAction) => void;
 }
 
@@ -35,9 +37,16 @@ const CONFIRM: Partial<Record<ContentAction, { title: string; body: string; labe
   },
 };
 
-export function EditActions({ status, hasDraft, pending, onAction }: EditActionsProps) {
+export function EditActions({
+  status,
+  hasDraft,
+  pending,
+  uploading = false,
+  onAction,
+}: EditActionsProps) {
   const [confirm, setConfirm] = useState<ContentAction | null>(null);
   const busy = pending !== null;
+  const saveBlocked = busy || uploading;
   const spin = (a: ContentAction) =>
     pending === a && <LoadingIcon size="sm" className="animate-spin" />;
   const c = confirm ? CONFIRM[confirm] : undefined;
@@ -47,7 +56,7 @@ export function EditActions({ status, hasDraft, pending, onAction }: EditActions
       <Button
         type="button"
         variant="outline"
-        disabled={busy}
+        disabled={saveBlocked}
         onClick={() => {
           onAction("draft");
         }}
@@ -57,7 +66,7 @@ export function EditActions({ status, hasDraft, pending, onAction }: EditActions
       </Button>
       <Button
         type="button"
-        disabled={busy}
+        disabled={saveBlocked}
         onClick={() => {
           onAction("publish");
         }}
@@ -90,6 +99,11 @@ export function EditActions({ status, hasDraft, pending, onAction }: EditActions
           {spin("discard")}
           수정 초안 버리기
         </Button>
+      )}
+      {uploading && (
+        <span className="text-muted-foreground text-sm">
+          사진을 올리는 중이에요. 다 올라가면 저장할 수 있어요.
+        </span>
       )}
       <AlertDialog
         open={c !== undefined}

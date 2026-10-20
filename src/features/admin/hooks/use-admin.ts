@@ -1,5 +1,5 @@
 // 관리자 서버 상태 훅 — queryKey는 adminKeys로만 (rules.md § 상태관리).
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useIsMutating, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import type { AdminKind } from "@/app/paths";
 import {
@@ -16,12 +16,20 @@ import {
   type AnyContent,
 } from "../api/admin-api";
 
+/** 사용자 화면 feature의 query key 첫 칸 — 관리자 저장 뒤 공개 화면 캐시를 새로 받게 */
+const PUBLIC_KEY: Record<AdminKind, string> = {
+  festivals: "festivals",
+  places: "places",
+  creators: "creatorCourses",
+};
+
 export const adminKeys = {
   all: ["admin"] as const,
   isAdmin: (uid: string) => [...adminKeys.all, "isAdmin", uid] as const,
   list: (kind: AdminKind) => [...adminKeys.all, "list", kind] as const,
   counts: (kind: AdminKind) => [...adminKeys.all, "counts", kind] as const,
   edit: (kind: AdminKind, id: string) => [...adminKeys.all, "edit", kind, id] as const,
+  upload: (kind: AdminKind, id: string) => [...adminKeys.all, "upload", kind, id] as const,
 };
 
 export function useIsAdmin(uid: string | null) {
@@ -68,18 +76,28 @@ export function useContentAction(kind: AdminKind) {
       if (action === "discard") await discardDraft(kind, content.id);
       return null;
     },
-    onSuccess: (_, { content }) => {
-      void qc.invalidateQueries({ queryKey: adminKeys.list(kind) });
-      void qc.invalidateQueries({ queryKey: adminKeys.counts(kind) });
-      void qc.invalidateQueries({ queryKey: adminKeys.edit(kind, content.id) });
-      // 사용자 화면의 공개 콘텐츠 캐시 (축제·장소·코스 feature의 queryKey 첫 칸)
-      void qc.invalidateQueries({ queryKey: [kind === "creators" ? "creators" : kind] });
-    },
+    // 다시 받아 올 때까지 기다린다 — 그동안 폼이 잠겨 있어야 새 기준값으로 다시 그릴 때 입력이 사라지지 않는다
+    onSuccess: (_, { content }) =>
+      Promise.all([
+        qc.invalidateQueries({ queryKey: adminKeys.edit(kind, content.id) }),
+        qc.invalidateQueries({ queryKey: adminKeys.list(kind) }),
+        qc.invalidateQueries({ queryKey: adminKeys.counts(kind) }),
+        // 사용자 화면의 공개 콘텐츠 캐시 (각 feature query key의 첫 칸)
+        qc.invalidateQueries({ queryKey: [PUBLIC_KEY[kind]] }),
+      ]),
   });
 }
 
 export function useUploadPhoto(kind: AdminKind, id: string) {
-  return useMutation({ mutationFn: (file: File) => uploadPhoto(kind, id, file) });
+  return useMutation({
+    mutationKey: adminKeys.upload(kind, id),
+    mutationFn: (file: File) => uploadPhoto(kind, id, file),
+  });
+}
+
+/** 사진을 올리는 중이면 저장을 막는다 — 올리는 도중 저장하면 그 사진이 폼에서 빠진다 */
+export function useIsUploading(kind: AdminKind, id: string): boolean {
+  return useIsMutating({ mutationKey: adminKeys.upload(kind, id) }) > 0;
 }
 
 /** 새 콘텐츠 id — 첫 저장 전에도 사진 경로를 정할 수 있게 화면 진입 때 한 번 만든다 */

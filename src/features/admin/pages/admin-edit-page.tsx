@@ -71,7 +71,8 @@ function Editor({ kind, contentId }: { kind: AdminKind; contentId: string | null
   };
 
   if (contentId && editable.isPending) return <Skeleton className="h-96 w-full" />;
-  if (contentId && editable.isError) {
+  // 이미 불러온 내용이 있으면 배경 재조회 실패로 폼을 내리지 않는다
+  if (contentId && editable.isError && !editable.data) {
     return (
       <Alert variant="destructive">
         <AlertTitle>콘텐츠를 불러오지 못했어요</AlertTitle>

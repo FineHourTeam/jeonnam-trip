@@ -56,21 +56,42 @@ const nameFor = (m: SaveMode) =>
   m === "publish" ? name : z.string().trim().max(80, "80자까지 쓸 수 있어요.");
 const urlFor = (m: SaveMode) => (m === "publish" ? requiredUrl : optionalUrl);
 
-function rangeSchemaFor(m: SaveMode) {
-  return z.object({
-    open: timeFor(m),
-    close: timeFor(m),
-    lastOrder: z.union([time, z.literal("")]),
+/** 날짜별 영업 입력은 최대 이 일수까지 화면에 보인다 (나머지 날짜는 미확인으로 저장) */
+export const MAX_DAY_ROWS = 62;
+
+const TIME_MSG = "시각은 HH:mm(예: 09:30)으로 입력해 주세요.";
+// 영업 구간은 모양만 받고, 화면에 보이는 구간만 따로 검사한다 — 휴무·미확인으로 바꿔 숨긴 구간은
+// 저장되지 않으니 거기 남은 빈 시각이 오류 문구 없이 저장을 막지 않게
+const looseRange = z.object({ open: z.string(), close: z.string(), lastOrder: z.string() });
+export const rangeSchema = looseRange;
+export type RangeValues = z.infer<typeof rangeSchema>;
+
+function checkRanges(
+  ranges: RangeValues[],
+  m: SaveMode,
+  ctx: z.RefinementCtx,
+  path: (string | number)[],
+) {
+  const ok = (v: string, required: boolean) => (v === "" ? !required : TIME_RE.test(v));
+  ranges.forEach((r, i) => {
+    if (!ok(r.open, m === "publish"))
+      ctx.addIssue({ code: "custom", path: [...path, i, "open"], message: TIME_MSG });
+    if (!ok(r.close, m === "publish"))
+      ctx.addIssue({ code: "custom", path: [...path, i, "close"], message: TIME_MSG });
+    if (!ok(r.lastOrder, false))
+      ctx.addIssue({ code: "custom", path: [...path, i, "lastOrder"], message: TIME_MSG });
   });
 }
-export const rangeSchema = rangeSchemaFor("publish");
-export type RangeValues = z.infer<typeof rangeSchema>;
+
+const dayHoursShape = z.object({
+  mode: z.enum(["unknown", "closed", "open"]),
+  ranges: z.array(looseRange),
+});
 
 /** 하루 영업 — unknown: 미확인(자동 배정 제외), closed: 휴무, open: 구간(여러 개면 사이가 브레이크타임) */
 function dayHoursFor(m: SaveMode) {
-  return z.object({
-    mode: z.enum(["unknown", "closed", "open"]),
-    ranges: z.array(rangeSchemaFor(m)),
+  return dayHoursShape.superRefine((d, ctx) => {
+    if (d.mode === "open") checkRanges(d.ranges, m, ctx, ["ranges"]);
   });
 }
 export const dayHoursSchema = dayHoursFor("publish");
@@ -163,7 +184,8 @@ function makeFestivalSchema(mode: SaveMode) {
     startDate: dateFor(mode),
     endDate: dateFor(mode),
     // 화면에 마운트됐지만 아직 고르지 않은 날은 값이 undefined다 — 미확인으로 저장한다
-    days: z.record(z.string(), dayHoursFor(mode).optional()),
+    // 화면에 보이는 기간의 날짜만 아래 superRefine에서 검사한다 (기간을 줄여 빠진 날짜의 값은 저장되지 않는다)
+    days: z.record(z.string(), dayHoursShape.optional()),
     programs: z.array(
       z.object({
         id: z.string(),
@@ -188,9 +210,16 @@ function makeFestivalSchema(mode: SaveMode) {
     stateNote: z.string(),
     checks: z.object({ schedule: checkSchema, location: checkSchema, info: checkSchema }),
   });
-  if (mode === "draft") return base;
+  const checked = base.superRefine((v, ctx) => {
+    if (!(v.startDate && v.endDate && v.endDate >= v.startDate)) return;
+    for (const d of dateRange(v.startDate, v.endDate).slice(0, MAX_DAY_ROWS)) {
+      const h = v.days[d];
+      if (h?.mode === "open") checkRanges(h.ranges, mode, ctx, ["days", d, "ranges"]);
+    }
+  });
+  if (mode === "draft") return checked;
   // 기간·프로그램이 맞물리는지는 공개할 때만 본다 (작성 중 기간을 옮겨도 초안은 저장되게)
-  return base
+  return checked
     .refine((v) => v.endDate >= v.startDate, {
       path: ["endDate"],
       message: "종료일은 시작일과 같거나 그 뒤여야 해요.",
@@ -237,11 +266,14 @@ export function valuesToFestival(id: string, v: FestivalValues, base?: Festival)
     summary: opt(v.summary),
     startDate: v.startDate,
     endDate: v.endDate,
-    // 초안은 기간이 비었거나 뒤집혀 있을 수 있다 — 그때는 날짜별 운영을 비워 둔다
+    // 초안은 기간이 비었거나 뒤집혀 있을 수 있다 — 그때는 입력해 둔 날짜별 운영을 그대로 보관한다
     days:
       v.startDate && v.endDate && v.endDate >= v.startDate
         ? dateRange(v.startDate, v.endDate).map((d) => ({ date: d, ranges: toRanges(v.days[d]) }))
-        : [],
+        : Object.entries(v.days)
+            .filter((e): e is [string, DayHoursValues] => e[1] !== undefined)
+            .sort(([a], [b]) => a.localeCompare(b))
+            .map(([date, h]) => ({ date, ranges: toRanges(h) })),
     programs: v.programs.map((p) => ({ ...p, name: p.name.trim(), place: opt(p.place) })),
     address: opt(v.address),
     location: toLocation(v.location),
@@ -284,12 +316,20 @@ function makePlaceSchema(mode: SaveMode) {
         .object({
           date: dateFor(mode),
           closed: z.boolean(),
-          ranges: z.array(rangeSchemaFor(mode)),
+          ranges: z.array(looseRange),
           note: z.string(),
         })
-        .refine((e) => mode === "draft" || e.closed || e.ranges.length > 0, {
-          path: ["ranges"],
-          message: "그날 휴무가 아니면 영업 구간을 하나 이상 넣어 주세요.",
+        .superRefine((e, ctx) => {
+          if (e.closed) return;
+          // 구간 없는 영업일은 저장하면 휴무([])로 읽힌다 — 초안에서도 막는 구조 검사다
+          if (e.ranges.length === 0) {
+            ctx.addIssue({
+              code: "custom",
+              path: ["ranges"],
+              message: "그날 휴무가 아니면 영업 구간을 하나 이상 넣어 주세요.",
+            });
+          }
+          checkRanges(e.ranges, mode, ctx, ["ranges"]);
         }),
     ),
     parking: triState,

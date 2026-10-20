@@ -201,7 +201,7 @@ describe("content-form 변환", () => {
     expect(valuesToFestival("d", draft).days).toEqual([]);
   });
 
-  it("초안은 기간이 뒤집혀도 저장되고, 날짜별 운영은 비워 둔다", () => {
+  it("초안은 기간이 뒤집혀도 저장되고, 입력해 둔 날짜별 운영은 보관한다", () => {
     const values = {
       ...festivalToValues(festival),
       startDate: "2026-10-20",
@@ -209,7 +209,7 @@ describe("content-form 변환", () => {
     };
     expect(festivalDraftSchema.safeParse(values).success).toBe(true);
     expect(festivalSchema.safeParse(values).success).toBe(false);
-    expect(valuesToFestival("f1", festivalDraftSchema.parse(values)).days).toEqual([]);
+    expect(valuesToFestival("f1", festivalDraftSchema.parse(values)).days).toEqual(festival.days);
   });
 
   it("초안 장소·코스는 이름 없이도 저장된다", () => {
@@ -217,5 +217,33 @@ describe("content-form 변환", () => {
     expect(
       courseDraftSchema.safeParse({ ...courseToValues(course), title: "", days: [] }).success,
     ).toBe(true);
+  });
+
+  it("휴무·미확인으로 바꿔 숨긴 구간의 빈 시각은 공개를 막지 않는다", () => {
+    const values = placeToValues(place);
+    const weekly = values.weekly.map((d, i) =>
+      i === 2 ? { mode: "closed" as const, ranges: [{ open: "", close: "", lastOrder: "" }] } : d,
+    );
+    expect(placeSchema.safeParse({ ...values, weekly }).success).toBe(true);
+    const shown = values.weekly.map((d, i) =>
+      i === 2 ? { mode: "open" as const, ranges: [{ open: "", close: "", lastOrder: "" }] } : d,
+    );
+    expect(placeSchema.safeParse({ ...values, weekly: shown }).success).toBe(false);
+  });
+
+  it("휴무가 아닌 예외일에 구간이 없으면 초안에서도 막는다 (저장하면 휴무로 읽히므로)", () => {
+    const values = placeToValues(place);
+    const r = placeDraftSchema.safeParse({
+      ...values,
+      exceptions: [{ date: "2026-10-03", closed: false, ranges: [], note: "" }],
+    });
+    expect(r.success).toBe(false);
+  });
+
+  it("기간을 비운 초안은 입력해 둔 날짜별 운영을 그대로 보관한다", () => {
+    const values = { ...festivalToValues(festival), endDate: "" };
+    const saved = valuesToFestival("f1", festivalDraftSchema.parse(values), festival);
+    expect(saved.days).toEqual(festival.days);
+    expect(festivalToValues(saved).days).toEqual(festivalToValues(festival).days);
   });
 });

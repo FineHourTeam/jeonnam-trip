@@ -56,7 +56,7 @@ export function usePublishShare() {
   const invalidate = useInvalidate();
   return useMutation({
     mutationFn: async ({ trip, current }: { trip: Trip; current: SharedTrip | null }) => {
-      if (current?.active) return republishShare(trip, current);
+      if (current?.active) return { share: await republishShare(trip, current), created: false };
       const share = await createShare(trip);
       try {
         // 화면이 아는 연결 상태(trip.shareId)가 서버와 같을 때만 연결한다
@@ -66,13 +66,15 @@ export function usePublishShare() {
         await deactivateShare(share.id).catch(() => undefined);
         throw e;
       }
-      return share;
+      return { share, created: true };
     },
-    onSuccess: async (share, { trip }) => {
-      // 새 연결을 캐시에 먼저 반영하고, 다시 받아 올 때까지 기다린다 — 그 사이 "링크 만들기"를 또 누르지 않게
-      qc.setQueryData<Trip>(tripKeys.detail(trip.id), (t) =>
-        t ? { ...t, shareId: share.id, version: t.version + 1 } : t,
-      );
+    onSuccess: async ({ share, created }, { trip }) => {
+      // 새로 연결했을 때만 코스가 바뀐다(shareId·버전) — 캐시에 먼저 반영하고 다시 받아 올 때까지 기다린다
+      if (created) {
+        qc.setQueryData<Trip>(tripKeys.detail(trip.id), (t) =>
+          t ? { ...t, shareId: share.id, version: t.version + 1 } : t,
+        );
+      }
       await invalidate(trip, share.id);
     },
     // 실패(이미 해제된 공유본·다른 기기의 변경)해도 화면이 서버 상태를 다시 읽게

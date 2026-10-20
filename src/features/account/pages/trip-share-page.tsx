@@ -31,7 +31,8 @@ export default function TripSharePage() {
   const trip = useTrip(tripId);
 
   if (trip.isPending) return <Skeleton className="mx-4 my-6 h-64" />;
-  if (trip.isError) {
+  // 이미 불러온 코스가 있으면 배경 재조회 실패(일시적인 네트워크 오류)로 화면을 바꾸지 않는다
+  if (!trip.data) {
     return (
       <section className="mx-auto flex max-w-screen-md flex-col gap-3 px-4 py-10">
         <h1 className="text-xl font-semibold">코스를 불러오지 못했어요</h1>

@@ -50,8 +50,14 @@ export async function getActiveShare(shareId: string): Promise<SharedTrip> {
 
 /** 소유자용 — 비활성이어도 읽는다. 없으면 null */
 export async function getOwnShare(shareId: string): Promise<SharedTrip | null> {
-  const snap = await getDoc(doc(db, COL.shares, shareId));
-  return snap.exists() ? { ...(snap.data() as ShareDoc), id: snap.id } : null;
+  try {
+    const snap = await getDoc(doc(db, COL.shares, shareId));
+    return snap.exists() ? { ...(snap.data() as ShareDoc), id: snap.id } : null;
+  } catch (e) {
+    // 지워진 공유본은 규칙이 permission-denied로 거부한다 — "없음"으로 보고 새 링크를 만들 수 있게 한다
+    if (e instanceof FirebaseError && e.code === "permission-denied") return null;
+    throw e;
+  }
 }
 
 export async function createShare(trip: Trip): Promise<SharedTrip> {

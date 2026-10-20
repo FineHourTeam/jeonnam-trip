@@ -5,12 +5,13 @@ import { Button } from "@/components/ui/button";
 import { SIGUNS, sigunName, type Festival, type SigunCode } from "@/shared/domain";
 import { dateRange, formatDateKo } from "@/shared/lib/date";
 import {
+  MAX_DAY_ROWS,
   festivalDraftSchema,
   festivalSchema,
   valuesToFestival,
   type FestivalValues,
 } from "../lib/content-form";
-import type { ContentAction } from "../hooks/use-admin";
+import { useIsUploading, type ContentAction } from "../hooks/use-admin";
 import { notifyInvalid, useSaveModeResolver } from "../hooks/use-save-mode-resolver";
 import type { ContentFormProps } from "./content-form-props";
 import { ContentPreview } from "./content-preview";
@@ -33,7 +34,6 @@ const STATE_OPTIONS = [
   { value: "changed", label: "일정 변경" },
   { value: "cancelled", label: "취소" },
 ] as const;
-const MAX_DAY_ROWS = 62;
 
 export function FestivalForm(props: ContentFormProps<Festival, FestivalValues>) {
   const { contentId, initial, base } = props;
@@ -41,6 +41,7 @@ export function FestivalForm(props: ContentFormProps<Festival, FestivalValues>) 
   const form = useForm<FestivalValues>({ resolver, defaultValues: initial });
   const programs = useFieldArray({ control: form.control, name: "programs" });
   const v = form.watch();
+  const uploading = useIsUploading("festivals", contentId);
   const days = v.startDate && v.endDate ? dateRange(v.startDate, v.endDate) : [];
   const run = (action: ContentAction) => {
     // 비공개·초안 버리기는 입력 검사와 무관하다 — 저장된 본문으로 바로 처리한다
@@ -205,6 +206,7 @@ export function FestivalForm(props: ContentFormProps<Festival, FestivalValues>) 
             status={props.status}
             hasDraft={props.hasDraft}
             pending={props.pending}
+            uploading={uploading}
             onAction={run}
           />
         </fieldset>

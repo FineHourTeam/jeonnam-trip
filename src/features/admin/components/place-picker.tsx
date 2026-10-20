@@ -40,7 +40,7 @@ export function PlacePicker({ places, onPick }: PlacePickerProps) {
               className="border-border flex items-center gap-2 border-b px-3 py-2 last:border-b-0"
             >
               <span className="min-w-0 flex-1 text-sm">
-                {p.name}
+                {p.name || "이름 없음"}
                 <span className="text-muted-foreground"> · {sigunName(p.sigun)}</span>
                 {p.status !== "published" && (
                   <span className="text-muted-foreground"> · 비공개</span>

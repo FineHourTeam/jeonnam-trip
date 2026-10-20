@@ -18,7 +18,7 @@ import {
   valuesToPlace,
   type PlaceValues,
 } from "../lib/content-form";
-import type { ContentAction } from "../hooks/use-admin";
+import { useIsUploading, type ContentAction } from "../hooks/use-admin";
 import { notifyInvalid, useSaveModeResolver } from "../hooks/use-save-mode-resolver";
 import type { ContentFormProps } from "./content-form-props";
 import { ContentPreview } from "./content-preview";
@@ -62,6 +62,7 @@ export function PlaceForm(props: ContentFormProps<Place, PlaceValues>) {
   const exceptions = useFieldArray({ control: form.control, name: "exceptions" });
   const sources = useFieldArray({ control: form.control, name: "sources" });
   const v = form.watch();
+  const uploading = useIsUploading("places", contentId);
   const run = (action: ContentAction) => {
     // 비공개·초안 버리기는 입력 검사와 무관하다 — 저장된 본문으로 바로 처리한다
     if (action === "hide" || action === "discard") {
@@ -287,6 +288,7 @@ export function PlaceForm(props: ContentFormProps<Place, PlaceValues>) {
             status={props.status}
             hasDraft={props.hasDraft}
             pending={props.pending}
+            uploading={uploading}
             onAction={run}
           />
         </fieldset>

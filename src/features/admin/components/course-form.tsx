@@ -11,7 +11,7 @@ import {
   valuesToCourse,
   type CourseValues,
 } from "../lib/content-form";
-import type { ContentAction } from "../hooks/use-admin";
+import { useIsUploading, type ContentAction } from "../hooks/use-admin";
 import { notifyInvalid, useSaveModeResolver } from "../hooks/use-save-mode-resolver";
 import type { ContentFormProps } from "./content-form-props";
 import { ContentPreview } from "./content-preview";
@@ -33,7 +33,12 @@ export function CourseForm(
   const form = useForm<CourseValues>({ resolver, defaultValues: initial });
   const days = useFieldArray({ control: form.control, name: "days" });
   const v = form.watch();
-  const placeName = (id: string) => places.find((p) => p.id === id)?.name ?? "삭제됐거나 없는 장소";
+  const uploading = useIsUploading("creators", contentId);
+  const placeName = (id: string) => {
+    const p = places.find((x) => x.id === id);
+    if (!p) return "삭제됐거나 없는 장소";
+    return p.name === "" ? "이름 없음" : p.name;
+  };
   const run = (action: ContentAction) => {
     // 비공개·초안 버리기는 입력 검사와 무관하다 — 저장된 본문으로 바로 처리한다
     if (action === "hide" || action === "discard") {
@@ -152,6 +157,7 @@ export function CourseForm(
             status={props.status}
             hasDraft={props.hasDraft}
             pending={props.pending}
+            uploading={uploading}
             onAction={run}
           />
         </fieldset>
