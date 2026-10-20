@@ -1,10 +1,11 @@
 // 사용자 앱 셸 — 모바일: 하단 탭(탐색·보관함·내 여행) + "여행 만들기" 주 버튼 / PC: 상단 내비게이션.
 // 서비스기획서 §5 "모바일 기본 메뉴: 탐색·보관함·내 여행, 여행 만들기를 주요 버튼으로".
-import { Link, NavLink, Outlet } from "react-router";
+import { Link, NavLink, Outlet, useLocation } from "react-router";
 import { AddIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { paths } from "./paths";
+import { useAuthState } from "./use-auth-state";
 
 const NAV = [
   { to: paths.home, label: "탐색", end: true },
@@ -13,6 +14,8 @@ const NAV = [
 ] as const;
 
 export function AppLayout() {
+  const authState = useAuthState();
+  const location = useLocation();
   return (
     <div className="bg-background text-foreground flex min-h-dvh flex-col">
       <header className="border-border bg-background sticky top-0 z-40 border-b">
@@ -43,6 +46,18 @@ export function AppLayout() {
               여행 만들기
             </Link>
           </Button>
+          {/* 로그인 화면에서는 숨긴다 — 로그인 후 지금 보던 화면으로 돌아오게 from을 넘긴다 */}
+          {authState.status !== "loading" && location.pathname !== paths.login && (
+            <Button asChild variant="ghost" size="sm" className="ml-auto md:ml-0">
+              {authState.status === "authed" ? (
+                <Link to={paths.account}>내 계정</Link>
+              ) : (
+                <Link to={paths.login} state={{ from: location.pathname + location.search }}>
+                  로그인
+                </Link>
+              )}
+            </Button>
+          )}
         </div>
       </header>
 
