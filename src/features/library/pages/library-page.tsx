@@ -17,7 +17,7 @@ import { SavedPlacesTab } from "../components/saved-places-tab";
 import { SnsLinkCard } from "../components/sns-link-card";
 import { useCustomPlaces, useSavedPlaces, useSnsLinks } from "../hooks/use-library";
 import { useLibraryViewStore } from "../hooks/use-library-view-store";
-import { libraryEntries } from "../lib/library";
+import { libraryEntries, linksWithoutSavedPlace } from "../lib/library";
 
 export default function LibraryPage() {
   const authState = useAuthState();
@@ -109,7 +109,14 @@ function LibraryContent() {
   }
 
   const entries = libraryEntries(saved.data, places.data ?? [], customs.data, links.data);
-  const unlinked = links.data.filter((l) => l.linked.length === 0);
+  // 방금 저장한 장소는 새 목록을 받는 동안(이전 결과를 보여 주는 중) 원본이 비어 있다 — '볼 수 없는 장소'로 그리지 않고 기다린다
+  const resolving = entries.some((e) =>
+    e.saved.ref.kind === "place"
+      ? e.place === null && places.isPlaceholderData
+      : e.custom === null && customs.isFetching,
+  );
+  if (resolving) return <LoadingList />;
+  const unlinked = linksWithoutSavedPlace(links.data, saved.data);
 
   return (
     <Tabs

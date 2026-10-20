@@ -21,6 +21,11 @@ export function SnsLinkCard({ link }: { link: SnsLink }) {
         </span>
       </div>
       <p className="text-sm break-all">{link.url}</p>
+      {link.linked.length > 0 && (
+        <p className="text-muted-foreground text-xs">
+          연결한 장소 {link.linked.length}곳을 모두 저장 해제했어요.
+        </p>
+      )}
       {link.tags.length > 0 && (
         <p className="text-muted-foreground text-sm">{link.tags.map((t) => `#${t}`).join(" ")}</p>
       )}

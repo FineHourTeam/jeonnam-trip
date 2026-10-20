@@ -3,6 +3,7 @@ import type { CustomPlace, Place, SavedPlace, SnsLink } from "@/shared/domain";
 import {
   EMPTY_LIBRARY_FILTER,
   filterEntries,
+  linksWithoutSavedPlace,
   libraryEntries,
   moodOptions,
   normalizeSnsUrl,
@@ -10,7 +11,7 @@ import {
   parseTags,
   snsPlatformOf,
 } from "./library";
-import { formOfLink, linkInputOf, snsFormSchema } from "./sns-form";
+import { formOfLink, linkInputOf, mergeLinkInput, snsFormSchema } from "./sns-form";
 
 describe("normalizeSnsUrl", () => {
   it("http/https만 받고 javascript: 등은 버린다", () => {
@@ -192,5 +193,63 @@ describe("SNS 폼", () => {
       { kind: "place", placeId: "p1" },
       { kind: "custom", customPlaceId: "c1" },
     ]);
+  });
+});
+
+describe("linksWithoutSavedPlace", () => {
+  it("연결 전 링크와, 연결한 장소를 모두 저장 해제한 링크를 함께 고른다", () => {
+    const links = [
+      link("none", []),
+      link("kept", [{ kind: "place", placeId: "p1" }]),
+      link("orphan", [
+        { kind: "place", placeId: "gone" },
+        { kind: "custom", customPlaceId: "c9" },
+      ]),
+    ];
+    const savedList = [saved("p1", { kind: "place", placeId: "p1" })];
+    expect(linksWithoutSavedPlace(links, savedList).map((l) => l.id)).toEqual(["none", "orphan"]);
+  });
+});
+
+describe("mergeLinkInput", () => {
+  const existing: SnsLink = {
+    ...link("l1", [{ kind: "place", placeId: "p1" }]),
+    sigun: "mokpo",
+    tags: ["오션뷰"],
+    memo: "주차 팁",
+  };
+
+  it("보관한 링크에 장소·태그·메모를 더하고 주소·지역은 보관한 쪽을 따른다", () => {
+    expect(
+      mergeLinkInput(existing, {
+        url: existing.url,
+        sigun: "yeosu",
+        tags: ["오션뷰", "사진"],
+        memo: "야경 좋음",
+        targets: [
+          { kind: "place", placeId: "p1" },
+          { kind: "place", placeId: "p2" },
+        ],
+      }),
+    ).toEqual({
+      url: existing.url,
+      sigun: "mokpo",
+      tags: ["오션뷰", "사진"],
+      memo: "주차 팁\n야경 좋음",
+      targets: [
+        { kind: "place", placeId: "p1" },
+        { kind: "place", placeId: "p2" },
+      ],
+    });
+  });
+
+  it("합쳐서 한도를 넘으면 null", () => {
+    const many = Array.from({ length: 20 }, (_, i) => ({
+      kind: "place" as const,
+      placeId: `x${String(i)}`,
+    }));
+    const add = { url: existing.url, sigun: null, tags: [], memo: "", targets: many };
+    expect(mergeLinkInput(existing, add)).toBeNull();
+    expect(mergeLinkInput(existing, { ...add, targets: [], memo: "가".repeat(500) })).toBeNull();
   });
 });

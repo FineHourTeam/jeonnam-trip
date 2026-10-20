@@ -1,6 +1,7 @@
 // S07 SNS 링크 폼 — 원문 주소(http/https·2,000자) → 장소 연결(선택, 여러 곳) → 지역·태그·메모(선택) → 저장.
 // 미리보기를 가져오지 않고, 장소가 없어도 링크를 보관한다. 비회원은 저장할 때 로그인하고, 쓰던 내용은 돌아와서 이어 쓴다.
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
@@ -26,7 +27,6 @@ import { useSnsFormStore } from "../hooks/use-sns-form-store";
 import {
   MAX_MEMO_LENGTH,
   MAX_TAGS,
-  MAX_URL_LENGTH,
   SNS_PLATFORM_LABEL,
   normalizeSnsUrl,
   snsPlatformOf,
@@ -35,6 +35,7 @@ import {
   EMPTY_SNS_FORM,
   NO_SIGUN,
   linkInputOf,
+  mergeLinkInput,
   snsFormSchema,
   type SnsFormValues,
 } from "../lib/sns-form";
@@ -63,7 +64,13 @@ export function SnsLinkForm({ link, initial, restored }: SnsLinkFormProps) {
     defaultValues: initial,
   });
   const { errors } = form.formState;
+  const [showRestored, setShowRestored] = useState(restored);
   const url = useWatch({ control: form.control, name: "url" });
+  const [places, tags, memo] = useWatch({
+    control: form.control,
+    name: ["places", "tags", "memo"],
+  });
+  const hasExtra = places.length > 0 || tags.trim() !== "" || memo.trim() !== "";
   const normalized = normalizeSnsUrl(url);
   const duplicate = normalized
     ? links.data?.find((l) => l.url === normalized && l.id !== link?.id)
@@ -110,9 +117,32 @@ export function SnsLinkForm({ link, initial, restored }: SnsLinkFormProps) {
     );
   });
 
+  // 이미 보관한 주소면 새로 쓴 장소·태그·메모를 그 링크에 더한다 (로그인하고 돌아온 폼을 다시 쓰지 않게)
+  const merge = form.handleSubmit((v) => {
+    if (!duplicate) return;
+    const input = mergeLinkInput(duplicate, linkInputOf(v));
+    if (!input) {
+      toast.error("합치면 장소·태그·메모 한도를 넘어요. 보관한 링크를 열어 직접 고쳐 주세요.");
+      return;
+    }
+    save.mutate(
+      { input, linkId: duplicate.id },
+      {
+        onSuccess: () => {
+          clearPending();
+          toast.success("보관한 링크에 쓴 내용을 더했어요.");
+          goToLibrary(input.targets.length > 0);
+        },
+        onError: () => {
+          toast.error("링크를 보관하지 못했어요. 네트워크 연결을 확인한 뒤 다시 시도해 주세요.");
+        },
+      },
+    );
+  });
+
   return (
     <form onSubmit={(e) => void submit(e)} className="flex flex-col gap-8" noValidate>
-      {restored && (
+      {showRestored && (
         <Alert>
           <AlertDescription className="flex flex-wrap items-center justify-between gap-2">
             쓰던 내용을 그대로 불러왔어요. 확인하고 저장해 주세요.
@@ -123,6 +153,7 @@ export function SnsLinkForm({ link, initial, restored }: SnsLinkFormProps) {
               onClick={() => {
                 clearPending();
                 form.reset(EMPTY_SNS_FORM);
+                setShowRestored(false);
               }}
             >
               새로 쓰기
@@ -138,7 +169,6 @@ export function SnsLinkForm({ link, initial, restored }: SnsLinkFormProps) {
           type="url"
           inputMode="url"
           autoComplete="off"
-          maxLength={MAX_URL_LENGTH}
           readOnly={link !== null}
           placeholder="https://www.instagram.com/p/…"
           aria-describedby="sns-url-hint"
@@ -154,12 +184,25 @@ export function SnsLinkForm({ link, initial, restored }: SnsLinkFormProps) {
         </p>
         {errors.url && <p className="text-destructive text-sm">{errors.url.message}</p>}
         {duplicate && (
-          <p className="text-destructive text-sm">
-            이미 보관한 링크예요.{" "}
-            <Link to={paths.snsEdit(duplicate.id)} className="underline underline-offset-4">
-              보관한 링크 열기
-            </Link>
-          </p>
+          <div className="flex flex-col items-start gap-2">
+            <p className="text-destructive text-sm">
+              이미 보관한 링크예요.{" "}
+              <Link to={paths.snsEdit(duplicate.id)} className="underline underline-offset-4">
+                보관한 링크 열기
+              </Link>
+            </p>
+            {!link && !guest && hasExtra && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                disabled={save.isPending}
+                onClick={() => void merge()}
+              >
+                쓴 내용을 보관한 링크에 더하기
+              </Button>
+            )}
+          </div>
         )}
       </div>
 

@@ -104,6 +104,34 @@ function targetOf(d: LinkedPlaceDraft): LinkTarget {
   return { kind: "new", place: d.place };
 }
 
+/**
+ * 이미 보관한 링크에 새로 쓴 내용을 더한다 — 장소·태그는 합치고, 메모는 줄을 바꿔 잇는다.
+ * 주소와 지역은 보관한 링크를 따른다. 합쳐서 장소·태그·메모 한도를 넘으면 null (사용자가 직접 고친다).
+ */
+export function mergeLinkInput(existing: SnsLink, add: SnsLinkInput): SnsLinkInput | null {
+  const targets: LinkTarget[] = existing.linked.map((r) =>
+    r.kind === "place"
+      ? { kind: "place", placeId: r.placeId }
+      : { kind: "custom", customPlaceId: r.customPlaceId },
+  );
+  const key = (t: LinkTarget) =>
+    t.kind === "place"
+      ? `place:${t.placeId}`
+      : t.kind === "custom"
+        ? `custom:${t.customPlaceId}`
+        : null;
+  const known = new Set(targets.map(key));
+  for (const t of add.targets) if (!known.has(key(t))) targets.push(t);
+  const tags = [...new Set([...existing.tags, ...add.tags])];
+  const memo =
+    !add.memo || existing.memo.includes(add.memo)
+      ? existing.memo
+      : [existing.memo, add.memo].filter(Boolean).join("\n");
+  if (targets.length > MAX_LINKED_PLACES || tags.length > MAX_TAGS || memo.length > MAX_MEMO_LENGTH)
+    return null;
+  return { url: existing.url, sigun: existing.sigun ?? add.sigun, tags, memo, targets };
+}
+
 /** 검사를 통과한 폼 값 → 저장 입력 */
 export function linkInputOf(v: SnsFormValues): SnsLinkInput {
   return {

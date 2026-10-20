@@ -130,6 +130,15 @@ export function libraryEntries(
   });
 }
 
+/**
+ * '장소 연결 전 링크' 탭에 둘 링크 — 연결한 장소가 보관함에 한 곳도 없는 링크.
+ * 장소를 아직 연결하지 않은 링크와, 연결한 장소를 모두 저장 해제한 링크(다른 곳에서는 안 보인다)를 함께 담는다.
+ */
+export function linksWithoutSavedPlace(links: SnsLink[], saved: SavedPlace[]): SnsLink[] {
+  const savedKeys = new Set(saved.map((s) => refKey(s.ref)));
+  return links.filter((l) => !l.linked.some((r) => savedKeys.has(refKey(r))));
+}
+
 export function entryName(entry: LibraryEntry): string {
   return entry.place?.name ?? entry.custom?.name ?? "볼 수 없는 장소";
 }

@@ -39,6 +39,8 @@ export function RemoveSavedDialog({ entry, onClose }: RemoveSavedDialogProps) {
           <AlertDialogDescription>
             「{entry ? entryName(entry) : ""}」 저장을 해제하면 개인 태그·메모도 함께 지워져요. 이미
             일정에 담은 장소는 그대로 남아요.
+            {entry?.saved.ref.kind === "custom" &&
+              " 직접 등록한 장소는 해제하면 보관함에 다시 담을 수 없어요."}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
