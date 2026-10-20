@@ -38,6 +38,8 @@ export interface PlaceListQuery {
   sigun: SigunCode | null;
   /** 비면 전체, 여러 개면 OR (기능명세 §3 — 같은 묶음 안 복수 선택) */
   categories: PlaceCategory[];
+  /** 고른 종류에 속한 세부 종류만 — 비면 전체, 여러 개면 OR */
+  subcategories: string[];
   /** 이름 앞부분 ("" = 전체) */
   q: string;
 }
@@ -53,9 +55,9 @@ export interface PlacePage {
 function filtersOf(q: PlaceListQuery): QueryConstraint[] {
   const c: QueryConstraint[] = [where("status", "==", "published")];
   if (q.sigun) c.push(where("sigun", "==", q.sigun));
-  const [only] = q.categories;
-  if (q.categories.length === 1 && only) c.push(where("category", "==", only));
-  else if (q.categories.length > 1) c.push(where("category", "in", q.categories));
+  // 세부 종류는 한 종류에만 속하므로, 고르면 종류 조건을 대신한다 (in 두 개를 겹치지 않는다)
+  if (q.subcategories.length > 0) c.push(where("subcategory", "in", q.subcategories));
+  else if (q.categories.length > 0) c.push(where("category", "in", q.categories));
   // ponytail: Firestore는 부분 일치 검색이 없어 이름 앞부분 일치만 — "미황사"로 "달마산 미황사"를 찾으려면 검색 토큰 필드(array-contains)를 수집 단계에서 만들 것
   if (q.q) c.push(where("name", ">=", q.q), where("name", "<=", `${q.q}\uf8ff`));
   return c;
@@ -97,4 +99,14 @@ export async function getPlace(id: string): Promise<Place> {
     }
     throw e;
   }
+}
+
+/** 고른 장소 여러 곳 (요청 순서 유지). 공개가 끝났거나 없는 곳은 빼고 돌려준다 */
+export async function getPlacesByIds(ids: string[]): Promise<Place[]> {
+  const results = await Promise.allSettled(ids.map(getPlace));
+  return results.flatMap((r) => {
+    if (r.status === "fulfilled") return [r.value];
+    if (r.reason instanceof PlaceNotFoundError) return [];
+    throw r.reason;
+  });
 }

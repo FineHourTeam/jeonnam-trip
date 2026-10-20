@@ -1,6 +1,7 @@
-// S04 장소 목록 — 지역·종류·검색어(서버 조회)로 거르고 이름순으로 한 페이지씩 받는다 (1,000곳이 넘어 한 번에 받지 않는다).
+// S04 장소 목록 — 지역·종류·세부 종류·검색어(서버 조회)로 거르고 이름순으로 한 페이지씩 받는다 (1,000곳이 넘어 한 번에 받지 않는다).
 // 고른 장소는 필터를 바꿔도 유지하고, 아래 막대에서 작성 중인 코스의 일차에 한꺼번에 담는다 (기능명세 §3).
 import { useSearchParams } from "react-router";
+import { toast } from "sonner";
 import { Seo } from "@/components/Seo";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -11,9 +12,9 @@ import { PlaceCard } from "../components/place-card";
 import { PlaceFilters } from "../components/place-filters";
 import { usePlaceSelectionStore } from "../hooks/use-place-selection-store";
 import { usePlaceCount, usePlaces } from "../hooks/use-places";
-import { placeFilterParams, readPlaceFilter } from "../lib/place-filter";
+import { normalizePlaceFilter, placeFilterParams, readPlaceFilter } from "../lib/place-filter";
 
-const EMPTY: PlaceListQuery = { sigun: null, categories: [], q: "" };
+const EMPTY: PlaceListQuery = { sigun: null, categories: [], subcategories: [], q: "" };
 
 export default function PlaceListPage() {
   const [params, setParams] = useSearchParams();
@@ -25,11 +26,16 @@ export default function PlaceListPage() {
   const clear = usePlaceSelectionStore((s) => s.clear);
 
   const update = (next: Partial<PlaceListQuery>) => {
+    const merged = { ...filter, ...next };
+    const normalized = normalizePlaceFilter(merged);
+    // 종류를 바꿔 맞지 않게 된 세부 종류는 풀고 알린다 (기능명세 §3)
+    if (normalized.subcategories.length < merged.subcategories.length) {
+      toast("고른 종류에 없는 세부 종류는 선택을 해제했어요.");
+    }
     setParams(
       (prev) => {
         const p = new URLSearchParams(prev);
-        const merged = { ...readPlaceFilter(prev), ...next };
-        for (const [k, v] of Object.entries(placeFilterParams(merged))) {
+        for (const [k, v] of Object.entries(placeFilterParams(normalized))) {
           if (v) p.set(k, v);
           else p.delete(k);
         }

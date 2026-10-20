@@ -1,14 +1,19 @@
 import { describe, expect, it } from "vitest";
 import type { OpeningHours } from "@/shared/domain";
 import { hoursUnknown, weeklyRows } from "./hours";
-import { placeFilterParams, readPlaceFilter } from "./place-filter";
+import { placeFilterParams, readPlaceFilter, readPlaceIds } from "./place-filter";
 
 describe("readPlaceFilter", () => {
   it("모르는 값은 버리고 종류는 화면 순서로 맞춘다", () => {
     const f = readPlaceFilter(
       new URLSearchParams("sigun=nowhere&category=lodging,x,attraction&q= 유달 "),
     );
-    expect(f).toEqual({ sigun: null, categories: ["attraction", "lodging"], q: "유달" });
+    expect(f).toEqual({
+      sigun: null,
+      categories: ["attraction", "lodging"],
+      subcategories: [],
+      q: "유달",
+    });
   });
 
   it("URL 파라미터로 되돌리면 같은 조건이 나온다", () => {
@@ -17,6 +22,33 @@ describe("readPlaceFilter", () => {
     for (const [k, v] of Object.entries(placeFilterParams(f))) if (v) p.set(k, v);
     expect(readPlaceFilter(p)).toEqual(f);
     expect(p.has("q")).toBe(false);
+  });
+});
+
+describe("세부 종류", () => {
+  it("상위 종류와 맞지 않는 세부 종류는 버린다", () => {
+    const f = readPlaceFilter(new URLSearchParams("category=lodging&sub=한식,펜션,없는값"));
+    expect(f.subcategories).toEqual(["펜션"]);
+    expect(readPlaceFilter(new URLSearchParams("sub=펜션")).subcategories).toEqual([]);
+  });
+
+  it("URL 파라미터로 되돌리면 같은 조건이 나온다", () => {
+    const f = readPlaceFilter(
+      new URLSearchParams("category=attraction,restaurant&sub=한식,자연·생태"),
+    );
+    const p = new URLSearchParams();
+    for (const [k, v] of Object.entries(placeFilterParams(f))) if (v) p.set(k, v);
+    expect(readPlaceFilter(p)).toEqual(f);
+    expect(f.subcategories).toEqual(["자연·생태", "한식"]);
+  });
+});
+
+describe("readPlaceIds", () => {
+  it("빈 값·중복을 빼고 30곳까지만", () => {
+    expect(readPlaceIds("a,,b,a")).toEqual(["a", "b"]);
+    expect(readPlaceIds(null)).toEqual([]);
+    const many = Array.from({ length: 40 }, (_, i) => `p${String(i)}`).join(",");
+    expect(readPlaceIds(many)).toHaveLength(30);
   });
 });
 

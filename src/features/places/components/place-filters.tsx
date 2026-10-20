@@ -1,4 +1,4 @@
-// S04 기본 조회 조건 — 지역·종류·검색어. 값은 URL 검색 파라미터가 들고 있다.
+// S04 조회 조건 — 지역·종류·세부 종류·검색어. 값은 URL 검색 파라미터가 들고 있다.
 import { SearchIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +13,7 @@ import {
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { PLACE_CATEGORY_LABEL, SIGUNS, isSigunCode } from "@/shared/domain";
 import type { PlaceListQuery } from "../api/places-api";
-import { PLACE_CATEGORIES } from "../lib/place-filter";
+import { PLACE_CATEGORIES, subcategoriesOf } from "../lib/place-filter";
 
 interface PlaceFiltersProps {
   values: PlaceListQuery;
@@ -25,6 +25,7 @@ const ALL = "all";
 
 export function PlaceFilters({ values, onChange, onReset }: PlaceFiltersProps) {
   const dirty = values.sigun !== null || values.categories.length > 0 || values.q !== "";
+  const subOptions = subcategoriesOf(values.categories);
   return (
     <div className="flex flex-col gap-3">
       <form
@@ -104,6 +105,30 @@ export function PlaceFilters({ values, onChange, onReset }: PlaceFiltersProps) {
           </Button>
         )}
       </div>
+      {subOptions.length > 0 && (
+        <div className="flex flex-col gap-1.5">
+          <p className="text-muted-foreground text-xs">
+            세부 종류 (여러 개 고르면 하나라도 맞는 곳)
+          </p>
+          <ToggleGroup
+            type="multiple"
+            variant="outline"
+            size="sm"
+            value={values.subcategories}
+            onValueChange={(v) => {
+              onChange({ subcategories: subOptions.filter((s) => v.includes(s)) });
+            }}
+            aria-label="세부 종류 (여러 개 선택)"
+            className="flex-wrap"
+          >
+            {subOptions.map((s) => (
+              <ToggleGroupItem key={s} value={s}>
+                {s}
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
+        </div>
+      )}
     </div>
   );
 }

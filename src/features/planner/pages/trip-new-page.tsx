@@ -1,6 +1,7 @@
 // S09 여행 시작 — 설정을 받아 로그인 전 초안으로 만들고 코스 편집(S10)으로 보낸다.
 // 저장은 편집 화면에서 한다 (비회원도 작성 가능, 저장할 때 로그인).
 // ?festival=&date=(&program=)으로 오면 그 축제 방문을 방문일 일차에 담아 시작한다 (기능명세 §2).
+// ?places=id1,id2로 오면 장소 목록·상세에서 고른 장소를 첫째 날에 담아 시작한다 (기능명세 §3).
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { toast } from "sonner";
@@ -18,12 +19,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useFestival } from "@/features/festivals";
+import { readPlaceIds, usePlacesByIds } from "@/features/places";
 import {
   addItemsToDay,
   dayIndexOf,
   newTripDraft,
   useTripDraftStore,
   visitFromFestival,
+  visitFromPlace,
 } from "@/features/trips";
 import type { Festival, TripDraft } from "@/shared/domain";
 import { formatDateKo } from "@/shared/lib/date";
@@ -53,6 +56,8 @@ export default function TripNewPage() {
   const visitDate = DATE_RE.test(dateParam) ? dateParam : undefined;
   const programId = params.get("program") ?? undefined;
   const festival = useFestival(festivalId);
+  const placeIds = readPlaceIds(params.get("places"));
+  const pickedPlaces = usePlacesByIds(placeIds);
 
   const start = (draft: TripDraft) => {
     setDraft(draft);
@@ -71,6 +76,13 @@ export default function TripNewPage() {
       if (visitDate && festival.data.state !== "cancelled") {
         draft = withFestival(draft, festival.data, visitDate, programId);
       }
+    } else if (placeIds.length > 0) {
+      if (!pickedPlaces.data) {
+        toast("장소 정보를 불러온 뒤 다시 눌러 주세요.");
+        return;
+      }
+      const blank = newTripDraft({ ...v, origin: { kind: "blank" } });
+      draft = addItemsToDay(blank, 0, pickedPlaces.data.map(visitFromPlace)).trip;
     } else {
       draft = newTripDraft({ ...v, origin: { kind: "blank" } });
     }
@@ -96,6 +108,27 @@ export default function TripNewPage() {
           onRetry={() => void festival.refetch()}
           visitDate={visitDate}
         />
+      )}
+
+      {placeIds.length > 0 && (
+        <div className="bg-background-subtle text-foreground flex flex-wrap items-center justify-between gap-3 rounded-lg p-4 text-sm">
+          {pickedPlaces.isPending ? (
+            <Skeleton className="h-5 w-2/3" />
+          ) : pickedPlaces.isError ? (
+            <>
+              <p>고른 장소를 불러오지 못했어요.</p>
+              <Button variant="outline" size="sm" onClick={() => void pickedPlaces.refetch()}>
+                다시 시도
+              </Button>
+            </>
+          ) : (
+            <p>
+              {pickedPlaces.data.length > 0
+                ? `고른 장소 ${String(pickedPlaces.data.length)}곳을 첫째 날에 담아 시작해요.`
+                : "고른 장소가 공개가 끝나 담을 수 없어요."}
+            </p>
+          )}
+        </div>
       )}
 
       <TripSetupForm onSubmit={onSubmit} defaultDate={visitDate} />

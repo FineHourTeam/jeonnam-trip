@@ -4,6 +4,7 @@ import {
   PlaceNotFoundError,
   countPlaces,
   getPlace,
+  getPlacesByIds,
   listPlaces,
   type PlaceCursor,
   type PlaceListQuery,
@@ -14,6 +15,7 @@ export const placeKeys = {
   list: (q: PlaceListQuery) => [...placeKeys.all, "list", q] as const,
   count: (q: PlaceListQuery) => [...placeKeys.all, "count", q] as const,
   detail: (id: string) => [...placeKeys.all, "detail", id] as const,
+  byIds: (ids: string[]) => [...placeKeys.all, "byIds", ids] as const,
 };
 
 export function usePlaces(q: PlaceListQuery) {
@@ -35,5 +37,14 @@ export function usePlace(id: string | null | undefined) {
     queryFn: () => getPlace(id ?? ""),
     enabled: Boolean(id),
     retry: (count, error) => !(error instanceof PlaceNotFoundError) && count < 2,
+  });
+}
+
+/** 여러 곳 한꺼번에 — 여행 만들기(S09)가 ?places=로 넘어온 장소를 담을 때 쓴다 */
+export function usePlacesByIds(ids: string[]) {
+  return useQuery({
+    queryKey: placeKeys.byIds(ids),
+    queryFn: () => getPlacesByIds(ids),
+    enabled: ids.length > 0,
   });
 }
