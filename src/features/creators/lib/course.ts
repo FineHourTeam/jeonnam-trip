@@ -7,6 +7,32 @@ export function courseDayCount(course: Pick<CreatorCourse, "days">): number {
   return Math.max(1, ...course.days.map((d) => d.day));
 }
 
+/** 일차 번호 순으로 정렬한 일차 목록 (원본 배열은 그대로) */
+export function sortedDays<T extends { day: number }>(days: T[]): T[] {
+  return [...days].sort((a, b) => a.day - b.day);
+}
+
+/** 여러 코스에 든 장소 id — 중복 없이 정렬해 한 번에 읽는 쿼리의 키로 쓴다 */
+export function coursePlaceIds(courses: { days: { items: { placeId: string }[] }[] }[]): string[] {
+  return [
+    ...new Set(courses.flatMap((c) => c.days.flatMap((d) => d.items.map((i) => i.placeId)))),
+  ].sort();
+}
+
+/** 카드 대표 사진 = 코스 순서(일차 → 장소)상 처음 나오는 사진. 볼 수 없는 장소·사진 없는 장소는 건너뛴다 */
+export function pickCoverPhoto(
+  course: Pick<CreatorCourse, "days">,
+  places: Record<string, Pick<Place, "photos">>,
+): string | null {
+  for (const day of sortedDays(course.days)) {
+    for (const { placeId } of day.items) {
+      const photo = places[placeId]?.photos[0];
+      if (photo) return photo;
+    }
+  }
+  return null;
+}
+
 export function formatDays(n: number): string {
   return n === 1 ? "당일" : `${String(n - 1)}박 ${String(n)}일`;
 }
@@ -58,7 +84,7 @@ export function copyCourseIntoDraft(
   let trip = draft;
   let missing = 0;
   let duplicates = 0;
-  for (const day of [...course.days].sort((a, b) => a.day - b.day)) {
+  for (const day of sortedDays(course.days)) {
     const seen = new Set<string>();
     const items = day.items.flatMap(({ placeId }) => {
       const place = places[placeId];
