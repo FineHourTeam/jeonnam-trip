@@ -1,6 +1,6 @@
 // "일정에 추가" — 대상 코스(작성 중인 초안 또는 저장한 내 여행)와 일차를 골라 장소를 끝에 담는다 (기능명세 §3).
 // 여러 곳을 한 번에 담을 수 있고, 그 일차에 이미 있는 장소는 빼고 안내한다.
-// 담을 코스가 없으면 고른 장소를 들고 여행 만들기(S09)로 보낸다.
+// 담을 코스가 없으면 고른 장소를 들고 여행 만들기(S09)로 보낸다. 보관함(S06)은 직접 등록한 개인 장소도 함께 넘긴다.
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
@@ -22,14 +22,17 @@ import {
   useMyTrips,
   useSaveTrip,
   useTripDraftStore,
+  visitFromCustomPlace,
   visitFromPlace,
 } from "@/features/trips";
-import type { Place, TripDay } from "@/shared/domain";
+import type { CustomPlace, Place, TripDay } from "@/shared/domain";
 import { formatDateKo } from "@/shared/lib/date";
 import { MAX_PLACES_PARAM } from "../lib/place-filter";
 
 interface PlaceAddToTripProps {
   places: Place[];
+  /** 직접 등록한 개인 장소 (보관함) — 새 여행 만들기 주소로는 넘기지 못한다 */
+  customPlaces?: CustomPlace[];
   /** 담기에 성공한 뒤 (목록에서는 선택을 비운다) */
   onAdded?: () => void;
 }
@@ -43,7 +46,7 @@ interface Target {
   days: TripDay[];
 }
 
-export function PlaceAddToTrip({ places, onAdded }: PlaceAddToTripProps) {
+export function PlaceAddToTrip({ places, customPlaces = [], onAdded }: PlaceAddToTripProps) {
   const navigate = useNavigate();
   const draft = useTripDraftStore((s) => s.draft);
   const setDraft = useTripDraftStore((s) => s.setDraft);
@@ -61,15 +64,20 @@ export function PlaceAddToTrip({ places, onAdded }: PlaceAddToTripProps) {
     ...trips.map((t) => ({ key: t.id, label: t.title, title: t.title, days: t.days })),
   ];
   // ponytail: 여행 만들기로는 앞의 30곳까지만 넘긴다 (URL 길이) — 더 많이 고르는 일이 잦아지면 선택을 스토어로 넘길 것
-  const newTripHref = `${paths.tripNew}?${new URLSearchParams({
-    places: places
-      .slice(0, MAX_PLACES_PARAM)
-      .map((p) => p.id)
-      .join(","),
-  }).toString()}`;
+  const newTripHref =
+    places.length === 0
+      ? paths.tripNew
+      : `${paths.tripNew}?${new URLSearchParams({
+          places: places
+            .slice(0, MAX_PLACES_PARAM)
+            .map((p) => p.id)
+            .join(","),
+        }).toString()}`;
   const newTripLink = (variant: "outline" | "ghost") => (
     <Button asChild variant={variant} size={variant === "ghost" ? "sm" : "default"}>
-      <Link to={newTripHref}>이 장소로 새 여행 만들기</Link>
+      <Link to={newTripHref}>
+        {places.length > 0 ? "이 장소로 새 여행 만들기" : "새 여행 만들기"}
+      </Link>
     </Button>
   );
 
@@ -84,6 +92,8 @@ export function PlaceAddToTrip({ places, onAdded }: PlaceAddToTripProps) {
           {myTrips.isError
             ? "내 여행을 불러오지 못했어요. 다시 시도하거나 새 여행을 만들어 담아 주세요."
             : "담을 코스가 없어요. 여행을 만들면 고른 장소를 첫째 날에 담아 시작해요."}
+          {customPlaces.length > 0 &&
+            " 직접 등록한 장소는 여행을 만든 뒤 보관함에서 다시 담아 주세요."}
         </p>
         <div className="flex flex-wrap gap-2">
           {newTripLink("outline")}
@@ -98,7 +108,8 @@ export function PlaceAddToTrip({ places, onAdded }: PlaceAddToTripProps) {
   }
 
   const dayIndex = Number(picked) < target.days.length ? Number(picked) : 0;
-  const multi = places.length > 1;
+  const count = places.length + customPlaces.length;
+  const multi = count > 1;
   const id = multi ? "place-add-bulk" : "place-add";
   const day = `${String(dayIndex + 1)}일차`;
 
@@ -119,7 +130,7 @@ export function PlaceAddToTrip({ places, onAdded }: PlaceAddToTripProps) {
   };
 
   const add = () => {
-    const items = places.map(visitFromPlace);
+    const items = [...places.map(visitFromPlace), ...customPlaces.map(visitFromCustomPlace)];
     if (target.key === DRAFT && draft) {
       const result = addItemsToDay(draft, dayIndex, items);
       if (result.added.length === 0) {
@@ -201,7 +212,7 @@ export function PlaceAddToTrip({ places, onAdded }: PlaceAddToTripProps) {
             </SelectContent>
           </Select>
         </div>
-        <Button onClick={add} disabled={places.length === 0 || saveTrip.isPending}>
+        <Button onClick={add} disabled={count === 0 || saveTrip.isPending}>
           {saveTrip.isPending ? "담는 중…" : "일정에 추가"}
         </Button>
       </div>

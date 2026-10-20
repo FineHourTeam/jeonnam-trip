@@ -1,5 +1,5 @@
 // 장소 서버 상태 훅 — queryKey는 placeKeys로만 (rules.md § 상태관리).
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import {
   PlaceNotFoundError,
   countPlaces,
@@ -40,11 +40,15 @@ export function usePlace(id: string | null | undefined) {
   });
 }
 
-/** 여러 곳 한꺼번에 — 여행 만들기(S09)가 ?places=로 넘어온 장소를 담을 때 쓴다 */
+/**
+ * 여러 곳 한꺼번에 — 여행 만들기(S09)가 ?places=로 넘어온 장소를, 보관함(S06)이 저장한 장소를 읽을 때 쓴다.
+ * 목록이 바뀌어도(저장 해제 등) 새 결과가 올 때까지 이전 결과를 보여 준다 (isPlaceholderData).
+ */
 export function usePlacesByIds(ids: string[]) {
   return useQuery({
     queryKey: placeKeys.byIds(ids),
     queryFn: () => getPlacesByIds(ids),
     enabled: ids.length > 0,
+    placeholderData: keepPreviousData,
   });
 }

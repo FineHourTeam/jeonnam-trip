@@ -10,6 +10,9 @@ export const paths = {
   placeDetail: (id: string) => `/places/${id}`,
   library: "/library",
   snsNew: "/library/sns/new",
+  /** 보관한 SNS 링크 고치기 (장소 나중에 연결) — 같은 화면(S07)을 편집 모드로 */
+  snsEdit: (linkId: string) =>
+    `/library/sns/new?${new URLSearchParams({ link: linkId }).toString()}`,
   creators: "/creators",
   creatorDetail: (id: string) => `/creators/${id}`,
   /** 여행 시작 설정(S09). 쿼리: festival, date, program, creator, places(쉼표 구분 placeId) */

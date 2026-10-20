@@ -1,4 +1,4 @@
-// S05 장소 상세 — 사진·소개·영업시간·이용 정보·위치·출처와 "일정에 추가".
+// S05 장소 상세 — 사진·소개·영업시간·이용 정보·위치·출처와 "보관함에 저장"·"일정에 추가".
 import { Link, useParams } from "react-router";
 import { paths } from "@/app/paths";
 import { ChevronLeftIcon } from "@/components/icons";
@@ -7,6 +7,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { PlaceSaveAction } from "@/features/library";
 import { CourseMap } from "@/features/map";
 import { PLACE_CATEGORY_LABEL, sigunName, type Place } from "@/shared/domain";
 import { PlaceNotFoundError } from "../api/places-api";
@@ -90,6 +91,7 @@ function PlaceDetail({ place }: { place: Place }) {
           {sigunName(place.sigun)}
           {place.area ? ` · ${place.area}` : ""}
         </p>
+        <PlaceSaveAction placeId={place.id} />
       </header>
 
       {place.summary && (
