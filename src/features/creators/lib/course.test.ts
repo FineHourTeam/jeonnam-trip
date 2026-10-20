@@ -5,6 +5,7 @@ import {
   closedWeekdaysLabel,
   copyCourseIntoDraft,
   courseDayCount,
+  courseDayLegs,
   coursePlaceIds,
   filterCourses,
   hoursUnknown,
@@ -154,5 +155,18 @@ describe("creator course", () => {
       coursePlaceIds([course, { days: [{ items: [{ placeId: "a" }, { placeId: "z" }] }] }]),
     ).toEqual(["a", "b", "c", "d", "gone", "z"]);
     expect(coursePlaceIds([])).toEqual([]);
+  });
+
+  test("경로 구간은 위치가 확인된 장소끼리 순서대로만 잇는다", () => {
+    const p1 = { lat: 1, lng: 1 };
+    const p3 = { lat: 3, lng: 3 };
+    const p4 = { lat: 4, lng: 4 };
+    expect(
+      courseDayLegs([{ location: p1 }, { location: null }, { location: p3 }, { location: p4 }]),
+    ).toEqual([
+      { from: p1, to: p3 },
+      { from: p3, to: p4 },
+    ]);
+    expect(courseDayLegs([{ location: p1 }, { location: null }])).toEqual([]);
   });
 });

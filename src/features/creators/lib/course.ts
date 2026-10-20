@@ -1,6 +1,13 @@
 // 크리에이터 코스 순수 함수 — 목록 필터와 개인 초안 복사(기능명세 §5).
 import { addItemsToDay, visitFromPlace } from "@/features/trips";
-import type { CreatorCourse, Place, SigunCode, TripDraft } from "@/shared/domain";
+import type {
+  CreatorCourse,
+  LatLng,
+  LegRequest,
+  Place,
+  SigunCode,
+  TripDraft,
+} from "@/shared/domain";
 
 /** 코스 일수 = 가장 큰 일차 번호 */
 export function courseDayCount(course: Pick<CreatorCourse, "days">): number {
@@ -31,6 +38,23 @@ export function pickCoverPhoto(
     }
   }
   return null;
+}
+
+/** 상세 목록 행과 지도 마커가 함께 쓰는 id — 같은 장소가 두 번 나와도 구분된다 */
+export function courseItemId(day: number, index: number): string {
+  return `${String(day)}-${String(index)}`;
+}
+
+/**
+ * 지도 경로 구간 — 위치가 확인된 장소끼리 목록 순서대로 잇는다. 위치를 모르는 장소는 건너뛰고,
+ * 구간은 실제 자동차 경로 조회로만 그린다 (기능명세 §7).
+ */
+export function courseDayLegs(points: { location: LatLng | null }[]): LegRequest[] {
+  const located = points.flatMap((p) => (p.location ? [p.location] : []));
+  return located.flatMap((to, i) => {
+    const from = located[i - 1];
+    return from ? [{ from, to }] : [];
+  });
 }
 
 export function formatDays(n: number): string {
