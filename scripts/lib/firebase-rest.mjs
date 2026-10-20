@@ -29,6 +29,46 @@ export function enc(v) {
   };
 }
 
+/** Firestore REST Value → JS 값 */
+export function dec(v) {
+  if ("mapValue" in v)
+    return Object.fromEntries(Object.entries(v.mapValue.fields ?? {}).map(([k, x]) => [k, dec(x)]));
+  if ("arrayValue" in v) return (v.arrayValue.values ?? []).map(dec);
+  if ("integerValue" in v) return Number(v.integerValue);
+  if ("nullValue" in v) return null;
+  return v.stringValue ?? v.booleanValue ?? v.doubleValue ?? v.timestampValue;
+}
+
+/** 문서의 일부 필드만 읽는다. 문서가 없으면 null */
+export async function getFields(collection, id, fieldPaths) {
+  const mask = fieldPaths.map((f) => `mask.fieldPaths=${f}`).join("&");
+  const res = await fetch(
+    `https://firestore.googleapis.com/v1/${DOCS}/${collection}/${id}?${mask}`,
+    {
+      headers: auth(),
+    },
+  );
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`get ${id}: ${String(res.status)} ${await res.text()}`);
+  return dec({ mapValue: { fields: (await res.json()).fields ?? {} } });
+}
+
+/** data에 있는 필드만 바꾼다(updateMask) — 나머지 필드는 그대로 두고, 없는 문서는 만들지 않는다 */
+export async function patchFields(collection, id, data) {
+  const mask = Object.keys(data)
+    .map((f) => `updateMask.fieldPaths=${f}`)
+    .join("&");
+  const res = await fetch(
+    `https://firestore.googleapis.com/v1/${DOCS}/${collection}/${id}?${mask}&currentDocument.exists=true`,
+    {
+      method: "PATCH",
+      headers: { ...auth(), "Content-Type": "application/json" },
+      body: JSON.stringify({ fields: enc(data).mapValue.fields }),
+    },
+  );
+  if (!res.ok) throw new Error(`patch ${id}: ${String(res.status)} ${await res.text()}`);
+}
+
 /** 문서를 통째로 쓴다(덮어쓰기). docs: [{ collection, id, data }] — 200개씩 커밋 */
 export async function commitDocs(docs) {
   for (let i = 0; i < docs.length; i += 200) {
@@ -48,7 +88,8 @@ export async function commitDocs(docs) {
 export async function uploadImage(path, srcUrl, headers = {}) {
   const img = await fetch(srcUrl, { headers });
   if (!img.ok) throw new Error(`${String(img.status)} ${srcUrl}`);
-  const type = img.headers.get("content-type") ?? "";
+  // "image/jpeg;charset=utf-8"처럼 매개변수가 붙어 오는 서버가 있어 미디어 타입만 쓴다
+  const type = (img.headers.get("content-type") ?? "").split(";")[0].trim();
   if (!type.startsWith("image/")) throw new Error(`이미지가 아님: ${srcUrl}`);
   const buf = Buffer.from(await img.arrayBuffer());
   if (buf.length >= 10 * 1024 * 1024) throw new Error(`10MB 초과: ${srcUrl}`);
