@@ -1,7 +1,7 @@
 // S01 상단 — 지역·날짜와 "이 날짜로 여행 만들기". 값은 URL 검색 파라미터가 들고 있다.
 import { Link } from "react-router";
+import { DateFilterInput } from "@/components/date-filter-input";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -49,15 +49,14 @@ export function HomeFilters({ values, today, onChange, tripNewTo }: HomeFiltersP
       </div>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="home-date">날짜</Label>
-        <Input
+        <DateFilterInput
           id="home-date"
-          type="date"
           min={today}
           className="w-auto"
           value={values.date}
-          onChange={(e) => {
-            // 비우거나 오늘(또는 지난 날)을 고르면 파라미터를 지워 "오늘"을 따라가게 한다
-            onChange({ date: e.target.value > today ? e.target.value : null });
+          onCommit={(date) => {
+            // 비우거나 오늘을 고르면 파라미터를 지워 "오늘"을 따라가게 한다
+            onChange({ date: date > today ? date : null });
           }}
         />
       </div>

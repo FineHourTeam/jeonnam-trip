@@ -1,6 +1,6 @@
 // S02 조회 조건 — 시군·진행 상태·날짜. 값은 URL 검색 파라미터가 들고 있어 뒤로 가기·공유에도 유지된다.
+import { DateFilterInput } from "@/components/date-filter-input";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -54,14 +54,13 @@ export function FestivalFilters({ values, today, onChange, onReset }: FestivalFi
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="festival-date">날짜</Label>
-          <Input
+          <DateFilterInput
             id="festival-date"
-            type="date"
             min={today}
             className="w-auto"
             value={values.date ?? ""}
-            onChange={(e) => {
-              onChange({ date: e.target.value >= today ? e.target.value : null });
+            onCommit={(date) => {
+              onChange({ date: date === "" ? null : date });
             }}
           />
         </div>

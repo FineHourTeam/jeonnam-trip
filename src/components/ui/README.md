@@ -39,4 +39,4 @@ npx shadcn@latest add button dialog input card sonner
 
 | 컴포넌트 | 파일 | 용도 |
 |---------|------|------|
-| (아직 없음) | | |
+| DateFilterInput | src/components/date-filter-input.tsx | 필터용 날짜 입력. 키보드 입력 중간 값은 반영하지 않고 완성된 날짜만 onCommit |
