@@ -1,13 +1,18 @@
 // A03·A06 크리에이터 코스 편집 — 원문·등록 장소·일차·순서와 순서 확인 기준을 입력한다.
 // 영상 등장 순서만 확인했으면 "영상 등장 순서"로 두어 실제 여행 순서로 표현되지 않게 한다 (기능명세 §5).
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, FormProvider, useFieldArray, useForm, useFormContext } from "react-hook-form";
 import { AddIcon, ChevronDownIcon, ChevronUpIcon, DeleteIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { SIGUNS, type CreatorCourse, type Place } from "@/shared/domain";
-import { courseSchema, valuesToCourse, type CourseValues } from "../lib/content-form";
+import {
+  courseDraftSchema,
+  courseSchema,
+  valuesToCourse,
+  type CourseValues,
+} from "../lib/content-form";
 import type { ContentAction } from "../hooks/use-admin";
+import { notifyInvalid, useSaveModeResolver } from "../hooks/use-save-mode-resolver";
 import type { ContentFormProps } from "./content-form-props";
 import { ContentPreview } from "./content-preview";
 import { EditActions } from "./edit-actions";
@@ -24,17 +29,21 @@ export function CourseForm(
   props: ContentFormProps<CreatorCourse, CourseValues> & { places: Place[] },
 ) {
   const { contentId, initial, base, places } = props;
-  const form = useForm<CourseValues>({
-    resolver: zodResolver(courseSchema),
-    defaultValues: initial,
-  });
+  const { resolver, mode } = useSaveModeResolver(courseSchema, courseDraftSchema);
+  const form = useForm<CourseValues>({ resolver, defaultValues: initial });
   const days = useFieldArray({ control: form.control, name: "days" });
   const v = form.watch();
   const placeName = (id: string) => places.find((p) => p.id === id)?.name ?? "삭제됐거나 없는 장소";
   const run = (action: ContentAction) => {
+    // 비공개·초안 버리기는 입력 검사와 무관하다 — 저장된 본문으로 바로 처리한다
+    if (action === "hide" || action === "discard") {
+      if (base) props.onAction(action, base);
+      return;
+    }
+    mode.current = action === "draft" ? "draft" : "publish";
     void form.handleSubmit((values) => {
       props.onAction(action, valuesToCourse(contentId, values, base));
-    })();
+    }, notifyInvalid)();
   };
 
   return (

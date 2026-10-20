@@ -13,6 +13,7 @@ import {
   setDoc,
   updateDoc,
   where,
+  writeBatch,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import type { AdminKind } from "@/app/paths";
@@ -133,19 +134,26 @@ export async function saveDraft(
     await setDoc(doc(db, COL.contentDrafts, draftId(kind, content.id)), draft);
     return "draft-doc";
   }
+  // 공개 중이 아니면(신규·임시저장·비공개) 본문에 바로 쓴다. 남아 있던 수정 초안(비공개 전 저장분)은
+  // 이 내용으로 옮겨졌으니 함께 지운다 — 남겨 두면 편집 화면이 옛 초안을 다시 불러와 이번 저장분을 가린다
   const status: ContentStatus = main.exists() ? (main.data() as AnyContent).status : "draft";
-  await setDoc(doc(db, COLLECTION[kind], content.id), { ...body(content), status, updatedAt: now });
+  const batch = writeBatch(db);
+  batch.set(doc(db, COLLECTION[kind], content.id), { ...body(content), status, updatedAt: now });
+  batch.delete(doc(db, COL.contentDrafts, draftId(kind, content.id)));
+  await batch.commit();
   return "main";
 }
 
 /** 공개본 갱신 — 본문을 이 내용으로 바꾸고 공개, 남아 있던 초안은 지운다 */
 export async function publish(kind: AdminKind, content: AnyContent): Promise<void> {
-  await setDoc(doc(db, COLLECTION[kind], content.id), {
+  const batch = writeBatch(db);
+  batch.set(doc(db, COLLECTION[kind], content.id), {
     ...body(content),
     status: "published",
     updatedAt: new Date().toISOString(),
   });
-  await deleteDoc(doc(db, COL.contentDrafts, draftId(kind, content.id)));
+  batch.delete(doc(db, COL.contentDrafts, draftId(kind, content.id)));
+  await batch.commit();
 }
 
 /** 비공개 — 사용자 화면·목록에서 빠진다. 저장된 사용자 코스의 사본은 그대로 남는다 */

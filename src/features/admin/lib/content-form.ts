@@ -23,6 +23,13 @@ const date = z.string().regex(DATE_RE, "날짜를 골라 주세요.");
 const optionalDate = z.union([date, z.literal("")]);
 // 타입 가드를 그대로 넘기면 출력 타입이 SigunCode로 좁아져 빈 기본값("")과 어긋난다 — 검사만 한다
 const sigun = z.string().refine((s): boolean => isSigunCode(s), "지역을 골라 주세요.");
+/** 임시저장은 불완전 정보도 허용한다 (기능명세 §9) — 지역은 비워 둘 수 있고, 넣었다면 올바른 값이어야 한다 */
+const draftSigun = z
+  .string()
+  .refine((s): boolean => s === "" || isSigunCode(s), "지역을 골라 주세요.");
+
+/** publish = 공개(필수 항목 검사), draft = 초안 저장(형식만 검사) */
+export type SaveMode = "publish" | "draft";
 const name = z.string().trim().min(1, "이름을 입력해 주세요.").max(80, "80자까지 쓸 수 있어요.");
 
 function isHttpUrl(s: string): boolean {
@@ -135,43 +142,48 @@ const fromTri = (b: boolean | null): z.infer<typeof triState> =>
 
 // ── 축제 (A04) ──
 
-export const festivalSchema = z
-  .object({
-    name,
-    sigun,
-    summary: z.string().max(2000, "2000자까지 쓸 수 있어요."),
-    startDate: date,
-    endDate: date,
-    /** 날짜별 운영 — 키는 YYYY-MM-DD. 기간 밖 날짜는 저장할 때 버린다 */
-    days: z.record(z.string(), dayHoursSchema),
-    programs: z.array(
-      z.object({
-        id: z.string(),
-        name: z.string().trim().min(1, "프로그램 이름을 입력해 주세요."),
-        date,
-        start: time,
-        end: time,
-        place: z.string(),
-      }),
-    ),
-    address: z.string(),
-    location: locationSchema,
-    parking: z.string(),
-    contact: z.string(),
-    officialUrl: optionalUrl,
-    photos: z.array(z.string()),
-    state: z.enum(["scheduled", "changed", "cancelled"]),
-    stateNote: z.string(),
-    checks: z.object({ schedule: checkSchema, location: checkSchema, info: checkSchema }),
-  })
-  .refine((v) => v.endDate >= v.startDate, {
-    path: ["endDate"],
-    message: "종료일은 시작일과 같거나 그 뒤여야 해요.",
-  })
-  .refine((v) => v.programs.every((p) => p.date >= v.startDate && p.date <= v.endDate), {
-    path: ["programs"],
-    message: "프로그램 날짜는 개최 기간 안이어야 해요.",
-  });
+function makeFestivalSchema(mode: SaveMode) {
+  return z
+    .object({
+      name,
+      sigun: mode === "publish" ? sigun : draftSigun,
+      summary: z.string().max(2000, "2000자까지 쓸 수 있어요."),
+      startDate: date,
+      endDate: date,
+      /** 날짜별 운영 — 키는 YYYY-MM-DD. 기간 밖 날짜는 저장할 때 버린다 */
+      // 화면에 마운트됐지만 아직 고르지 않은 날은 값이 undefined다 — 미확인으로 저장한다
+      days: z.record(z.string(), dayHoursSchema.optional()),
+      programs: z.array(
+        z.object({
+          id: z.string(),
+          name: z.string().trim().min(1, "프로그램 이름을 입력해 주세요."),
+          date,
+          start: time,
+          end: time,
+          place: z.string(),
+        }),
+      ),
+      address: z.string(),
+      location: locationSchema,
+      parking: z.string(),
+      contact: z.string(),
+      officialUrl: optionalUrl,
+      photos: z.array(z.string()),
+      state: z.enum(["scheduled", "changed", "cancelled"]),
+      stateNote: z.string(),
+      checks: z.object({ schedule: checkSchema, location: checkSchema, info: checkSchema }),
+    })
+    .refine((v) => v.endDate >= v.startDate, {
+      path: ["endDate"],
+      message: "종료일은 시작일과 같거나 그 뒤여야 해요.",
+    })
+    .refine((v) => v.programs.every((p) => p.date >= v.startDate && p.date <= v.endDate), {
+      path: ["programs"],
+      message: "프로그램 날짜는 개최 기간 안이어야 해요.",
+    });
+}
+export const festivalSchema = makeFestivalSchema("publish");
+export const festivalDraftSchema = makeFestivalSchema("draft");
 export type FestivalValues = z.infer<typeof festivalSchema>;
 
 export function festivalToValues(f: Festival): FestivalValues {
@@ -232,32 +244,41 @@ export function valuesToFestival(id: string, v: FestivalValues, base?: Festival)
 export const PLACE_CATEGORIES = ["attraction", "restaurant", "cafe", "shop", "lodging"] as const;
 const SOURCE_PLATFORMS = ["official", "instagram", "youtube", "blog", "other"] as const;
 
-export const placeSchema = z.object({
-  name,
-  sigun,
-  area: z.string(),
-  category: z.enum(PLACE_CATEGORIES),
-  subcategory: z.string(),
-  moods: z.string(),
-  purposes: z.string(),
-  address: z.string(),
-  location: locationSchema,
-  /** 요일 0=일 … 6=토 */
-  weekly: z.array(dayHoursSchema).length(7),
-  exceptions: z.array(
-    z.object({ date, closed: z.boolean(), ranges: z.array(rangeSchema), note: z.string() }),
-  ),
-  parking: triState,
-  reservation: triState,
-  pets: triState,
-  phone: z.string(),
-  summary: z.string().max(2000, "2000자까지 쓸 수 있어요."),
-  sources: z.array(
-    z.object({ platform: z.enum(SOURCE_PLATFORMS), url: requiredUrl, label: z.string() }),
-  ),
-  photos: z.array(z.string()),
-  checks: z.object({ location: checkSchema, hours: checkSchema, info: checkSchema }),
-});
+function makePlaceSchema(mode: SaveMode) {
+  return z.object({
+    name,
+    sigun: mode === "publish" ? sigun : draftSigun,
+    area: z.string(),
+    category: z.enum(PLACE_CATEGORIES),
+    subcategory: z.string(),
+    moods: z.string(),
+    purposes: z.string(),
+    address: z.string(),
+    location: locationSchema,
+    /** 요일 0=일 … 6=토 */
+    weekly: z.array(dayHoursSchema).length(7),
+    exceptions: z.array(
+      z
+        .object({ date, closed: z.boolean(), ranges: z.array(rangeSchema), note: z.string() })
+        .refine((e) => e.closed || e.ranges.length > 0, {
+          path: ["ranges"],
+          message: "그날 휴무가 아니면 영업 구간을 하나 이상 넣어 주세요.",
+        }),
+    ),
+    parking: triState,
+    reservation: triState,
+    pets: triState,
+    phone: z.string(),
+    summary: z.string().max(2000, "2000자까지 쓸 수 있어요."),
+    sources: z.array(
+      z.object({ platform: z.enum(SOURCE_PLATFORMS), url: requiredUrl, label: z.string() }),
+    ),
+    photos: z.array(z.string()),
+    checks: z.object({ location: checkSchema, hours: checkSchema, info: checkSchema }),
+  });
+}
+export const placeSchema = makePlaceSchema("publish");
+export const placeDraftSchema = makePlaceSchema("draft");
 export type PlaceValues = z.infer<typeof placeSchema>;
 
 export function placeToValues(p: Place): PlaceValues {
@@ -336,26 +357,33 @@ export function valuesToPlace(id: string, v: PlaceValues, base?: Place): Place {
 
 // ── 크리에이터 코스 (A06) ──
 
-export const courseSchema = z.object({
-  title: name,
-  creatorName: z.string().trim().min(1, "크리에이터 이름을 입력해 주세요."),
-  channelUrl: optionalUrl,
-  sourceUrl: requiredUrl,
-  siguns: z.array(sigun).min(1, "지역을 하나 이상 골라 주세요."),
-  tags: z.string(),
-  orderBasis: z.enum(["video_order", "verified_trip", "editor_suggested"]),
-  reviewedAt: optionalDate,
-  summary: z.string().max(2000, "2000자까지 쓸 수 있어요."),
-  days: z
-    .array(
-      z.object({
-        items: z.array(
-          z.object({ placeId: z.string().min(1, "장소를 골라 주세요."), note: z.string() }),
-        ),
-      }),
-    )
-    .min(1, "일차를 하나 이상 만들어 주세요."),
-});
+function makeCourseSchema(mode: SaveMode) {
+  const strict = mode === "publish";
+  return z.object({
+    title: name,
+    creatorName: strict
+      ? z.string().trim().min(1, "크리에이터 이름을 입력해 주세요.")
+      : z.string().trim(),
+    channelUrl: optionalUrl,
+    sourceUrl: strict ? requiredUrl : optionalUrl,
+    siguns: strict ? z.array(sigun).min(1, "지역을 하나 이상 골라 주세요.") : z.array(sigun),
+    tags: z.string(),
+    orderBasis: z.enum(["video_order", "verified_trip", "editor_suggested"]),
+    reviewedAt: optionalDate,
+    summary: z.string().max(2000, "2000자까지 쓸 수 있어요."),
+    days: z
+      .array(
+        z.object({
+          items: z.array(
+            z.object({ placeId: z.string().min(1, "장소를 골라 주세요."), note: z.string() }),
+          ),
+        }),
+      )
+      .min(1, "일차를 하나 이상 만들어 주세요."),
+  });
+}
+export const courseSchema = makeCourseSchema("publish");
+export const courseDraftSchema = makeCourseSchema("draft");
 export type CourseValues = z.infer<typeof courseSchema>;
 
 export function courseToValues(c: CreatorCourse): CourseValues {

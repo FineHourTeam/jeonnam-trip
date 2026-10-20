@@ -9,7 +9,7 @@ import { PhotoTooLargeError } from "../api/admin-api";
 import { useUploadPhoto } from "../hooks/use-admin";
 
 export function PhotosEditor({ kind, contentId }: { kind: AdminKind; contentId: string }) {
-  const { control } = useFormContext();
+  const { control, getValues, setValue } = useFormContext();
   const upload = useUploadPhoto(kind, contentId);
   const inputId = useId();
   return (
@@ -22,7 +22,9 @@ export function PhotosEditor({ kind, contentId }: { kind: AdminKind; contentId: 
           for (const file of Array.from(files ?? [])) {
             try {
               const url = await upload.mutateAsync(file);
-              field.onChange([...((field.value as string[] | undefined) ?? []), url]);
+              // 여러 장을 차례로 올릴 때 렌더 시점 값이 아니라 지금 값에 덧붙인다
+              const latest = (getValues("photos") as string[] | undefined) ?? [];
+              setValue("photos", [...latest, url], { shouldDirty: true });
             } catch (e) {
               toast.error(
                 e instanceof PhotoTooLargeError
@@ -85,6 +87,7 @@ export function PhotosEditor({ kind, contentId }: { kind: AdminKind; contentId: 
                 type="file"
                 accept="image/*"
                 multiple
+                disabled={upload.isPending}
                 className="sr-only"
                 onChange={(e) => {
                   void onFiles(e.target.files);

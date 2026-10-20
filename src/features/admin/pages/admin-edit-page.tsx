@@ -50,7 +50,8 @@ function Editor({ kind, contentId }: { kind: AdminKind; contentId: string | null
   const id = contentId ?? newId;
   const editable = useEditable(kind, contentId);
   const action = useContentAction(kind);
-  const places = useContentList("places");
+  // 장소 목록은 코스 편집에서만 쓴다 (장소 1천여 건을 다른 편집 화면에서 받지 않게)
+  const places = useContentList("places", kind === "creators");
 
   const onAction = (a: ContentAction, content: AnyContent) => {
     action.mutate(
@@ -123,8 +124,9 @@ function Editor({ kind, contentId }: { kind: AdminKind; contentId: string | null
       </div>
       {draft && (
         <p className="text-muted-foreground text-sm">
-          공개본은 그대로 있고, 아래는 저장해 둔 수정 초안이에요. 공개본 갱신을 눌러야 사용자에게
-          보여요.
+          {saved?.status === "published"
+            ? "공개본은 그대로 있고, 아래는 저장해 둔 수정 초안이에요. 공개본 갱신을 눌러야 사용자에게 보여요."
+            : "아래는 비공개로 바꾸기 전에 저장해 둔 수정 초안이에요. 초안 저장이나 공개하기를 누르면 본문에 반영돼요."}
         </p>
       )}
 
@@ -149,11 +151,21 @@ function Editor({ kind, contentId }: { kind: AdminKind; contentId: string | null
       {kind === "creators" &&
         (places.isPending ? (
           <Skeleton className="h-64 w-full" />
+        ) : places.isError ? (
+          <Alert variant="destructive">
+            <AlertTitle>장소 목록을 불러오지 못했어요</AlertTitle>
+            <AlertDescription className="flex flex-col items-start gap-2">
+              코스에 넣을 장소를 확인하려면 장소 목록이 필요해요.
+              <Button variant="outline" size="sm" onClick={() => void places.refetch()}>
+                다시 시도
+              </Button>
+            </AlertDescription>
+          </Alert>
         ) : (
           <CourseForm
             key={formKey}
             {...common}
-            places={places.data ?? []}
+            places={places.data}
             base={(saved as CreatorCourse | null) ?? undefined}
             initial={current ? courseToValues(current as CreatorCourse) : emptyCourseValues()}
           />

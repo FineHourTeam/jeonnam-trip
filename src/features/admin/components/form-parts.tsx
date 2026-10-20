@@ -230,6 +230,7 @@ export function DayHoursEditor({ name, label }: { name: string; label: string })
     <Controller
       control={control}
       name={name}
+      defaultValue={{ mode: "unknown", ranges: [] }}
       render={({ field }) => {
         const value = (field.value as { mode: string; ranges: unknown[] } | undefined) ?? {
           mode: "unknown",

@@ -1,11 +1,15 @@
 import { describe, expect, it } from "vitest";
 import type { CreatorCourse, Festival, Place } from "@/shared/domain";
 import {
+  courseDraftSchema,
   courseSchema,
+  emptyFestivalValues,
+  festivalDraftSchema,
   courseToValues,
   festivalSchema,
   festivalToValues,
   fromRanges,
+  placeDraftSchema,
   placeSchema,
   placeToValues,
   toRanges,
@@ -150,6 +154,37 @@ describe("content-form 변환", () => {
 
   it("지역을 고르지 않으면 저장할 수 없다", () => {
     const r = placeSchema.safeParse({ ...placeToValues(place), sigun: "" });
+    expect(r.success).toBe(false);
+  });
+
+  it("화면에 떴지만 고르지 않은 날짜 칸(undefined)이 있어도 새 축제를 저장할 수 있다", () => {
+    const values = {
+      ...emptyFestivalValues("2026-10-20"),
+      name: "새 축제",
+      sigun: "mokpo",
+      days: { "2026-10-20": undefined },
+    };
+    const parsed = festivalSchema.parse(values);
+    expect(valuesToFestival("new", parsed).days).toEqual([{ date: "2026-10-20", ranges: null }]);
+  });
+
+  it("초안은 지역·원문 주소 없이도 저장되고, 공개는 막는다", () => {
+    const f = { ...emptyFestivalValues("2026-10-20"), name: "이름만" };
+    expect(festivalDraftSchema.safeParse(f).success).toBe(true);
+    expect(festivalSchema.safeParse(f).success).toBe(false);
+    const p = { ...placeToValues(place), sigun: "" };
+    expect(placeDraftSchema.safeParse(p).success).toBe(true);
+    const c = { ...courseToValues(course), sourceUrl: "", siguns: [] };
+    expect(courseDraftSchema.safeParse(c).success).toBe(true);
+    expect(courseSchema.safeParse(c).success).toBe(false);
+  });
+
+  it("휴무가 아닌 예외일에 영업 구간이 없으면 막는다", () => {
+    const values = placeToValues(place);
+    const r = placeSchema.safeParse({
+      ...values,
+      exceptions: [{ date: "2026-10-03", closed: false, ranges: [], note: "" }],
+    });
     expect(r.success).toBe(false);
   });
 });

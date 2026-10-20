@@ -1,12 +1,17 @@
 // A03·A04 축제 편집 — 개최 기간과 날짜별 운영시간(방문 가능 시간)을 구분해 입력한다.
-import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { AddIcon, DeleteIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { SIGUNS, sigunName, type Festival, type SigunCode } from "@/shared/domain";
 import { dateRange, formatDateKo } from "@/shared/lib/date";
-import { festivalSchema, valuesToFestival, type FestivalValues } from "../lib/content-form";
+import {
+  festivalDraftSchema,
+  festivalSchema,
+  valuesToFestival,
+  type FestivalValues,
+} from "../lib/content-form";
 import type { ContentAction } from "../hooks/use-admin";
+import { notifyInvalid, useSaveModeResolver } from "../hooks/use-save-mode-resolver";
 import type { ContentFormProps } from "./content-form-props";
 import { ContentPreview } from "./content-preview";
 import { EditActions } from "./edit-actions";
@@ -32,17 +37,21 @@ const MAX_DAY_ROWS = 62;
 
 export function FestivalForm(props: ContentFormProps<Festival, FestivalValues>) {
   const { contentId, initial, base } = props;
-  const form = useForm<FestivalValues>({
-    resolver: zodResolver(festivalSchema),
-    defaultValues: initial,
-  });
+  const { resolver, mode } = useSaveModeResolver(festivalSchema, festivalDraftSchema);
+  const form = useForm<FestivalValues>({ resolver, defaultValues: initial });
   const programs = useFieldArray({ control: form.control, name: "programs" });
   const v = form.watch();
   const days = v.startDate && v.endDate ? dateRange(v.startDate, v.endDate) : [];
   const run = (action: ContentAction) => {
+    // 비공개·초안 버리기는 입력 검사와 무관하다 — 저장된 본문으로 바로 처리한다
+    if (action === "hide" || action === "discard") {
+      if (base) props.onAction(action, base);
+      return;
+    }
+    mode.current = action === "draft" ? "draft" : "publish";
     void form.handleSubmit((values) => {
       props.onAction(action, valuesToFestival(contentId, values, base));
-    })();
+    }, notifyInvalid)();
   };
 
   return (

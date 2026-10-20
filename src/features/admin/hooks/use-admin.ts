@@ -33,8 +33,8 @@ export function useIsAdmin(uid: string | null) {
   });
 }
 
-export function useContentList<K extends AdminKind>(kind: K) {
-  return useQuery({ queryKey: adminKeys.list(kind), queryFn: () => listContent(kind) });
+export function useContentList<K extends AdminKind>(kind: K, enabled = true) {
+  return useQuery({ queryKey: adminKeys.list(kind), queryFn: () => listContent(kind), enabled });
 }
 
 export function useContentCounts(kind: AdminKind) {
@@ -46,8 +46,10 @@ export function useEditable<K extends AdminKind>(kind: K, id: string | null) {
     queryKey: adminKeys.edit(kind, id ?? ""),
     queryFn: () => getEditable(kind, id ?? ""),
     enabled: id !== null,
-    // 편집 중 다른 탭으로 다녀왔다고 폼 기준값이 바뀌지 않게
+    // 폼 기준값은 이 화면의 저장(무효화)으로만 바뀐다 — 배경 재조회가 폼을 다시 그려 입력을 지우지 않게
+    staleTime: Infinity,
     refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 }
 

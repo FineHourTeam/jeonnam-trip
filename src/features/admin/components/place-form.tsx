@@ -1,5 +1,4 @@
 // A03·A05 장소 편집 — 요일별 영업구간·예외일, 확정 사실과 주관 태그를 나눠 입력한다.
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { AddIcon, DeleteIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
@@ -14,11 +13,13 @@ import {
 } from "@/shared/domain";
 import {
   PLACE_CATEGORIES,
+  placeDraftSchema,
   placeSchema,
   valuesToPlace,
   type PlaceValues,
 } from "../lib/content-form";
 import type { ContentAction } from "../hooks/use-admin";
+import { notifyInvalid, useSaveModeResolver } from "../hooks/use-save-mode-resolver";
 import type { ContentFormProps } from "./content-form-props";
 import { ContentPreview } from "./content-preview";
 import { EditActions } from "./edit-actions";
@@ -56,14 +57,21 @@ const WEEKDAYS = ["일요일", "월요일", "화요일", "수요일", "목요일
 
 export function PlaceForm(props: ContentFormProps<Place, PlaceValues>) {
   const { contentId, initial, base } = props;
-  const form = useForm<PlaceValues>({ resolver: zodResolver(placeSchema), defaultValues: initial });
+  const { resolver, mode } = useSaveModeResolver(placeSchema, placeDraftSchema);
+  const form = useForm<PlaceValues>({ resolver, defaultValues: initial });
   const exceptions = useFieldArray({ control: form.control, name: "exceptions" });
   const sources = useFieldArray({ control: form.control, name: "sources" });
   const v = form.watch();
   const run = (action: ContentAction) => {
+    // 비공개·초안 버리기는 입력 검사와 무관하다 — 저장된 본문으로 바로 처리한다
+    if (action === "hide" || action === "discard") {
+      if (base) props.onAction(action, base);
+      return;
+    }
+    mode.current = action === "draft" ? "draft" : "publish";
     void form.handleSubmit((values) => {
       props.onAction(action, valuesToPlace(contentId, values, base));
-    })();
+    }, notifyInvalid)();
   };
 
   return (
