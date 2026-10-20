@@ -104,6 +104,12 @@ describe("content-form 변환", () => {
     expect(valuesToFestival("f1", values, festival)).toEqual(festival);
   });
 
+  it("관리자 저장이 사진 출처를 잃지 않는다", () => {
+    const credited = { ...festival, photoCredit: "사진: 목포시 · 공공누리 제4유형" };
+    const values = festivalSchema.parse(festivalToValues(credited));
+    expect(valuesToFestival("f1", values, credited).photoCredit).toBe(credited.photoCredit);
+  });
+
   it("축제 기간을 줄이면 기간 밖 날짜 운영은 버리고, 늘린 날짜는 미확인으로 둔다", () => {
     const values = festivalToValues(festival);
     const f = valuesToFestival(

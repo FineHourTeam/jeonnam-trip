@@ -206,6 +206,7 @@ function makeFestivalSchema(mode: SaveMode) {
     contact: z.string(),
     officialUrl: optionalUrl,
     photos: z.array(z.string()),
+    photoCredit: z.string().trim().max(200, "200자까지 쓸 수 있어요."),
     state: z.enum(["scheduled", "changed", "cancelled"]),
     stateNote: z.string(),
     checks: z.object({ schedule: checkSchema, location: checkSchema, info: checkSchema }),
@@ -248,6 +249,7 @@ export function festivalToValues(f: Festival): FestivalValues {
     contact: f.contact ?? "",
     officialUrl: f.officialUrl ?? "",
     photos: f.photos,
+    photoCredit: f.photoCredit ?? "",
     state: f.state,
     stateNote: f.stateNote ?? "",
     checks: {
@@ -281,6 +283,7 @@ export function valuesToFestival(id: string, v: FestivalValues, base?: Festival)
     contact: opt(v.contact),
     officialUrl: opt(v.officialUrl),
     photos: v.photos,
+    photoCredit: opt(v.photoCredit),
     state: v.state,
     stateNote: opt(v.stateNote),
     checks: {
@@ -515,6 +518,7 @@ export function emptyFestivalValues(today: string): FestivalValues {
     contact: "",
     officialUrl: "",
     photos: [],
+    photoCredit: "",
     state: "scheduled",
     stateNote: "",
     checks: { schedule: blankCheck, location: blankCheck, info: blankCheck },

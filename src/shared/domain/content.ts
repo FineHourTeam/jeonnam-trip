@@ -146,6 +146,8 @@ export interface Festival {
   contact?: string;
   officialUrl?: string;
   photos: string[];
+  /** 사진 출처 표시 (예: "사진: 신안군청 · 공공누리 제4유형") — 이용 조건상 사진 아래에 그대로 보여 준다 */
+  photoCredit?: string;
   /** 변경·취소 상태 — 취소는 상세 열람 가능, 신규 일정 추가 차단 */
   state: FestivalState;
   stateNote?: string;

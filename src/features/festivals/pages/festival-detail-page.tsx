@@ -146,16 +146,21 @@ function Photos({ festival }: { festival: Festival }) {
     );
   }
   return (
-    <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto">
-      {festival.photos.map((src, i) => (
-        <img
-          key={src}
-          src={src}
-          alt={`${festival.name} 사진 ${String(i + 1)}`}
-          loading={i === 0 ? "eager" : "lazy"}
-          className="aspect-video w-full shrink-0 snap-start rounded-lg object-cover"
-        />
-      ))}
-    </div>
+    <figure className="flex flex-col gap-1">
+      <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto">
+        {festival.photos.map((src, i) => (
+          <img
+            key={src}
+            src={src}
+            alt={`${festival.name} 사진 ${String(i + 1)}`}
+            loading={i === 0 ? "eager" : "lazy"}
+            className="aspect-video w-full shrink-0 snap-start rounded-lg object-cover"
+          />
+        ))}
+      </div>
+      {festival.photoCredit && (
+        <figcaption className="text-muted-foreground text-xs">{festival.photoCredit}</figcaption>
+      )}
+    </figure>
   );
 }

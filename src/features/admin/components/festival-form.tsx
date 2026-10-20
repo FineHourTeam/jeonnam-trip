@@ -162,6 +162,11 @@ export function FestivalForm(props: ContentFormProps<Festival, FestivalValues>) 
 
           <Section title="사진">
             <PhotosEditor kind="festivals" contentId={contentId} />
+            <TextField
+              name="photoCredit"
+              label="사진 출처"
+              placeholder="예: 사진: 신안군청 · 공공누리 제4유형"
+            />
           </Section>
 
           <Section
