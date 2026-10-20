@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTripDraftStore } from "@/features/trips";
 import { useSignOut } from "../hooks/use-auth-actions";
+import { providerNameOf } from "../lib/login";
 
 export default function AccountPage() {
   const authState = useAuthState();
@@ -57,7 +58,7 @@ export default function AccountPage() {
           </div>
           <div className="flex flex-col gap-1">
             <dt className="text-muted-foreground">로그인 방법</dt>
-            <dd>Google</dd>
+            <dd>{providerNameOf(user.providerData.map((p) => p.providerId))}</dd>
           </div>
         </dl>
       )}
