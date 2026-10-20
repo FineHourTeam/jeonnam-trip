@@ -40,10 +40,13 @@ export interface TripSetupValues {
 export function TripSetupForm({
   onSubmit,
   defaultDate,
+  defaultEndDate,
 }: {
   onSubmit: (values: TripSetupValues) => void;
   /** 축제에서 왔을 때 방문일로 시작·종료일을 채운다 */
   defaultDate?: string;
+  /** 크리에이터 코스에서 왔을 때 코스 일수에 맞춘 종료일 */
+  defaultEndDate?: string;
 }) {
   const today = todayKst();
   const form = useForm<FormValues>({
@@ -51,7 +54,7 @@ export function TripSetupForm({
     defaultValues: {
       title: "",
       startDate: defaultDate ?? today,
-      endDate: defaultDate ?? addDays(today, 1),
+      endDate: defaultEndDate ?? defaultDate ?? addDays(today, 1),
       siguns: [],
       pace: "none",
     },
