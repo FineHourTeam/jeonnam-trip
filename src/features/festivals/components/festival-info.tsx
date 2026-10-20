@@ -4,7 +4,8 @@ import type { ReactNode } from "react";
 import { Badge } from "@/components/ui/badge";
 import type { Festival, FieldCheck, VerifyState } from "@/shared/domain";
 import { formatDateKo } from "@/shared/lib/date";
-import { formatDotDate, formatRanges, safeHttpUrl } from "../lib/format";
+import { formatDotDate, safeHttpUrl, telHref } from "@/shared/lib/format";
+import { formatRanges } from "../lib/format";
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
@@ -56,11 +57,6 @@ export function FestivalPrograms({ festival }: { festival: Festival }) {
       </ul>
     </Section>
   );
-}
-
-function telHref(contact: string): string | null {
-  const digits = contact.replace(/[^\d]/g, "");
-  return /^[\d\s()-]+$/.test(contact) && digits.length >= 8 ? `tel:${digits}` : null;
 }
 
 export function FestivalBasics({ festival }: { festival: Festival }) {
