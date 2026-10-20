@@ -104,6 +104,11 @@ export default function TripEditPage() {
         >
           {editor.isSaving ? "저장 중..." : saveLabel}
         </Button>
+        {!editor.isDraft && (
+          <Button variant="outline" asChild>
+            <Link to={paths.tripShare(tripId)}>공유</Link>
+          </Button>
+        )}
       </header>
 
       <p className="text-muted-foreground text-sm">
