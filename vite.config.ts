@@ -30,6 +30,12 @@ export default defineConfig({
   // 함수 이름이 `api`라 접두사를 지우지 않는다: /api/directions → …/asia-northeast3/api/directions.
   server: {
     proxy: {
+      // 더 구체적인 경로가 먼저 — 카카오 로그인은 별도 함수 authKakao
+      "/api/auth/kakao": {
+        target: "http://127.0.0.1:5001/jeonnam-trip/asia-northeast3",
+        changeOrigin: true,
+        rewrite: () => "/authKakao",
+      },
       "/api": {
         target: "http://127.0.0.1:5001/jeonnam-trip/asia-northeast3",
         changeOrigin: true,

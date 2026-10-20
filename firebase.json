@@ -4,6 +4,13 @@
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
+        "source": "/api/auth/kakao",
+        "function": {
+          "functionId": "authKakao",
+          "region": "asia-northeast3"
+        }
+      },
+      {
         "source": "/api/**",
         "function": {
           "functionId": "api",
