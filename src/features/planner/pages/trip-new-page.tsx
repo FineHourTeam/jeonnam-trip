@@ -3,7 +3,7 @@
 // ?festival=&date=(&program=)으로 오면 그 축제 방문을 방문일 일차에 담아 시작한다 (기능명세 §2).
 // ?creator=로 오면 크리에이터 코스의 장소·순서를 개인 초안으로 복사한다. 넘치는 일차는 미배치 후보로 (기능명세 §5).
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router";
+import { Link, useNavigate, useSearchParams } from "react-router";
 import { toast } from "sonner";
 import { paths } from "@/app/paths";
 import {
@@ -19,6 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
+  CourseNotFoundError,
   copyCourseIntoDraft,
   courseDayCount,
   useCoursePlaces,
@@ -33,7 +34,7 @@ import {
   visitFromFestival,
 } from "@/features/trips";
 import { MAX_TRIP_DAYS, type CreatorCourse, type Festival, type TripDraft } from "@/shared/domain";
-import { addDays, formatDateKo, todayKst } from "@/shared/lib/date";
+import { formatDateKo } from "@/shared/lib/date";
 import { TripSetupForm, type TripSetupValues } from "../components/trip-setup-form";
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
@@ -53,7 +54,8 @@ export default function TripNewPage() {
   const navigate = useNavigate();
   const existing = useTripDraftStore((s) => s.draft);
   const setDraft = useTripDraftStore((s) => s.setDraft);
-  const [pending, setPending] = useState<TripDraft | null>(null);
+  // notice: 초안을 실제로 넣을 때 띄울 안내 (덮어쓰기 확인을 거치면 확인 뒤에 띄운다)
+  const [pending, setPending] = useState<{ draft: TripDraft; notice?: string } | null>(null);
   const [params] = useSearchParams();
   const festivalId = params.get("festival");
   const dateParam = params.get("date") ?? "";
@@ -63,15 +65,19 @@ export default function TripNewPage() {
   const creatorId = festivalId ? null : params.get("creator");
   const course = useCreatorCourse(creatorId);
   const coursePlaces = useCoursePlaces(course.data);
-  const courseDays = course.data ? Math.min(courseDayCount(course.data), MAX_TRIP_DAYS) : 0;
+  // 비공개·없는 코스면 빈 초안으로 시작할 수 있게 한다 (안내는 배너가 한다)
+  const courseNotFound = course.error instanceof CourseNotFoundError;
+  const courseDays = course.data ? Math.min(courseDayCount(course.data), MAX_TRIP_DAYS) : undefined;
 
-  const start = (draft: TripDraft) => {
+  const start = (draft: TripDraft, notice?: string) => {
     setDraft(draft);
+    if (notice) toast(notice);
     void navigate(paths.tripDraft);
   };
 
   const onSubmit = (v: TripSetupValues) => {
     let draft: TripDraft;
+    let notice: string | undefined;
     if (festivalId) {
       if (!festival.data) {
         toast("축제 정보를 불러온 뒤 다시 눌러 주세요.");
@@ -82,7 +88,7 @@ export default function TripNewPage() {
       if (visitDate && festival.data.state !== "cancelled") {
         draft = withFestival(draft, festival.data, visitDate, programId);
       }
-    } else if (creatorId) {
+    } else if (creatorId && !courseNotFound) {
       if (!course.data || !coursePlaces.data) {
         toast("코스 정보를 불러온 뒤 다시 눌러 주세요.");
         return;
@@ -92,15 +98,23 @@ export default function TripNewPage() {
         siguns: v.siguns.length > 0 ? v.siguns : course.data.siguns,
         origin: { kind: "creator", courseId: creatorId },
       });
-      const { trip, missing } = copyCourseIntoDraft(base, course.data, coursePlaces.data);
-      if (missing > 0) toast(`지금은 볼 수 없는 장소 ${String(missing)}곳은 빼고 가져왔어요.`);
+      const { trip, missing, duplicates } = copyCourseIntoDraft(
+        base,
+        course.data,
+        coursePlaces.data,
+      );
+      const skipped = [
+        missing > 0 && `지금은 볼 수 없는 장소 ${String(missing)}곳`,
+        duplicates > 0 && `같은 일차에 겹친 장소 ${String(duplicates)}곳`,
+      ].filter(Boolean);
+      if (skipped.length > 0) notice = `${skipped.join(", ")}은 빼고 가져왔어요.`;
       draft = trip;
     } else {
       draft = newTripDraft({ ...v, origin: { kind: "blank" } });
     }
     // 저장 안 한 초안을 조용히 덮어쓰지 않는다
-    if (existing) setPending(draft);
-    else start(draft);
+    if (existing) setPending({ draft, notice });
+    else start(draft, notice);
   };
 
   return (
@@ -127,17 +141,12 @@ export default function TripNewPage() {
           course={course.data}
           isPending={course.isPending || coursePlaces.isPending}
           isError={course.isError || coursePlaces.isError}
+          notFound={courseNotFound}
           onRetry={() => void (course.isError ? course.refetch() : coursePlaces.refetch())}
         />
       )}
 
-      <TripSetupForm
-        // 코스를 받으면 일수에 맞춰 종료일 기본값을 다시 채운다
-        key={courseDays}
-        onSubmit={onSubmit}
-        defaultDate={visitDate}
-        defaultEndDate={courseDays > 0 ? addDays(todayKst(), courseDays - 1) : undefined}
-      />
+      <TripSetupForm onSubmit={onSubmit} defaultDate={visitDate} defaultDays={courseDays} />
 
       <AlertDialog
         open={pending !== null}
@@ -163,7 +172,7 @@ export default function TripNewPage() {
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
-                if (pending) start(pending);
+                if (pending) start(pending.draft, pending.notice);
               }}
             >
               새로 만들기
@@ -213,10 +222,26 @@ interface CreatorBannerProps {
   course: CreatorCourse | undefined;
   isPending: boolean;
   isError: boolean;
+  notFound: boolean;
   onRetry: () => void;
 }
 
-function CreatorBanner({ course, isPending, isError, onRetry }: CreatorBannerProps) {
+function CreatorBanner({ course, isPending, isError, notFound, onRetry }: CreatorBannerProps) {
+  if (notFound) {
+    return (
+      <div className="bg-background-subtle text-foreground flex flex-wrap items-center justify-between gap-3 rounded-lg p-4 text-sm">
+        <div className="flex flex-col gap-1">
+          <p className="font-medium">찾을 수 없는 코스예요</p>
+          <p className="text-muted-foreground">
+            공개가 끝났거나 주소가 잘못됐어요. 아래에서 빈 코스로 시작할 수 있어요.
+          </p>
+        </div>
+        <Button variant="outline" size="sm" asChild>
+          <Link to={paths.creators}>추천 코스 보기</Link>
+        </Button>
+      </div>
+    );
+  }
   if (isError) {
     return (
       <div className="bg-background-subtle text-foreground flex flex-wrap items-center justify-between gap-3 rounded-lg p-4 text-sm">

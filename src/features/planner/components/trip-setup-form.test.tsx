@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import { addDays, todayKst } from "@/shared/lib/date";
 import { TripSetupForm } from "./trip-setup-form";
 
 describe("TripSetupForm", () => {
@@ -27,5 +28,21 @@ describe("TripSetupForm", () => {
     expect(onSubmit).toHaveBeenCalledWith(
       expect.objectContaining({ title: "새 여행", siguns: ["mokpo"], pace: "relaxed" }),
     );
+  });
+
+  it("코스 일수가 늦게 와도 사용자가 고친 값은 지우지 않는다", async () => {
+    const onSubmit = vi.fn();
+    const { rerender } = render(<TripSetupForm onSubmit={onSubmit} />);
+    const title = screen.getByLabelText("여행 제목 (선택)");
+    await userEvent.type(title, "가을 여행");
+    rerender(<TripSetupForm onSubmit={onSubmit} defaultDays={3} />);
+    expect(title).toHaveValue("가을 여행");
+    expect(screen.getByLabelText("종료일")).toHaveValue(addDays(todayKst(), 2));
+
+    const end = screen.getByLabelText("종료일");
+    await userEvent.clear(end);
+    await userEvent.type(end, todayKst());
+    rerender(<TripSetupForm onSubmit={onSubmit} defaultDays={4} />);
+    expect(end).toHaveValue(todayKst());
   });
 });

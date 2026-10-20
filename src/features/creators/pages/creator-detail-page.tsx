@@ -18,7 +18,13 @@ import {
 import { formatDateKo } from "@/shared/lib/date";
 import { CourseNotFoundError } from "../api/creators-api";
 import { useCoursePlaces, useCreatorCourse } from "../hooks/use-creator-courses";
-import { courseDayCount, formatDays, hoursUnknown } from "../lib/course";
+import {
+  closedWeekdaysLabel,
+  courseDayCount,
+  formatDays,
+  hoursUnknown,
+  safeHttpUrl,
+} from "../lib/course";
 
 const ORDER_BASIS_TEXT: Record<CourseOrderBasis, string> = {
   editor_suggested: "편집자가 구성한 순서예요. 실제로 이 순서대로 다녀온 기록은 아니에요.",
@@ -75,6 +81,8 @@ function LoadError({ notFound, onRetry }: { notFound: boolean; onRetry: () => vo
 function CourseDetail({ course }: { course: CreatorCourse }) {
   const places = useCoursePlaces(course);
   const unknownCount = places.data ? Object.values(places.data).filter(hoursUnknown).length : 0;
+  const channelUrl = safeHttpUrl(course.creator.channelUrl);
+  const sourceUrl = safeHttpUrl(course.sourceUrl);
 
   return (
     <>
@@ -98,9 +106,9 @@ function CourseDetail({ course }: { course: CreatorCourse }) {
       <div className="bg-background-subtle text-foreground flex flex-col gap-1 rounded-lg p-4 text-sm">
         <p>
           출처{" "}
-          {course.creator.channelUrl ? (
+          {channelUrl ? (
             <a
-              href={course.creator.channelUrl}
+              href={channelUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="font-medium underline underline-offset-4"
@@ -109,16 +117,21 @@ function CourseDetail({ course }: { course: CreatorCourse }) {
             </a>
           ) : (
             <span className="font-medium">{course.creator.name}</span>
-          )}{" "}
-          ·{" "}
-          <a
-            href={course.sourceUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline underline-offset-4"
-          >
-            원문 보기
-          </a>
+          )}
+          {sourceUrl && (
+            <>
+              {" "}
+              ·{" "}
+              <a
+                href={sourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-4"
+              >
+                원문 보기
+              </a>
+            </>
+          )}
         </p>
         <p className="text-muted-foreground">{ORDER_BASIS_TEXT[course.orderBasis]}</p>
         {course.reviewedAt && (
@@ -166,7 +179,7 @@ function CourseDetail({ course }: { course: CreatorCourse }) {
               <h2 className="text-base font-semibold">{day.day}일차</h2>
               <ol className="flex flex-col gap-2">
                 {day.items.map((item, i) => (
-                  <li key={item.placeId}>
+                  <li key={`${String(day.day)}-${String(i)}`}>
                     {places.isPending ? (
                       <Skeleton className="h-20 w-full rounded-lg" />
                     ) : (
@@ -192,6 +205,7 @@ function PlaceRow({ index, place, note }: { index: number; place?: Place; note?:
     );
   }
   const photo = place.photos[0];
+  const closed = closedWeekdaysLabel(place);
   return (
     <Link
       to={paths.placeDetail(place.id)}
@@ -215,10 +229,11 @@ function PlaceRow({ index, place, note }: { index: number; place?: Place; note?:
         <p className="text-muted-foreground text-sm">
           {sigunName(place.sigun)} · {PLACE_CATEGORY_LABEL[place.category]}
         </p>
-        {hoursUnknown(place) && (
-          <Badge variant="warning" className="self-start">
-            영업시간 미확인
-          </Badge>
+        {(hoursUnknown(place) || closed) && (
+          <div className="flex flex-wrap gap-1.5">
+            {hoursUnknown(place) && <Badge variant="warning">영업시간 미확인</Badge>}
+            {closed && <Badge variant="outline">{closed}</Badge>}
+          </div>
         )}
         {note && <p className="text-muted-foreground text-sm">{note}</p>}
       </div>

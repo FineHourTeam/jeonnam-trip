@@ -1,7 +1,14 @@
 import { describe, expect, test } from "vitest";
 import { newTripDraft } from "@/features/trips";
 import type { CreatorCourse, Place } from "@/shared/domain";
-import { copyCourseIntoDraft, courseDayCount, filterCourses, hoursUnknown } from "./course";
+import {
+  closedWeekdaysLabel,
+  copyCourseIntoDraft,
+  courseDayCount,
+  filterCourses,
+  hoursUnknown,
+  safeHttpUrl,
+} from "./course";
 
 function place(id: string): Place {
   return {
@@ -97,5 +104,34 @@ describe("creator course", () => {
     expect(hoursUnknown(p)).toBe(true);
     p.hours.weekly[1] = [{ open: "09:00", close: "18:00" }];
     expect(hoursUnknown(p)).toBe(false);
+  });
+
+  test("같은 일차에 겹친 장소는 배치·미배치 모두 한 번만 담고 센다", () => {
+    const dup: CreatorCourse = {
+      ...course,
+      days: [
+        { day: 1, items: [{ placeId: "a" }, { placeId: "a" }] },
+        { day: 2, items: [{ placeId: "c" }, { placeId: "c" }] },
+      ],
+    };
+    const { trip, duplicates } = copyCourseIntoDraft(draft("2026-10-20"), dup, places);
+    expect(trip.days[0]?.items).toHaveLength(1);
+    expect(trip.unplaced).toHaveLength(1);
+    expect(duplicates).toBe(2);
+  });
+
+  test("정기 휴무 요일만 표기하고 미확인은 휴무로 치지 않는다", () => {
+    const p = place("x");
+    expect(closedWeekdaysLabel(p)).toBeNull();
+    p.hours.weekly[1] = [];
+    p.hours.weekly[2] = [];
+    expect(closedWeekdaysLabel(p)).toBe("월·화 휴무");
+  });
+
+  test("http(s) 주소만 링크로 쓴다", () => {
+    expect(safeHttpUrl("https://www.namdokorea.com/a")).toBe("https://www.namdokorea.com/a");
+    expect(safeHttpUrl("javascript:alert(1)")).toBeNull();
+    expect(safeHttpUrl("not a url")).toBeNull();
+    expect(safeHttpUrl(undefined)).toBeNull();
   });
 });

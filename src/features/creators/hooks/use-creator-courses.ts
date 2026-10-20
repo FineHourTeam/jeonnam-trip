@@ -11,7 +11,8 @@ export const creatorKeys = {
   all: ["creatorCourses"] as const,
   list: () => [...creatorKeys.all, "list"] as const,
   detail: (id: string) => [...creatorKeys.all, "detail", id] as const,
-  places: (id: string) => [...creatorKeys.all, "places", id] as const,
+  /** 코스 문서의 장소 구성이 바뀌면 다시 받도록 정렬한 placeIds를 키에 넣는다 */
+  places: (placeIds: string[]) => [...creatorKeys.all, "places", placeIds] as const,
 };
 
 export function useCreatorCourses() {
@@ -28,13 +29,13 @@ export function useCreatorCourse(id: string | null | undefined) {
 }
 
 /** 코스 문서를 받은 뒤 그 코스에 든 공개 장소를 id → Place로 */
-export function useCoursePlaces(
-  course: { id: string; days: { items: { placeId: string }[] }[] } | undefined,
-) {
+export function useCoursePlaces(course: { days: { items: { placeId: string }[] }[] } | undefined) {
+  const placeIds = [
+    ...new Set(course?.days.flatMap((d) => d.items.map((i) => i.placeId)) ?? []),
+  ].sort();
   return useQuery({
-    queryKey: creatorKeys.places(course?.id ?? ""),
-    queryFn: () =>
-      getCoursePlaces(course?.days.flatMap((d) => d.items.map((i) => i.placeId)) ?? []),
+    queryKey: creatorKeys.places(placeIds),
+    queryFn: () => getCoursePlaces(placeIds),
     enabled: Boolean(course),
   });
 }

@@ -1,5 +1,6 @@
 // S09 여행 시작 폼 — 날짜(최대 4일)·지역·여행 속도. 이동수단은 자동차만이라 안내만 한다.
 // 추천 코스 자동 배치는 아직 없어서 "직접 만들기"로만 시작한다.
+import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -40,13 +41,13 @@ export interface TripSetupValues {
 export function TripSetupForm({
   onSubmit,
   defaultDate,
-  defaultEndDate,
+  defaultDays,
 }: {
   onSubmit: (values: TripSetupValues) => void;
   /** 축제에서 왔을 때 방문일로 시작·종료일을 채운다 */
   defaultDate?: string;
-  /** 크리에이터 코스에서 왔을 때 코스 일수에 맞춘 종료일 */
-  defaultEndDate?: string;
+  /** 크리에이터 코스에서 왔을 때 코스 일수 — 종료일을 아직 고치지 않았으면 이 일수에 맞춘다 */
+  defaultDays?: number;
 }) {
   const today = todayKst();
   const form = useForm<FormValues>({
@@ -54,12 +55,19 @@ export function TripSetupForm({
     defaultValues: {
       title: "",
       startDate: defaultDate ?? today,
-      endDate: defaultEndDate ?? defaultDate ?? addDays(today, 1),
+      endDate: defaultDate ?? addDays(today, (defaultDays ?? 2) - 1),
       siguns: [],
       pace: "none",
     },
   });
-  const { errors } = form.formState;
+  const { errors, dirtyFields } = form.formState;
+  const endDirty = Boolean(dirtyFields.endDate);
+
+  // 코스 일수가 늦게 도착하면 사용자가 고치지 않은 종료일만 맞춘다 (입력값은 지우지 않는다)
+  useEffect(() => {
+    if (defaultDays === undefined || endDirty) return;
+    form.setValue("endDate", addDays(form.getValues("startDate"), defaultDays - 1));
+  }, [defaultDays, endDirty, form]);
 
   const submit = form.handleSubmit((v) => {
     onSubmit({
