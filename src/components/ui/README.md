@@ -16,7 +16,7 @@ npx shadcn@latest add button dialog input card sonner
 
 | 컴포넌트 | 파일 | 용도 | 비고 |
 |---------|------|------|------|
-| Button | button.tsx | 모든 버튼 | variant(cva)가 스타일 소유 — 화면에서 색 재정의 금지 |
+| Button | button.tsx | 모든 버튼 | variant(cva)가 스타일 소유 — 화면에서 색 재정의 금지. 소셜 로그인은 variant `kakao`·`google` + size `xl`(44px) |
 | Input / Textarea | input.tsx | 폼 입력 | react-hook-form과 조합 |
 | Dialog / AlertDialog | dialog.tsx · alert-dialog.tsx | 모달·확인창 | window.confirm 대체 (훅이 직접 호출 차단). 삭제 확인은 AlertDialog |
 | Card | card.tsx | 컨텐츠 컨테이너 | |

@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { externalOpenUrlOf, inAppBrowserOf, loginFailureOf, returnPathOf } from "./login";
+import {
+  externalOpenUrlOf,
+  inAppBrowserOf,
+  loginFailureOf,
+  providerNameOf,
+  returnPathOf,
+} from "./login";
 
 describe("loginFailureOf", () => {
   it("Firebase 에러 코드를 화면 사유로 나눈다", () => {
@@ -10,9 +16,37 @@ describe("loginFailureOf", () => {
     expect(loginFailureOf({ code: "auth/unauthorized-domain" })).toBe("unauthorized-domain");
   });
 
+  it("콘솔에서 아직 켜지 않은 공급자는 provider-unavailable", () => {
+    expect(loginFailureOf({ code: "auth/operation-not-allowed" })).toBe("provider-unavailable");
+    expect(loginFailureOf({ code: "auth/configuration-not-found" })).toBe("provider-unavailable");
+    expect(loginFailureOf({ code: "auth/invalid-provider-id" })).toBe("provider-unavailable");
+    expect(loginFailureOf({ code: "auth/admin-restricted-operation" })).toBe(
+      "provider-unavailable",
+    );
+  });
+
+  it("같은 이메일로 다른 방법으로 가입한 계정은 account-exists", () => {
+    expect(loginFailureOf({ code: "auth/account-exists-with-different-credential" })).toBe(
+      "account-exists",
+    );
+  });
+
   it("모르는 에러는 unknown", () => {
     expect(loginFailureOf(new Error("boom"))).toBe("unknown");
     expect(loginFailureOf(null)).toBe("unknown");
+  });
+});
+
+describe("providerNameOf", () => {
+  it("providerId를 로그인 방법 이름으로 바꾼다", () => {
+    expect(providerNameOf(["google.com"])).toBe("Google");
+    expect(providerNameOf(["oidc.kakao"])).toBe("카카오");
+    expect(providerNameOf(["oidc.kakao", "google.com"])).toBe("카카오 · Google");
+  });
+
+  it("모르는 방법이거나 비어 있으면 알 수 없음", () => {
+    expect(providerNameOf(["password"])).toBe("알 수 없음");
+    expect(providerNameOf([])).toBe("알 수 없음");
   });
 });
 
