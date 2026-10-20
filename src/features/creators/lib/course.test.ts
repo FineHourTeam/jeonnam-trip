@@ -5,8 +5,11 @@ import {
   closedWeekdaysLabel,
   copyCourseIntoDraft,
   courseDayCount,
+  courseDayLegs,
+  coursePlaceIds,
   filterCourses,
   hoursUnknown,
+  pickCoverPhoto,
 } from "./course";
 import { safeHttpUrl } from "@/shared/lib/format";
 
@@ -133,5 +136,37 @@ describe("creator course", () => {
     expect(safeHttpUrl("javascript:alert(1)")).toBeNull();
     expect(safeHttpUrl("not a url")).toBeNull();
     expect(safeHttpUrl(undefined)).toBeNull();
+  });
+
+  test("대표 사진은 일차 → 장소 순서상 첫 사진이고, 없는 장소·사진 없는 장소는 건너뛴다", () => {
+    const withPhotos = {
+      ...places,
+      b: { ...place("b"), photos: ["b1.jpg", "b2.jpg"] },
+      c: { ...place("c"), photos: ["c1.jpg"] },
+    };
+    // 1일차가 배열 뒤에 있어도 1일차 a(사진 없음) → gone(없음) → b가 먼저다
+    expect(pickCoverPhoto(course, withPhotos)).toBe("b1.jpg");
+    expect(pickCoverPhoto(course, places)).toBeNull();
+    expect(pickCoverPhoto(course, {})).toBeNull();
+  });
+
+  test("여러 코스의 장소 id는 중복 없이 정렬한다", () => {
+    expect(
+      coursePlaceIds([course, { days: [{ items: [{ placeId: "a" }, { placeId: "z" }] }] }]),
+    ).toEqual(["a", "b", "c", "d", "gone", "z"]);
+    expect(coursePlaceIds([])).toEqual([]);
+  });
+
+  test("경로 구간은 위치가 확인된 장소끼리 순서대로만 잇는다", () => {
+    const p1 = { lat: 1, lng: 1 };
+    const p3 = { lat: 3, lng: 3 };
+    const p4 = { lat: 4, lng: 4 };
+    expect(
+      courseDayLegs([{ location: p1 }, { location: null }, { location: p3 }, { location: p4 }]),
+    ).toEqual([
+      { from: p1, to: p3 },
+      { from: p3, to: p4 },
+    ]);
+    expect(courseDayLegs([{ location: p1 }, { location: null }])).toEqual([]);
   });
 });

@@ -5,7 +5,7 @@ import { Link, useSearchParams } from "react-router";
 import { paths } from "@/app/paths";
 import { Seo } from "@/components/Seo";
 import { Button } from "@/components/ui/button";
-import { CourseCard, useCreatorCourses } from "@/features/creators";
+import { CourseCard, useCourseCovers, useCreatorCourses } from "@/features/creators";
 import { FestivalCard, useFestivals } from "@/features/festivals";
 import { PlaceCard, usePlaces } from "@/features/places";
 import { sigunName } from "@/shared/domain";
@@ -34,6 +34,7 @@ export default function HomePage() {
   const courseList = (courses.data ?? [])
     .filter((c) => sigun === null || c.siguns.includes(sigun))
     .slice(0, HOME_LIMIT);
+  const coverOf = useCourseCovers(courseList);
 
   const update = (next: { sigun?: string | null; date?: string | null }) => {
     setParams(
@@ -139,7 +140,7 @@ export default function HomePage() {
       >
         {courseList.map((c) => (
           <li key={c.id}>
-            <CourseCard course={c} />
+            <CourseCard course={c} cover={coverOf(c)} />
           </li>
         ))}
       </HomeSection>

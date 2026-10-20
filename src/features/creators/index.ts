@@ -3,6 +3,7 @@ export { CourseNotFoundError } from "./api/creators-api";
 export { CourseCard } from "./components/course-card";
 export {
   creatorKeys,
+  useCourseCovers,
   useCoursePlaces,
   useCreatorCourse,
   useCreatorCourses,

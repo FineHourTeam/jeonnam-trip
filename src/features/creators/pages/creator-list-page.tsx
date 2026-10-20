@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { MAX_TRIP_DAYS, isSigunCode, type CreatorCourse } from "@/shared/domain";
 import { CourseCard } from "../components/course-card";
 import { CourseFilters } from "../components/course-filters";
-import { useCreatorCourses } from "../hooks/use-creator-courses";
+import { useCourseCovers, useCreatorCourses } from "../hooks/use-creator-courses";
 import { courseTags, filterCourses, type CourseFilter } from "../lib/course";
 
 function readFilter(params: URLSearchParams): CourseFilter {
@@ -27,6 +27,8 @@ export default function CreatorListPage() {
   const courses = useCreatorCourses();
   const all = courses.data ?? [];
   const results = filterCourses(all, filter);
+  // 조건을 바꿀 때마다 다시 읽지 않도록 걸러지기 전 전체 코스의 장소를 한 번에 읽는다
+  const coverOf = useCourseCovers(all);
 
   const update = (next: Partial<CourseFilter>) => {
     setParams(
@@ -69,6 +71,7 @@ export default function CreatorListPage() {
         isError={courses.isError}
         onRetry={() => void courses.refetch()}
         results={results}
+        coverOf={coverOf}
         filtered={filter.sigun !== null || filter.days !== null || filter.tag !== null}
         onReset={reset}
       />
@@ -81,16 +84,25 @@ interface ResultListProps {
   isError: boolean;
   onRetry: () => void;
   results: CreatorCourse[];
+  coverOf: (course: CreatorCourse) => string | null | undefined;
   filtered: boolean;
   onReset: () => void;
 }
 
-function ResultList({ isPending, isError, onRetry, results, filtered, onReset }: ResultListProps) {
+function ResultList({
+  isPending,
+  isError,
+  onRetry,
+  results,
+  coverOf,
+  filtered,
+  onReset,
+}: ResultListProps) {
   if (isPending) {
     return (
-      <div className="flex flex-col gap-3" aria-busy="true">
-        {[0, 1, 2].map((i) => (
-          <Skeleton key={i} className="h-28 w-full rounded-lg" />
+      <div className="grid gap-3 sm:grid-cols-2" aria-busy="true">
+        {[0, 1, 2, 3].map((i) => (
+          <Skeleton key={i} className="h-72 w-full rounded-lg" />
         ))}
       </div>
     );
@@ -124,10 +136,10 @@ function ResultList({ isPending, isError, onRetry, results, filtered, onReset }:
     );
   }
   return (
-    <ul className="flex flex-col gap-3">
+    <ul className="grid gap-3 sm:grid-cols-2">
       {results.map((c) => (
         <li key={c.id}>
-          <CourseCard course={c} />
+          <CourseCard course={c} cover={coverOf(c)} />
         </li>
       ))}
     </ul>

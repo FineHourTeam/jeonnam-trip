@@ -1,10 +1,60 @@
 // 크리에이터 코스 순수 함수 — 목록 필터와 개인 초안 복사(기능명세 §5).
 import { addItemsToDay, visitFromPlace } from "@/features/trips";
-import type { CreatorCourse, Place, SigunCode, TripDraft } from "@/shared/domain";
+import type {
+  CreatorCourse,
+  LatLng,
+  LegRequest,
+  Place,
+  SigunCode,
+  TripDraft,
+} from "@/shared/domain";
 
 /** 코스 일수 = 가장 큰 일차 번호 */
 export function courseDayCount(course: Pick<CreatorCourse, "days">): number {
   return Math.max(1, ...course.days.map((d) => d.day));
+}
+
+/** 일차 번호 순으로 정렬한 일차 목록 (원본 배열은 그대로) */
+export function sortedDays<T extends { day: number }>(days: T[]): T[] {
+  return [...days].sort((a, b) => a.day - b.day);
+}
+
+/** 여러 코스에 든 장소 id — 중복 없이 정렬해 한 번에 읽는 쿼리의 키로 쓴다 */
+export function coursePlaceIds(courses: { days: { items: { placeId: string }[] }[] }[]): string[] {
+  return [
+    ...new Set(courses.flatMap((c) => c.days.flatMap((d) => d.items.map((i) => i.placeId)))),
+  ].sort();
+}
+
+/** 카드 대표 사진 = 코스 순서(일차 → 장소)상 처음 나오는 사진. 볼 수 없는 장소·사진 없는 장소는 건너뛴다 */
+export function pickCoverPhoto(
+  course: Pick<CreatorCourse, "days">,
+  places: Record<string, Pick<Place, "photos">>,
+): string | null {
+  for (const day of sortedDays(course.days)) {
+    for (const { placeId } of day.items) {
+      const photo = places[placeId]?.photos[0];
+      if (photo) return photo;
+    }
+  }
+  return null;
+}
+
+/** 상세 목록 행과 지도 마커가 함께 쓰는 id — 같은 장소가 두 번 나와도 구분된다 */
+export function courseItemId(day: number, index: number): string {
+  return `${String(day)}-${String(index)}`;
+}
+
+/**
+ * 지도 경로 구간 — 위치가 확인된 장소끼리 목록 순서대로 잇는다. 위치를 모르는 장소는 건너뛰고,
+ * 구간은 실제 자동차 경로 조회로만 그린다 (기능명세 §7).
+ */
+export function courseDayLegs(points: { location: LatLng | null }[]): LegRequest[] {
+  const located = points.flatMap((p) => (p.location ? [p.location] : []));
+  return located.flatMap((to, i) => {
+    const from = located[i - 1];
+    return from ? [{ from, to }] : [];
+  });
 }
 
 export function formatDays(n: number): string {
@@ -58,7 +108,7 @@ export function copyCourseIntoDraft(
   let trip = draft;
   let missing = 0;
   let duplicates = 0;
-  for (const day of [...course.days].sort((a, b) => a.day - b.day)) {
+  for (const day of sortedDays(course.days)) {
     const seen = new Set<string>();
     const items = day.items.flatMap(({ placeId }) => {
       const place = places[placeId];
