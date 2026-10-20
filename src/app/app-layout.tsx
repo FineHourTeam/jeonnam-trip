@@ -5,6 +5,7 @@ import { AddIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { paths } from "./paths";
+import { useAuthState } from "./use-auth-state";
 
 const NAV = [
   { to: paths.home, label: "탐색", end: true },
@@ -13,6 +14,7 @@ const NAV = [
 ] as const;
 
 export function AppLayout() {
+  const authState = useAuthState();
   return (
     <div className="bg-background text-foreground flex min-h-dvh flex-col">
       <header className="border-border bg-background sticky top-0 z-40 border-b">
@@ -43,6 +45,15 @@ export function AppLayout() {
               여행 만들기
             </Link>
           </Button>
+          {authState.status !== "loading" && (
+            <Button asChild variant="ghost" size="sm" className="ml-auto md:ml-0">
+              {authState.status === "authed" ? (
+                <Link to={paths.account}>내 계정</Link>
+              ) : (
+                <Link to={paths.login}>로그인</Link>
+              )}
+            </Button>
+          )}
         </div>
       </header>
 

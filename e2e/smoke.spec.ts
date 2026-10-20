@@ -13,7 +13,7 @@ import { expect, test } from "@playwright/test";
 // live: Firestore를 읽는 화면 — 연결 채널이 열려 있어 networkidle이 오지 않으므로 load 후 문구로 확인한다
 const ROUTES: { path: string; expectText?: RegExp; live?: boolean }[] = [
   { path: "/" },
-  { path: "/login" },
+  { path: "/login", expectText: /Google 계정으로 로그인/ },
   { path: "/festivals", expectText: /축제 \d+개/, live: true },
   { path: "/trips/new", expectText: /여행 만들기/ },
   { path: "/trips/draft", expectText: /작성 중인 코스가 없어요/ },
