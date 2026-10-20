@@ -1,4 +1,5 @@
 // 로그인(S13) — 카카오·Google 로그인 2종. 성공하면 location.state.from(예: /trips/draft)으로 돌아간다.
+// 카카오는 카카오 화면에 다녀와 /auth/kakao/callback에서 마무리한다(kakao-callback-page).
 // 취소·실패·팝업 차단 때도 작성 중인 초안(localStorage)은 그대로 둔다.
 // 버튼은 각 브랜드 가이드(카카오 로그인 디자인 가이드·Google Identity 브랜딩)대로 — 레이블·로고·색을 바꾸지 않는다.
 // 카카오톡·네이버 앱 같은 앱 안 브라우저는 Google이 로그인을 막으므로(403 disallowed_useragent) Google 버튼만 잠그고
@@ -16,14 +17,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useTripDraftStore } from "@/features/trips";
 import { LoginError } from "../api/auth-api";
 import { useSignIn } from "../hooks/use-auth-actions";
-import {
-  externalOpenUrlOf,
-  inAppBrowserOf,
-  LOGIN_PROVIDER_NAME,
-  returnPathOf,
-  type LoginFailure,
-  type LoginProvider,
-} from "../lib/login";
+import { externalOpenUrlOf, inAppBrowserOf, returnPathOf } from "../lib/login";
+import { failureCopyOf } from "../lib/login-copy";
 
 // 카카오 먼저, Google 다음 (레이블은 각 가이드의 표준 문구)
 const PROVIDER_BUTTONS = [
@@ -31,54 +26,13 @@ const PROVIDER_BUTTONS = [
   { provider: "google", label: "Google 계정으로 로그인", logo: googleG },
 ] as const;
 
-interface Copy {
-  title: string;
-  description: string;
-}
-
-const FAILURE_COPY: Record<Exclude<LoginFailure, "provider-unavailable">, Copy> = {
-  cancelled: {
-    title: "로그인을 취소했어요",
-    description: "저장하려면 다시 로그인해주세요.",
-  },
-  "popup-blocked": {
-    title: "로그인 창이 열리지 않았어요",
-    description: "브라우저가 팝업을 막았어요. 주소창에서 팝업을 허용하고 다시 시도해주세요.",
-  },
-  network: {
-    title: "로그인하지 못했어요",
-    description: "네트워크 연결을 확인하고 다시 시도해주세요.",
-  },
-  "unauthorized-domain": {
-    title: "이 주소에서는 로그인할 수 없어요",
-    description: "머물전남. 공식 주소에서 다시 시도해주세요.",
-  },
-  "account-exists": {
-    title: "같은 이메일로 가입한 계정이 있어요",
-    description: "처음 가입한 방법(Google 또는 카카오)으로 로그인해주세요.",
-  },
-  unknown: {
-    title: "로그인하지 못했어요",
-    description: "잠시 후 다시 시도해주세요.",
-  },
-};
-
-function failureCopyOf(failure: LoginFailure, provider: LoginProvider): Copy {
-  if (failure !== "provider-unavailable") return FAILURE_COPY[failure];
-  const other = provider === "kakao" ? "google" : "kakao";
-  return {
-    title: `${LOGIN_PROVIDER_NAME[provider]} 로그인을 아직 쓸 수 없어요`,
-    description: `준비가 끝나면 바로 열어 둘게요. 지금은 ${LOGIN_PROVIDER_NAME[other]} 계정으로 로그인해주세요.`,
-  };
-}
-
 export default function LoginPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const authState = useAuthState();
   const draft = useTripDraftStore((s) => s.draft);
-  const signIn = useSignIn();
   const returnTo = returnPathOf(location.state);
+  const signIn = useSignIn(returnTo);
   const inApp = inAppBrowserOf(navigator.userAgent);
 
   // 로그인에 성공하면 인증 상태가 바뀌면서 여기서 원래 화면으로 돌아간다 (이미 로그인한 경우 포함)
@@ -139,10 +93,13 @@ export default function LoginPage() {
               size="xl"
               disabled={signIn.isPending || (inApp !== null && provider === "google")}
               onClick={() => {
-                // 성공하면 인증 상태가 바뀌며 이 화면이 내려간다 — 언마운트 뒤에도 이어지게 then으로
+                // Google: 성공하면 인증 상태가 바뀌며 이 화면이 내려간다 — 언마운트 뒤에도 이어지게 then으로.
+                // 카카오: 카카오 화면으로 떠날 뿐이라 여기서는 알리지 않는다 (콜백 화면이 마무리한다)
                 signIn
                   .mutateAsync(provider)
-                  .then(() => toast.success("로그인했어요."))
+                  .then(() => {
+                    if (provider === "google") toast.success("로그인했어요.");
+                  })
                   .catch(() => undefined); // 실패 문구는 signIn.error로 그린다
               }}
             >

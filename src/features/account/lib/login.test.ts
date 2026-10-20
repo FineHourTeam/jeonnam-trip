@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import {
   externalOpenUrlOf,
   inAppBrowserOf,
+  kakaoCallbackOf,
+  kakaoRedirectUriOf,
   loginFailureOf,
   providerNameOf,
   returnPathOf,
@@ -38,15 +40,37 @@ describe("loginFailureOf", () => {
 });
 
 describe("providerNameOf", () => {
-  it("providerId를 로그인 방법 이름으로 바꾼다", () => {
-    expect(providerNameOf(["google.com"])).toBe("Google");
-    expect(providerNameOf(["oidc.kakao"])).toBe("카카오");
-    expect(providerNameOf(["oidc.kakao", "google.com"])).toBe("카카오 · Google");
+  it("Google은 providerId로, 카카오는 uid(kakao:<회원번호>)로 알아본다", () => {
+    expect(providerNameOf("g1", ["google.com"])).toBe("Google");
+    // 카카오는 커스텀 토큰 로그인이라 providerData가 비어 있다
+    expect(providerNameOf("kakao:1234", [])).toBe("카카오");
   });
 
   it("모르는 방법이거나 비어 있으면 알 수 없음", () => {
-    expect(providerNameOf(["password"])).toBe("알 수 없음");
-    expect(providerNameOf([])).toBe("알 수 없음");
+    expect(providerNameOf("u1", ["password"])).toBe("알 수 없음");
+    expect(providerNameOf("u1", [])).toBe("알 수 없음");
+  });
+});
+
+describe("kakaoCallbackOf", () => {
+  const q = (s: string) => new URLSearchParams(s);
+
+  it("state가 로그인을 시작할 때 저장한 값과 같을 때만 코드를 쓴다", () => {
+    expect(kakaoCallbackOf(q("code=abc&state=s1"), "s1")).toEqual({ kind: "code", code: "abc" });
+    expect(kakaoCallbackOf(q("code=abc&state=s2"), "s1")).toEqual({ kind: "invalid" });
+    expect(kakaoCallbackOf(q("code=abc&state=s1"), null)).toEqual({ kind: "invalid" });
+    expect(kakaoCallbackOf(q("state=s1"), "s1")).toEqual({ kind: "invalid" });
+  });
+
+  it("사용자가 동의 화면에서 취소하면 cancelled, 그 밖의 오류는 failed", () => {
+    expect(kakaoCallbackOf(q("error=access_denied&state=s1"), "s1")).toEqual({ kind: "cancelled" });
+    expect(kakaoCallbackOf(q("error=server_error&state=s1"), "s1")).toEqual({ kind: "failed" });
+  });
+
+  it("돌아올 주소는 지금 오리진의 콜백 경로", () => {
+    expect(kakaoRedirectUriOf("https://jeonnam-trip.web.app")).toBe(
+      "https://jeonnam-trip.web.app/auth/kakao/callback",
+    );
   });
 });
 

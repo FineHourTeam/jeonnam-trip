@@ -19,6 +19,7 @@ const CreatorDetailPage = lazy(() => import("@/features/creators/pages/creator-d
 const TripNewPage = lazy(() => import("@/features/planner/pages/trip-new-page"));
 const TripEditPage = lazy(() => import("@/features/planner/pages/trip-edit-page"));
 const LoginPage = lazy(() => import("@/features/account/pages/login-page"));
+const KakaoCallbackPage = lazy(() => import("@/features/account/pages/kakao-callback-page"));
 const AccountPage = lazy(() => import("@/features/account/pages/account-page"));
 const MyTripsPage = lazy(() => import("@/features/account/pages/my-trips-page"));
 const TripSharePage = lazy(() => import("@/features/account/pages/trip-share-page"));
@@ -57,6 +58,7 @@ export const router = createBrowserRouter([
       { path: patterns.tripEdit, element: page(<TripEditPage />) },
       { path: patterns.sharedTrip, element: page(<SharedTripPage />) },
       { path: paths.login, element: page(<LoginPage />) },
+      { path: paths.kakaoCallback, element: page(<KakaoCallbackPage />) },
       {
         element: <ProtectedRoute />,
         children: [

@@ -24,6 +24,8 @@ export const paths = {
   myTrips: "/my-trips",
   sharedTrip: (shareId: string) => `/s/${shareId}`,
   login: "/login",
+  /** 카카오 로그인 후 돌아오는 곳 — 카카오 콘솔·서버(authKakao) 허용 목록과 같아야 한다 */
+  kakaoCallback: "/auth/kakao/callback",
   account: "/account",
   admin: "/admin",
   adminList: (kind: AdminKind) => `/admin/${kind}`,

@@ -58,7 +58,12 @@ export default function AccountPage() {
           </div>
           <div className="flex flex-col gap-1">
             <dt className="text-muted-foreground">로그인 방법</dt>
-            <dd>{providerNameOf(user.providerData.map((p) => p.providerId))}</dd>
+            <dd>
+              {providerNameOf(
+                user.uid,
+                user.providerData.map((p) => p.providerId),
+              )}
+            </dd>
           </div>
         </dl>
       )}
