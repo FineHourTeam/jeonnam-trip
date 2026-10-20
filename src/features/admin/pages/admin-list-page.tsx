@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SIGUNS, sigunName, type ContentStatus, type SigunCode } from "@/shared/domain";
+import { kstDateOf } from "@/shared/lib/date";
 import type { AnyContent } from "../api/admin-api";
 import { useContentList } from "../hooks/use-admin";
 import { isAdminKind, KIND_LABEL, STATUS_LABEL } from "../lib/labels";
@@ -154,7 +155,7 @@ function ContentList({ kind }: { kind: AdminKind }) {
                       {STATUS_LABEL[r.status]}
                     </Badge>
                     <span className="text-muted-foreground text-xs tabular-nums">
-                      {r.updatedAt.slice(0, 10)}
+                      {kstDateOf(r.updatedAt)}
                     </span>
                   </Link>
                 </li>

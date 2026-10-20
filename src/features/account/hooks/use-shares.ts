@@ -7,6 +7,7 @@ import {
   ShareNotFoundError,
   createShare,
   deactivateShare,
+  deactivateSharesOfTrip,
   getActiveShare,
   getOwnShare,
   republishShare,
@@ -51,11 +52,21 @@ export function usePublishShare() {
     mutationFn: async ({ trip, current }: { trip: Trip; current: SharedTrip | null }) => {
       if (current?.active) return republishShare(trip, current);
       const share = await createShare(trip);
-      await setTripShareId(trip, share.id);
+      try {
+        await setTripShareId(trip.id, share.id);
+      } catch (e) {
+        // 코스에 연결하지 못한 공유본은 해제 버튼으로도 못 막으니 바로 거둔다
+        await deactivateShare(share.id).catch(() => undefined);
+        throw e;
+      }
       return share;
     },
     onSuccess: (share, { trip }) => {
       invalidate(trip, share.id);
+    },
+    // 실패(이미 해제된 공유본 등)해도 화면이 서버 상태를 다시 읽게
+    onError: (_, { trip, current }) => {
+      if (current) invalidate(trip, current.id);
     },
   });
 }
@@ -65,15 +76,21 @@ export function useUnshare() {
   return useMutation({
     mutationFn: async ({ trip, shareId }: { trip: Trip; shareId: string }) => {
       await deactivateShare(shareId);
-      await setTripShareId(trip, null);
+      await setTripShareId(trip.id, null);
     },
-    onSuccess: (_, { trip, shareId }) => {
+    onSettled: (_, __, { trip, shareId }) => {
       invalidate(trip, shareId);
     },
   });
 }
 
-/** 코스 삭제 전에 공유본을 먼저 막는다 — 삭제된 코스의 링크가 열리지 않게 (기능명세 §8) */
-export function useDeactivateShareOnly() {
-  return useMutation({ mutationFn: (shareId: string) => deactivateShare(shareId) });
+/** 코스 삭제 전에 그 코스의 공유본을 모두 막는다 — 삭제된 코스의 링크가 열리지 않게 (기능명세 §8) */
+export function useDeactivateTripShares() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (trip: Trip) => deactivateSharesOfTrip(trip.ownerUid, trip.id),
+    onSettled: () => {
+      void qc.invalidateQueries({ queryKey: shareKeys.all });
+    },
+  });
 }

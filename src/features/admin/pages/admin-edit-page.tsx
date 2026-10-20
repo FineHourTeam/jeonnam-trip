@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { CreatorCourse, Festival, Place } from "@/shared/domain";
-import { todayKst } from "@/shared/lib/date";
+import { kstDateTimeOf, todayKst } from "@/shared/lib/date";
 import type { AnyContent } from "../api/admin-api";
 import { CourseForm } from "../components/course-form";
 import { FestivalForm } from "../components/festival-form";
@@ -116,11 +116,7 @@ function Editor({ kind, contentId }: { kind: AdminKind; contentId: string | null
           {KIND_LABEL[kind]} {contentId ? "수정" : "등록"}
         </h1>
         {saved && <Badge variant="outline">{STATUS_LABEL[saved.status]}</Badge>}
-        {draft && (
-          <Badge variant="secondary">
-            수정 초안 {draft.savedAt.slice(0, 16).replace("T", " ")}
-          </Badge>
-        )}
+        {draft && <Badge variant="secondary">수정 초안 {kstDateTimeOf(draft.savedAt)}</Badge>}
       </div>
       {draft && (
         <p className="text-muted-foreground text-sm">

@@ -17,6 +17,19 @@ export function addDays(date: string, days: number): string {
   return new Date(toUtcMs(date) + days * 86_400_000).toISOString().slice(0, 10);
 }
 
+/** ISO 일시 → KST 달력 날짜 "YYYY-MM-DD" (UTC 문자열을 잘라 쓰면 오전 9시 전에는 하루 전으로 보인다) */
+export function kstDateOf(iso: string): string {
+  return todayKst(new Date(iso));
+}
+
+/** ISO 일시 → KST "YYYY-MM-DD HH:mm" */
+export function kstDateTimeOf(iso: string): string {
+  return new Date(new Date(iso).getTime() + KST_OFFSET_MS)
+    .toISOString()
+    .slice(0, 16)
+    .replace("T", " ");
+}
+
 /** 두 날짜 사이 일수 (b - a) */
 export function diffDays(a: string, b: string): number {
   return Math.round((toUtcMs(b) - toUtcMs(a)) / 86_400_000);

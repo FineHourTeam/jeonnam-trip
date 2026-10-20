@@ -1,6 +1,8 @@
 import { describe, expect, test } from "vitest";
 import {
   addDays,
+  kstDateOf,
+  kstDateTimeOf,
   dateRange,
   dayOfWeek,
   diffDays,
@@ -32,5 +34,13 @@ describe("date utils (KST)", () => {
   test("시각 변환", () => {
     expect(toMinutes("13:30")).toBe(810);
     expect(fromMinutes(810)).toBe("13:30");
+  });
+});
+
+describe("kstDateOf / kstDateTimeOf", () => {
+  test("UTC 자정 전후를 KST 날짜로 바꾼다", () => {
+    expect(kstDateOf("2026-10-19T16:30:00.000Z")).toBe("2026-10-20");
+    expect(kstDateOf("2026-10-19T14:59:00.000Z")).toBe("2026-10-19");
+    expect(kstDateTimeOf("2026-10-19T16:30:00.000Z")).toBe("2026-10-20 01:30");
   });
 });

@@ -27,8 +27,8 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCreateTrip, useDeleteTrip, useMyTrips } from "@/features/trips";
 import { sigunName, type Trip } from "@/shared/domain";
-import { formatDateKo } from "@/shared/lib/date";
-import { useDeactivateShareOnly } from "../hooks/use-shares";
+import { formatDateKo, kstDateOf } from "@/shared/lib/date";
+import { useDeactivateTripShares } from "../hooks/use-shares";
 import { draftFromTrip } from "../lib/share-copy";
 
 export default function MyTripsPage() {
@@ -36,7 +36,7 @@ export default function MyTripsPage() {
   const navigate = useNavigate();
   const create = useCreateTrip();
   const remove = useDeleteTrip();
-  const unshare = useDeactivateShareOnly();
+  const unshare = useDeactivateTripShares();
   const [deleting, setDeleting] = useState<Trip | null>(null);
 
   const duplicate = (trip: Trip) => {
@@ -57,7 +57,7 @@ export default function MyTripsPage() {
     if (!trip) return;
     setDeleting(null);
     try {
-      if (trip.shareId) await unshare.mutateAsync(trip.shareId);
+      await unshare.mutateAsync(trip);
       await remove.mutateAsync(trip);
       toast.success("코스를 삭제했어요.");
     } catch {
@@ -162,7 +162,7 @@ function TripCard({ trip, busy, onDuplicate, onDelete }: TripCardProps) {
         </span>
         <span className="text-muted-foreground text-sm">
           {trip.siguns.length > 0 ? trip.siguns.map(sigunName).join(", ") : "지역 미정"} · 수정{" "}
-          {trip.updatedAt.slice(0, 10)}
+          {kstDateOf(trip.updatedAt)}
         </span>
         <span>
           <Badge variant={trip.shareId ? "secondary" : "outline"}>

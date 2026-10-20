@@ -88,6 +88,7 @@ export function useTripEditor(tripId: string) {
     loadError: isDraft ? null : query.error,
     retryLoad: () => void query.refetch(),
     authPending: auth.status === "loading",
+    isGuest: auth.status === "guest",
     isSaving: create.isPending || save.isPending,
     update,
     save: onSave,

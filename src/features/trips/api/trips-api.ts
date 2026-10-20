@@ -10,7 +10,6 @@ import {
   query,
   runTransaction,
   setDoc,
-  updateDoc,
   where,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -90,12 +89,17 @@ export async function saveTrip(trip: Trip): Promise<Trip> {
   });
 }
 
-/** 공유본 id 연결/해제 — 공유 기능이 사용. 버전도 함께 올린다 */
-export async function setTripShareId(trip: Trip, shareId: string | null): Promise<void> {
-  await updateDoc(doc(db, COL.trips, trip.id), {
-    shareId,
-    version: trip.version + 1,
-    updatedAt: new Date().toISOString(),
+/**
+ * 공유본 id 연결/해제 — 공유 기능이 사용. 규칙상 버전을 1 올려야 해서 서버 버전을 읽고 쓴다
+ * (화면이 들고 있던 버전이 오래됐어도 실패하지 않게). 코스 내용은 그대로라 updatedAt은 건드리지 않는다
+ * — 공유 화면이 "공개 뒤에 코스를 고쳤어요"를 updatedAt으로 판단한다.
+ */
+export async function setTripShareId(tripId: string, shareId: string | null): Promise<void> {
+  const ref = doc(db, COL.trips, tripId);
+  await runTransaction(db, async (tx) => {
+    const snap = await tx.get(ref);
+    if (!snap.exists()) throw new TripNotFoundError();
+    tx.update(ref, { shareId, version: (snap.data() as TripDoc).version + 1 });
   });
 }
 

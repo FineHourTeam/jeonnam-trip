@@ -1,4 +1,6 @@
 // 공개 코스의 일차별 방문 순서 — 공유 미리보기(S12)와 받는 사람 화면이 같은 모양을 쓴다.
+import { Link } from "react-router";
+import { paths } from "@/app/paths";
 import { PLACE_CATEGORY_LABEL, type PublicVisitItem } from "@/shared/domain";
 import { formatDateKo } from "@/shared/lib/date";
 
@@ -8,6 +10,13 @@ interface SharedDaysProps {
 
 const categoryLabel = (c: PublicVisitItem["snapshot"]["category"]) =>
   c === "festival" ? "축제" : PLACE_CATEGORY_LABEL[c];
+
+/** 등록된 장소·축제는 원문 출처가 있는 상세로 잇는다. 직접 입력한 장소는 링크 없음 */
+function sourceHref(ref: PublicVisitItem["ref"]): string | null {
+  if (ref.kind === "place") return paths.placeDetail(ref.placeId);
+  if (ref.kind === "festival") return paths.festivalDetail(ref.festivalId);
+  return null;
+}
 
 export function SharedDays({ days }: SharedDaysProps) {
   return (
@@ -27,7 +36,16 @@ export function SharedDays({ days }: SharedDaysProps) {
               {d.items.map((item, n) => (
                 <li key={item.id} className="flex flex-wrap items-baseline gap-x-2 text-sm">
                   <span className="text-muted-foreground w-5 text-right tabular-nums">{n + 1}</span>
-                  <span className="font-medium">{item.snapshot.name}</span>
+                  {sourceHref(item.ref) ? (
+                    <Link
+                      to={sourceHref(item.ref) ?? ""}
+                      className="text-primary font-medium underline-offset-4 hover:underline"
+                    >
+                      {item.snapshot.name}
+                    </Link>
+                  ) : (
+                    <span className="font-medium">{item.snapshot.name}</span>
+                  )}
                   <span className="text-muted-foreground">
                     {categoryLabel(item.snapshot.category)}
                     {item.fixedStart

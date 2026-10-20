@@ -20,8 +20,9 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTrip } from "@/features/trips";
 import type { Trip } from "@/shared/domain";
-import { formatDateKo } from "@/shared/lib/date";
+import { formatDateKo, kstDateOf } from "@/shared/lib/date";
 import { SharedDays } from "../components/shared-days";
+import { ShareInactiveError } from "../api/shares-api";
 import { useOwnShare, usePublishShare, useUnshare } from "../hooks/use-shares";
 import { customPlaceCount, toSharedTrip } from "../lib/share-copy";
 
@@ -54,6 +55,8 @@ function ShareSettings({ trip }: { trip: Trip }) {
   const [confirmOff, setConfirmOff] = useState(false);
   const current = share.data ?? null;
   const active = current?.active === true;
+  // 연결된 공유본을 확인하기 전에는 새로 만들지 않는다 — 확인 전에 만들면 옛 공유본이 막을 수 없게 남는다
+  const shareUnknown = trip.shareId !== null && (share.isPending || share.isError);
   const link = active ? `${window.location.origin}${paths.sharedTrip(current.id)}` : "";
   const outdated = active && trip.updatedAt > current.publishedAt;
   const preview = toSharedTrip(trip, { id: "preview", publishedVersion: 0, publishedAt: "" });
@@ -67,10 +70,13 @@ function ShareSettings({ trip }: { trip: Trip }) {
           toast.success(
             active ? "공유 내용을 지금 코스로 업데이트했어요." : "공유 링크를 만들었어요.",
           ),
-        onError: () =>
+        onError: (e) => {
           toast.error(
-            "공유하지 못했어요. 다른 기기에서 코스를 고쳤다면 새로고침 후 다시 시도해주세요.",
-          ),
+            e instanceof ShareInactiveError
+              ? e.message
+              : "공유하지 못했어요. 네트워크를 확인하고 다시 시도해주세요.",
+          );
+        },
       },
     );
   };
@@ -96,8 +102,15 @@ function ShareSettings({ trip }: { trip: Trip }) {
       </div>
 
       <div className="bg-background-subtle text-foreground flex flex-col gap-3 rounded-lg p-4">
-        {share.isPending && trip.shareId ? (
+        {trip.shareId && share.isPending ? (
           <Skeleton className="h-10 w-full" />
+        ) : trip.shareId && share.isError ? (
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="text-sm">공유 상태를 확인하지 못했어요.</p>
+            <Button variant="outline" size="sm" onClick={() => void share.refetch()}>
+              다시 시도
+            </Button>
+          </div>
         ) : active ? (
           <>
             <p className="font-medium">링크를 아는 사람은 누구나 이 코스를 볼 수 있어요.</p>
@@ -106,14 +119,16 @@ function ShareSettings({ trip }: { trip: Trip }) {
                 value={link}
                 readOnly
                 aria-label="공유 링크"
-                onFocus={(e) => { e.target.select(); }}
+                onFocus={(e) => {
+                  e.target.select();
+                }}
               />
               <Button variant="outline" onClick={() => void onCopy()}>
                 복사
               </Button>
             </div>
             <p className="text-muted-foreground text-sm">
-              {formatDateKo(current.publishedAt.slice(0, 10))}에 공개한 내용이에요 (공개 버전{" "}
+              {formatDateKo(kstDateOf(current.publishedAt))}에 공개한 내용이에요 (공개 버전{" "}
               {current.publishedVersion}).
               {outdated && " 그 뒤에 코스를 고쳤어요. 업데이트해야 받는 사람에게 보여요."}
             </p>
@@ -124,14 +139,19 @@ function ShareSettings({ trip }: { trip: Trip }) {
           </p>
         )}
         <div className="flex flex-wrap gap-2">
-          <Button onClick={onPublish} disabled={publish.isPending || unshare.isPending}>
+          <Button
+            onClick={onPublish}
+            disabled={shareUnknown || publish.isPending || unshare.isPending}
+          >
             {publish.isPending && <LoadingIcon size="sm" className="animate-spin" />}
             {active ? "공유 내용 업데이트" : "공유 링크 만들기"}
           </Button>
           {active && (
             <Button
               variant="destructive"
-              onClick={() => { setConfirmOff(true); }}
+              onClick={() => {
+                setConfirmOff(true);
+              }}
               disabled={unshare.isPending}
             >
               공유 해제

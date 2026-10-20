@@ -113,7 +113,10 @@ export default function TripEditPage() {
 
       <p className="text-muted-foreground text-sm">
         {formatDateKo(trip.startDate)} ~ {formatDateKo(trip.endDate)} · 자동차
-        {editor.isDraft && " · 저장하지 않은 코스예요. 저장하려면 로그인이 필요해요."}
+        {editor.isDraft &&
+          (editor.isGuest
+            ? " · 저장하지 않은 코스예요. 저장하려면 로그인이 필요해요."
+            : " · 저장하지 않은 코스예요. 저장하기를 누르면 내 여행에 저장돼요.")}
       </p>
 
       <Tabs value={dayTab} onValueChange={setDayTab}>
