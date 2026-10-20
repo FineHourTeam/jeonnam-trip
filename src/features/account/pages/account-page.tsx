@@ -16,6 +16,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useTripDraftStore } from "@/features/trips";
 import { useSignOut } from "../hooks/use-auth-actions";
 
@@ -42,25 +43,29 @@ export default function AccountPage() {
     <section className="mx-auto flex max-w-sm flex-col gap-6 px-4 py-10">
       <h1 className="text-xl font-semibold text-balance">내 계정</h1>
 
-      <dl className="bg-background-subtle text-foreground flex flex-col gap-3 rounded-lg p-4 text-sm">
-        <div className="flex flex-col gap-1">
-          <dt className="text-muted-foreground">이름</dt>
-          <dd>{user?.displayName ?? "이름 없음"}</dd>
-        </div>
-        <div className="flex flex-col gap-1">
-          <dt className="text-muted-foreground">이메일</dt>
-          <dd className="break-all">{user?.email ?? "이메일 없음"}</dd>
-        </div>
-        <div className="flex flex-col gap-1">
-          <dt className="text-muted-foreground">로그인 방법</dt>
-          <dd>Google</dd>
-        </div>
-      </dl>
+      {!user ? (
+        <Skeleton className="h-40 w-full rounded-lg" />
+      ) : (
+        <dl className="bg-background-subtle text-foreground flex flex-col gap-3 rounded-lg p-4 text-sm">
+          <div className="flex flex-col gap-1">
+            <dt className="text-muted-foreground">이름</dt>
+            <dd>{user.displayName ?? "이름 없음"}</dd>
+          </div>
+          <div className="flex flex-col gap-1">
+            <dt className="text-muted-foreground">이메일</dt>
+            <dd className="break-all">{user.email ?? "이메일 없음"}</dd>
+          </div>
+          <div className="flex flex-col gap-1">
+            <dt className="text-muted-foreground">로그인 방법</dt>
+            <dd>Google</dd>
+          </div>
+        </dl>
+      )}
 
       <Button
         variant="outline"
         size="lg"
-        disabled={signOut.isPending}
+        disabled={!user || signOut.isPending}
         onClick={() => {
           setConfirming(true);
         }}

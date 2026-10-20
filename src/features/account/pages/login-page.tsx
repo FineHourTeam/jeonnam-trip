@@ -1,5 +1,6 @@
 // 로그인(S13) — Google 로그인 1종. 성공하면 location.state.from(예: /trips/draft)으로 돌아간다.
 // 취소·실패·팝업 차단 때도 작성 중인 초안(localStorage)은 그대로 둔다.
+// 카카오톡·네이버 앱 같은 앱 안 브라우저는 Google이 로그인을 막으므로(403 disallowed_useragent) 외부 브라우저로 안내한다.
 import { Navigate, useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { paths } from "@/app/paths";
@@ -11,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useTripDraftStore } from "@/features/trips";
 import { LoginError } from "../api/auth-api";
 import { useSignIn } from "../hooks/use-auth-actions";
-import { returnPathOf, type LoginFailure } from "../lib/login";
+import { externalOpenUrlOf, inAppBrowserOf, returnPathOf, type LoginFailure } from "../lib/login";
 
 const FAILURE_COPY: Record<LoginFailure, { title: string; description: string }> = {
   cancelled: {
@@ -43,6 +44,7 @@ export default function LoginPage() {
   const draft = useTripDraftStore((s) => s.draft);
   const signIn = useSignIn();
   const returnTo = returnPathOf(location.state);
+  const inApp = inAppBrowserOf(navigator.userAgent);
 
   // 로그인에 성공하면 인증 상태가 바뀌면서 여기서 원래 화면으로 돌아간다 (이미 로그인한 경우 포함)
   if (authState.status === "authed") return <Navigate to={returnTo} replace />;
@@ -52,9 +54,10 @@ export default function LoginPage() {
   const copy = failure ? FAILURE_COPY[failure] : null;
 
   const cancel = () => {
-    // 앱 안에서 넘어왔으면 직전 화면으로, 주소로 바로 들어왔으면 홈으로
-    if (location.key === "default") void navigate(paths.home, { replace: true });
-    else void navigate(-1);
+    // 앱 안에서 넘어왔으면 직전 화면으로, 첫 화면이면(주소로 바로 들어왔거나 가드가 replace로 보낸 경우) 홈으로
+    const idx = (window.history.state as { idx?: number } | null)?.idx ?? 0;
+    if (idx > 0) void navigate(-1);
+    else void navigate(paths.home, { replace: true });
   };
 
   return (
@@ -68,8 +71,9 @@ export default function LoginPage() {
 
       {draft && (
         <div className="bg-background-subtle text-foreground rounded-lg p-4 text-sm">
-          작성 중인 「{draft.title}」 코스는 이 기기에 그대로 있어요. 로그인한 뒤 이어서 저장할 수
-          있어요.
+          {inApp
+            ? `작성 중인 「${draft.title}」 코스는 지금 이 앱 안 브라우저에만 남아 있어요. 다른 브라우저에서는 보이지 않아요.`
+            : `작성 중인 「${draft.title}」 코스는 이 기기에 그대로 있어요. 로그인한 뒤 이어서 저장할 수 있어요.`}
         </div>
       )}
 
@@ -80,7 +84,12 @@ export default function LoginPage() {
         </Alert>
       )}
 
-      {authState.status === "loading" ? (
+      {inApp ? (
+        <InAppNotice
+          externalUrl={externalOpenUrlOf(inApp, window.location.href)}
+          onCancel={cancel}
+        />
+      ) : authState.status === "loading" ? (
         <Skeleton className="h-9 w-full rounded-lg" />
       ) : (
         <div className="flex flex-col gap-2">
@@ -109,5 +118,36 @@ export default function LoginPage() {
         있어요. 로그아웃하면 이 기기에 남은 작성 중 코스도 함께 지워져요.
       </p>
     </section>
+  );
+}
+
+function InAppNotice({
+  externalUrl,
+  onCancel,
+}: {
+  externalUrl: string | null;
+  onCancel: () => void;
+}) {
+  return (
+    <div className="flex flex-col gap-4">
+      <Alert role="alert">
+        <AlertTitle>이 앱 안에서는 Google 로그인을 할 수 없어요</AlertTitle>
+        <AlertDescription>
+          {externalUrl
+            ? "아래 버튼으로 다른 브라우저에서 연 뒤 로그인해주세요."
+            : "화면의 더보기(⋯) 메뉴에서 'Safari로 열기'를 눌러 연 뒤 로그인해주세요."}
+        </AlertDescription>
+      </Alert>
+      <div className="flex flex-col gap-2">
+        {externalUrl && (
+          <Button asChild size="lg">
+            <a href={externalUrl}>다른 브라우저로 열기</a>
+          </Button>
+        )}
+        <Button variant="ghost" size="lg" onClick={onCancel}>
+          로그인 없이 돌아가기
+        </Button>
+      </div>
+    </div>
   );
 }
