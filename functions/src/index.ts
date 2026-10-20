@@ -64,7 +64,9 @@ export const api = onRequest(
   },
 );
 
-// 커스텀 토큰 서명에 런타임 서비스 계정의 iam.serviceAccounts.signBlob(서비스 계정 토큰 생성자 역할)이 필요하다
+// 커스텀 토큰은 런타임 서비스 계정이 iam.serviceAccounts.signBlob으로 서명한다. 기본 Compute 계정에는 이 권한이 없어서,
+// 프로젝트에 '서비스 계정 토큰 생성자' 역할이 이미 있는 Firebase Admin SDK 계정으로 authKakao를 실행한다.
+const KAKAO_RUNTIME_SA = "firebase-adminsdk-fbsvc@jeonnam-trip.iam.gserviceaccount.com";
 const kakaoUsers: KakaoUserStore = {
   async upsert(uid, profile) {
     const auth = getAuth();
@@ -82,6 +84,7 @@ const kakaoUsers: KakaoUserStore = {
 export const authKakao = onRequest(
   {
     region: "asia-northeast3",
+    serviceAccount: KAKAO_RUNTIME_SA,
     secrets: [kakaoClientSecret],
     timeoutSeconds: 30,
     maxInstances: 5,
