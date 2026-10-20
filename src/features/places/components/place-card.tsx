@@ -5,11 +5,12 @@ import { PLACE_CATEGORY_LABEL, sigunName, type Place } from "@/shared/domain";
 
 interface PlaceCardProps {
   place: Place;
-  selected: boolean;
-  onToggle: () => void;
+  /** onToggle을 넘기면 선택 체크박스를 보여 준다 (장소 목록). 탐색 홈은 넘기지 않는다 */
+  selected?: boolean;
+  onToggle?: () => void;
 }
 
-export function PlaceCard({ place, selected, onToggle }: PlaceCardProps) {
+export function PlaceCard({ place, selected = false, onToggle }: PlaceCardProps) {
   const photo = place.photos[0];
   return (
     <div className="border-border bg-card text-card-foreground has-[a:hover]:bg-background-subtle flex items-center gap-3 rounded-lg border p-3">
@@ -38,12 +39,14 @@ export function PlaceCard({ place, selected, onToggle }: PlaceCardProps) {
           <p className="text-muted-foreground text-sm">{sigunName(place.sigun)}</p>
         </div>
       </Link>
-      <Checkbox
-        checked={selected}
-        onCheckedChange={onToggle}
-        aria-label={`${place.name} 선택`}
-        className="size-5"
-      />
+      {onToggle && (
+        <Checkbox
+          checked={selected}
+          onCheckedChange={onToggle}
+          aria-label={`${place.name} 선택`}
+          className="size-5"
+        />
+      )}
     </div>
   );
 }

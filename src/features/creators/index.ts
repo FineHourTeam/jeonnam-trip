@@ -1,5 +1,6 @@
-// 크리에이터 코스 공개 API — 여행 시작(S09)이 코스를 개인 초안으로 복사할 때 쓴다.
+// 크리에이터 코스 공개 API — 탐색 홈이 코스를 보여 주고, 여행 시작(S09)이 코스를 개인 초안으로 복사할 때 쓴다.
 export { CourseNotFoundError } from "./api/creators-api";
+export { CourseCard } from "./components/course-card";
 export {
   creatorKeys,
   useCoursePlaces,
