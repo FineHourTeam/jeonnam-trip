@@ -18,7 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useTrip } from "@/features/trips";
+import { ShareLinkConflictError, useTrip } from "@/features/trips";
 import type { Trip } from "@/shared/domain";
 import { formatDateKo, kstDateOf } from "@/shared/lib/date";
 import { SharedDays } from "../components/shared-days";
@@ -72,7 +72,7 @@ function ShareSettings({ trip }: { trip: Trip }) {
           ),
         onError: (e) => {
           toast.error(
-            e instanceof ShareInactiveError
+            e instanceof ShareInactiveError || e instanceof ShareLinkConflictError
               ? e.message
               : "공유하지 못했어요. 네트워크를 확인하고 다시 시도해주세요.",
           );
@@ -198,7 +198,13 @@ function ShareSettings({ trip }: { trip: Trip }) {
                   { trip, shareId: current.id },
                   {
                     onSuccess: () => toast.success("공유를 해제했어요."),
-                    onError: () => toast.error("공유를 해제하지 못했어요. 다시 시도해주세요."),
+                    onError: (e) => {
+                      toast.error(
+                        e instanceof ShareLinkConflictError
+                          ? e.message
+                          : "공유를 해제하지 못했어요. 다시 시도해주세요.",
+                      );
+                    },
                   },
                 );
               }}

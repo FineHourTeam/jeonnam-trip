@@ -14,7 +14,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { SIGUNS, sigunName, type ContentStatus, type SigunCode } from "@/shared/domain";
+import {
+  SIGUNS,
+  isSigunCode,
+  sigunName,
+  type ContentStatus,
+  type SigunCode,
+} from "@/shared/domain";
 import { kstDateOf } from "@/shared/lib/date";
 import type { AnyContent } from "../api/admin-api";
 import { useContentList } from "../hooks/use-admin";
@@ -31,9 +37,18 @@ interface Row {
 }
 
 function toRow(c: AnyContent): Row {
-  if ("title" in c)
-    return { id: c.id, title: c.title, siguns: c.siguns, status: c.status, updatedAt: c.updatedAt };
-  return { id: c.id, title: c.name, siguns: [c.sigun], status: c.status, updatedAt: c.updatedAt };
+  // 초안은 이름·지역이 비어 있을 수 있다
+  if ("title" in c) {
+    const title = c.title || "제목 없음";
+    return { id: c.id, title, siguns: c.siguns, status: c.status, updatedAt: c.updatedAt };
+  }
+  return {
+    id: c.id,
+    title: c.name || "이름 없음",
+    siguns: isSigunCode(c.sigun) ? [c.sigun] : [],
+    status: c.status,
+    updatedAt: c.updatedAt,
+  };
 }
 
 export default function AdminListPage() {

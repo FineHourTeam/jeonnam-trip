@@ -187,4 +187,35 @@ describe("content-form 변환", () => {
     });
     expect(r.success).toBe(false);
   });
+
+  it("초안은 이름·프로그램 행·기간이 덜 채워져도 저장되고, 공개는 막는다", () => {
+    const values = {
+      ...emptyFestivalValues("2026-10-20"),
+      startDate: "",
+      endDate: "",
+      programs: [{ id: "p", name: "", date: "", start: "", end: "", place: "" }],
+    };
+    expect(festivalDraftSchema.safeParse(values).success).toBe(true);
+    expect(festivalSchema.safeParse(values).success).toBe(false);
+    const draft = festivalDraftSchema.parse(values);
+    expect(valuesToFestival("d", draft).days).toEqual([]);
+  });
+
+  it("초안은 기간이 뒤집혀도 저장되고, 날짜별 운영은 비워 둔다", () => {
+    const values = {
+      ...festivalToValues(festival),
+      startDate: "2026-10-20",
+      endDate: "2026-10-18",
+    };
+    expect(festivalDraftSchema.safeParse(values).success).toBe(true);
+    expect(festivalSchema.safeParse(values).success).toBe(false);
+    expect(valuesToFestival("f1", festivalDraftSchema.parse(values)).days).toEqual([]);
+  });
+
+  it("초안 장소·코스는 이름 없이도 저장된다", () => {
+    expect(placeDraftSchema.safeParse({ ...placeToValues(place), name: "" }).success).toBe(true);
+    expect(
+      courseDraftSchema.safeParse({ ...courseToValues(course), title: "", days: [] }).success,
+    ).toBe(true);
+  });
 });

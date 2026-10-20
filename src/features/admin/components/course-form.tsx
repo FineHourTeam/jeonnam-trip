@@ -55,103 +55,106 @@ export function CourseForm(
           e.preventDefault();
         }}
       >
-        <Section title="원문·크리에이터">
-          <TextField name="title" label="코스 제목" />
-          <div className="grid gap-3 sm:grid-cols-2">
-            <TextField name="creatorName" label="크리에이터" />
-            <TextField name="channelUrl" label="채널 주소" placeholder="https://" />
-          </div>
-          <TextField name="sourceUrl" label="원문 주소" placeholder="https://" />
-          <div className="grid gap-3 sm:grid-cols-2">
-            <SelectField name="orderBasis" label="순서 확인 기준" options={ORDER_OPTIONS} />
-            <TextField name="reviewedAt" label="검수일" type="date" />
-          </div>
-          <TextField name="tags" label="태그 (쉼표로 구분)" placeholder="1박2일, 바다" />
-          <TextAreaField name="summary" label="소개" rows={3} />
-        </Section>
+        {/* 저장 중에는 입력을 잠근다 — 저장 뒤 서버 값으로 폼을 다시 그릴 때 그 사이 입력이 사라지지 않게 */}
+        <fieldset disabled={props.pending !== null} className="contents">
+          <Section title="원문·크리에이터">
+            <TextField name="title" label="코스 제목" />
+            <div className="grid gap-3 sm:grid-cols-2">
+              <TextField name="creatorName" label="크리에이터" />
+              <TextField name="channelUrl" label="채널 주소" placeholder="https://" />
+            </div>
+            <TextField name="sourceUrl" label="원문 주소" placeholder="https://" />
+            <div className="grid gap-3 sm:grid-cols-2">
+              <SelectField name="orderBasis" label="순서 확인 기준" options={ORDER_OPTIONS} />
+              <TextField name="reviewedAt" label="검수일" type="date" />
+            </div>
+            <TextField name="tags" label="태그 (쉼표로 구분)" placeholder="1박2일, 바다" />
+            <TextAreaField name="summary" label="소개" rows={3} />
+          </Section>
 
-        <Section title="지역">
-          <Controller
-            control={form.control}
-            name="siguns"
-            render={({ field }) => (
-              <ToggleGroup
-                type="multiple"
-                variant="outline"
-                value={field.value}
-                onValueChange={field.onChange}
-                className="flex flex-wrap justify-start gap-2"
-                aria-label="코스 지역"
-              >
-                {SIGUNS.map((s) => (
-                  <ToggleGroupItem key={s.code} value={s.code}>
-                    {s.name}
-                  </ToggleGroupItem>
-                ))}
-              </ToggleGroup>
-            )}
-          />
-          <FieldError name="siguns" />
-        </Section>
-
-        <Section
-          title="일차별 장소"
-          hint="등록된 장소만 넣을 수 있어요. 순서는 위·아래 버튼으로 바꿔요."
-        >
-          {days.fields.map((d, i) => (
-            <DayItems
-              key={d.id}
-              dayIndex={i}
-              places={places}
-              placeName={placeName}
-              onRemoveDay={
-                days.fields.length > 1
-                  ? () => {
-                      days.remove(i);
-                    }
-                  : undefined
-              }
+          <Section title="지역">
+            <Controller
+              control={form.control}
+              name="siguns"
+              render={({ field }) => (
+                <ToggleGroup
+                  type="multiple"
+                  variant="outline"
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  className="flex flex-wrap justify-start gap-2"
+                  aria-label="코스 지역"
+                >
+                  {SIGUNS.map((s) => (
+                    <ToggleGroupItem key={s.code} value={s.code}>
+                      {s.name}
+                    </ToggleGroupItem>
+                  ))}
+                </ToggleGroup>
+              )}
             />
-          ))}
-          <FieldError name="days" />
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="self-start"
-            onClick={() => {
-              days.append({ items: [] });
-            }}
+            <FieldError name="siguns" />
+          </Section>
+
+          <Section
+            title="일차별 장소"
+            hint="등록된 장소만 넣을 수 있어요. 순서는 위·아래 버튼으로 바꿔요."
           >
-            <AddIcon size="sm" />
-            일차 추가
-          </Button>
-        </Section>
+            {days.fields.map((d, i) => (
+              <DayItems
+                key={d.id}
+                dayIndex={i}
+                places={places}
+                placeName={placeName}
+                onRemoveDay={
+                  days.fields.length > 1
+                    ? () => {
+                        days.remove(i);
+                      }
+                    : undefined
+                }
+              />
+            ))}
+            <FieldError name="days" />
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="self-start"
+              onClick={() => {
+                days.append({ items: [] });
+              }}
+            >
+              <AddIcon size="sm" />
+              일차 추가
+            </Button>
+          </Section>
 
-        <ContentPreview
-          title={v.title}
-          lines={[
-            v.creatorName ? `크리에이터 ${v.creatorName}` : undefined,
-            ORDER_OPTIONS.find((o) => o.value === v.orderBasis)?.label,
-            v.days.map((d, i) => `${String(i + 1)}일차 ${String(d.items.length)}곳`).join(" · "),
-          ]}
-          checks={[
-            {
-              label: "검수",
-              check: { state: v.reviewedAt ? "verified" : "unverified", checkedAt: v.reviewedAt },
-            },
-          ]}
-        />
+          <ContentPreview
+            title={v.title}
+            lines={[
+              v.creatorName ? `크리에이터 ${v.creatorName}` : undefined,
+              ORDER_OPTIONS.find((o) => o.value === v.orderBasis)?.label,
+              v.days.map((d, i) => `${String(i + 1)}일차 ${String(d.items.length)}곳`).join(" · "),
+            ]}
+            checks={[
+              {
+                label: "검수",
+                check: { state: v.reviewedAt ? "verified" : "unverified", checkedAt: v.reviewedAt },
+              },
+            ]}
+          />
 
-        <p className="text-muted-foreground text-sm">
-          여기서 고치는 것은 원본 코스예요. 사용자가 이미 복사해 간 개인 코스는 바뀌지 않아요.
-        </p>
-        <EditActions
-          status={props.status}
-          hasDraft={props.hasDraft}
-          pending={props.pending}
-          onAction={run}
-        />
+          <p className="text-muted-foreground text-sm">
+            여기서 고치는 것은 원본 코스예요. 사용자가 이미 복사해 간 개인 코스는 바뀌지 않아요.
+          </p>
+          <EditActions
+            status={props.status}
+            hasDraft={props.hasDraft}
+            pending={props.pending}
+            onAction={run}
+          />
+        </fieldset>
       </form>
     </FormProvider>
   );

@@ -25,7 +25,7 @@ interface EditActionsProps {
 const CONFIRM: Partial<Record<ContentAction, { title: string; body: string; label: string }>> = {
   hide: {
     title: "비공개로 바꿀까요?",
-    body: "사용자 목록과 상세에서 빠져요. 이미 사용자 코스에 담긴 사본은 그대로 남아요.",
+    body: "사용자 목록과 상세에서 빠져요. 이미 사용자 코스에 담긴 사본은 그대로 남아요. 저장하지 않은 수정 내용은 사라지니 필요하면 먼저 초안을 저장해 주세요.",
     label: "비공개하기",
   },
   discard: {

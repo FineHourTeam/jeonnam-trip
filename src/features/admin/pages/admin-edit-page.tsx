@@ -147,7 +147,7 @@ function Editor({ kind, contentId }: { kind: AdminKind; contentId: string | null
       {kind === "creators" &&
         (places.isPending ? (
           <Skeleton className="h-64 w-full" />
-        ) : places.isError ? (
+        ) : !places.data ? (
           <Alert variant="destructive">
             <AlertTitle>장소 목록을 불러오지 못했어요</AlertTitle>
             <AlertDescription className="flex flex-col items-start gap-2">

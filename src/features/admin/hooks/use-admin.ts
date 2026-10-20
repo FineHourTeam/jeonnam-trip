@@ -46,8 +46,10 @@ export function useEditable<K extends AdminKind>(kind: K, id: string | null) {
     queryKey: adminKeys.edit(kind, id ?? ""),
     queryFn: () => getEditable(kind, id ?? ""),
     enabled: id !== null,
-    // 폼 기준값은 이 화면의 저장(무효화)으로만 바뀐다 — 배경 재조회가 폼을 다시 그려 입력을 지우지 않게
+    // 폼 기준값은 이 화면의 저장(무효화)으로만 바뀐다 — 배경 재조회가 폼을 다시 그려 입력을 지우지 않게.
+    // 화면을 떠나면 캐시를 버려(gcTime 0) 다시 열 때는 항상 서버의 최신 내용을 받는다
     staleTime: Infinity,
+    gcTime: 0,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });

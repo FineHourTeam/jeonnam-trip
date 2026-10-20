@@ -22,6 +22,13 @@ export class VersionConflictError extends Error {
   }
 }
 
+export class ShareLinkConflictError extends Error {
+  constructor() {
+    super("다른 기기에서 공유 설정이 바뀌었어요. 최신 상태를 불러왔으니 다시 확인해 주세요.");
+    this.name = "ShareLinkConflictError";
+  }
+}
+
 export class TripNotFoundError extends Error {
   constructor() {
     super("코스를 찾을 수 없어요.");
@@ -90,16 +97,23 @@ export async function saveTrip(trip: Trip): Promise<Trip> {
 }
 
 /**
- * 공유본 id 연결/해제 — 공유 기능이 사용. 규칙상 버전을 1 올려야 해서 서버 버전을 읽고 쓴다
- * (화면이 들고 있던 버전이 오래됐어도 실패하지 않게). 코스 내용은 그대로라 updatedAt은 건드리지 않는다
- * — 공유 화면이 "공개 뒤에 코스를 고쳤어요"를 updatedAt으로 판단한다.
+ * 공유본 id 연결/해제 — 공유 기능이 사용. 서버의 현재 shareId가 expected일 때만 바꾼다(compare-and-set).
+ * 다른 기기에서 이미 다른 공유본을 연결했는데 이 화면의 오래된 값으로 덮어쓰면, 덮인 공유본은 켜진 채
+ * 어디에서도 해제할 수 없게 된다. 규칙상 버전을 1 올려야 해서 서버 버전을 읽고 쓰고, 코스 내용은 그대로라
+ * updatedAt은 건드리지 않는다 (공유 화면이 "공개 뒤에 코스를 고쳤어요"를 updatedAt으로 판단한다).
  */
-export async function setTripShareId(tripId: string, shareId: string | null): Promise<void> {
+export async function setTripShareId(
+  tripId: string,
+  expected: string | null,
+  next: string | null,
+): Promise<void> {
   const ref = doc(db, COL.trips, tripId);
   await runTransaction(db, async (tx) => {
     const snap = await tx.get(ref);
     if (!snap.exists()) throw new TripNotFoundError();
-    tx.update(ref, { shareId, version: (snap.data() as TripDoc).version + 1 });
+    const server = snap.data() as TripDoc;
+    if (server.shareId !== expected) throw new ShareLinkConflictError();
+    tx.update(ref, { shareId: next, version: server.version + 1 });
   });
 }
 

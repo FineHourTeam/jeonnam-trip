@@ -35,9 +35,12 @@ export function Section({
 
 export function FieldError({ name }: { name: string }) {
   const { formState } = useFormContext();
-  const error = get(formState.errors, name) as { message?: string } | undefined;
-  if (!error?.message) return null;
-  return <p className="text-destructive text-sm">{error.message}</p>;
+  // 배열 전체에 건 검사(refine)는 요소가 있으면 `.root`에 오류가 붙는다
+  const error = get(formState.errors, name) as
+    { message?: string; root?: { message?: string } } | undefined;
+  const message = error?.message ?? error?.root?.message;
+  if (!message) return null;
+  return <p className="text-destructive text-sm">{message}</p>;
 }
 
 export function TextField({

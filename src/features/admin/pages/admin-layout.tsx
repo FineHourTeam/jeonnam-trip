@@ -29,7 +29,8 @@ export default function AdminLayout() {
     );
   }
 
-  if (isAdmin.isError) {
+  // 이미 확인된 권한이 배경 재조회 실패로 사라지면 편집 중인 폼이 날아간다 — 처음 확인에 실패했을 때만 막는다
+  if (isAdmin.isError && isAdmin.data === undefined) {
     return (
       <Gate title="권한을 확인하지 못했어요" body="네트워크 연결을 확인하고 다시 시도해주세요.">
         <Button onClick={() => void isAdmin.refetch()}>다시 시도</Button>
