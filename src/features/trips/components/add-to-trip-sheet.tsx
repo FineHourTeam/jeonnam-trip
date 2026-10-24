@@ -1,7 +1,7 @@
 // "일정에 담기" 시트 — 여행 고르기 → 일차 고르기 → 담기. 저장(보관함)과 다른 동작이다 (PLC-06).
 // 축제처럼 날짜가 정해진 항목은 그 날짜가 있는 일차만 고를 수 있다 (기능명세 §2 기간 적합성 검사).
 import { useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { paths } from "@/app/paths";
 import { BottomSheet } from "@/components/bottom-sheet";
@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils";
 import type { VisitItem } from "@/shared/domain";
 import { formatDateShort, formatPeriodKo } from "@/shared/lib/date";
 import { useAddItemsToTrip, useTripTargets, type TripTarget } from "../hooks/use-add-to-trip";
+import { useCurrentUid } from "../hooks/use-trips";
 
 const targetKey = (t: TripTarget) => (t.kind === "draft" ? "draft" : t.tripId);
 
@@ -38,6 +39,8 @@ export function AddToTripSheet({
   onAdded?: () => void;
 }) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const uid = useCurrentUid();
   const { options, isLoading, error, refetch } = useTripTargets();
   const add = useAddItemsToTrip();
   const [picked, setPicked] = useState<string | null>(null);
@@ -118,6 +121,15 @@ export function AddToTripSheet({
               }}
               className="py-4"
             />
+          ) : options.length === 0 && !uid ? (
+            <div className="bg-background-subtle flex items-center justify-between gap-3 rounded-xl p-4 text-sm">
+              <span className="text-muted-foreground">로그인하면 저장한 여행에도 담을 수 있어요.</span>
+              <Button asChild variant="outline" size="sm" className="bg-background shrink-0">
+                <Link to={paths.login} state={{ from: location.pathname + location.search }}>
+                  로그인하기
+                </Link>
+              </Button>
+            </div>
           ) : options.length === 0 ? (
             <p className="text-muted-foreground bg-background-subtle rounded-xl p-4 text-sm">
               아직 만든 여행이 없어요. 새 여행으로 시작해 주세요.
