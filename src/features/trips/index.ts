@@ -10,6 +10,14 @@ export {
   useTrip,
 } from "./hooks/use-trips";
 export { useTripDraftStore } from "./hooks/use-trip-draft-store";
+export { useTripWorkingStore, type WorkingCopy } from "./hooks/use-trip-working-store";
+export {
+  useAddItemsToTrip,
+  useTripTargets,
+  type TripTarget,
+  type TripTargetOption,
+} from "./hooks/use-add-to-trip";
+export { AddToTripSheet } from "./components/add-to-trip-sheet";
 export {
   DEFAULT_DAY_END,
   DEFAULT_DAY_START,

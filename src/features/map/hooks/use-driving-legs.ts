@@ -28,7 +28,9 @@ export function useDrivingLegs(requests: (LegRequest | null)[]) {
         return fetchDrivingLeg(r, signal);
       },
       enabled: r !== null,
-      staleTime: 10 * 60_000,
+      // 같은 좌표 구간은 다시 조회하지 않는다 (경로 API 호출 비용) — 화면에는 "현재 교통 기준 예상"으로 표기
+      staleTime: 6 * 60 * 60_000,
+      gcTime: 6 * 60 * 60_000,
       retry: 1,
     })),
     combine: (results) => ({

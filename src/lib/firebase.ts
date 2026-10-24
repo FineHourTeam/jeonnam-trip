@@ -29,7 +29,7 @@ export const storage = getStorage(app);
 // 로컬 개발은 에뮬레이터가 기본 — 실 프로젝트 데이터를 건드리지 않는다.
 // VITE_USE_EMULATORS=false 로 끌 수 있다 (예: 스테이징 데이터 확인 시).
 if (import.meta.env.DEV && env.VITE_USE_EMULATORS) {
-  connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
-  connectFirestoreEmulator(db, "127.0.0.1", 8080);
-  connectStorageEmulator(storage, "127.0.0.1", 9199);
+  connectAuthEmulator(auth, `http://127.0.0.1:${env.VITE_EMULATOR_AUTH_PORT}`, { disableWarnings: true });
+  connectFirestoreEmulator(db, "127.0.0.1", Number(env.VITE_EMULATOR_FIRESTORE_PORT));
+  connectStorageEmulator(storage, "127.0.0.1", Number(env.VITE_EMULATOR_STORAGE_PORT));
 }

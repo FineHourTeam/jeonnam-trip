@@ -58,3 +58,32 @@ export function formatDateKo(date: string): string {
   const [, m = 0, d = 0] = date.split("-").map(Number);
   return `${String(m)}월 ${String(d)}일 (${WEEKDAY[dayOfWeek(date)]})`;
 }
+
+/** 지금의 KST 시각 "HH:mm" */
+export function nowKstTime(now: Date = new Date()): string {
+  return new Date(now.getTime() + KST_OFFSET_MS).toISOString().slice(11, 16);
+}
+
+/** 그 달의 첫날·마지막 날 */
+export function monthRange(date: string): { from: string; to: string } {
+  const [y = 0, m = 1] = date.split("-").map(Number);
+  const from = `${String(y)}-${String(m).padStart(2, "0")}-01`;
+  const last = new Date(Date.UTC(y, m, 0)).getUTCDate();
+  return { from, to: `${String(y)}-${String(m).padStart(2, "0")}-${String(last).padStart(2, "0")}` };
+}
+
+/** "10.23 (금)" — 탭·칩처럼 좁은 자리 */
+export function formatDateShort(date: string): string {
+  const [, m = 0, d = 0] = date.split("-").map(Number);
+  return `${String(m)}.${String(d)} (${WEEKDAY[dayOfWeek(date)]})`;
+}
+
+/** "10월 23일 ~ 25일" / "10월 30일 ~ 11월 8일" */
+export function formatPeriodKo(start: string, end: string): string {
+  const [, sm = 0, sd = 0] = start.split("-").map(Number);
+  const [, em = 0, ed = 0] = end.split("-").map(Number);
+  if (start === end) return `${String(sm)}월 ${String(sd)}일`;
+  return sm === em
+    ? `${String(sm)}월 ${String(sd)}일 ~ ${String(ed)}일`
+    : `${String(sm)}월 ${String(sd)}일 ~ ${String(em)}월 ${String(ed)}일`;
+}

@@ -9,7 +9,8 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
-      <Toaster />
+      {/* 위쪽에 띄운다 — 모바일 하단 고정 버튼·탭 바를 가리지 않게 */}
+      <Toaster position="top-center" />
     </QueryClientProvider>
   );
 }

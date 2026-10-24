@@ -31,6 +31,8 @@ export interface VisitSnapshot {
   festivalState?: "scheduled" | "changed" | "cancelled";
   /** 원본 updatedAt — 이 값이 바뀌었으면 재검토 안내 */
   sourceUpdatedAt?: string;
+  /** 사용자가 "그대로 두기"로 확인한 원본 updatedAt — 같은 변경을 다시 안내하지 않는다 */
+  ackUpdatedAt?: string;
   capturedAt: string;
 }
 
@@ -101,8 +103,18 @@ export type TripDraft = Omit<
   "id" | "ownerUid" | "version" | "createdAt" | "updatedAt" | "shareId"
 >;
 
+/** 공유 시점에 계산한 시각 사본 — 받는 사람 화면은 경로를 다시 조회하지 않고 이 값을 보여준다 */
+export interface PublicItemTimes {
+  /** "HH:mm" (24시 이후는 "25:10"처럼 그대로). null = 공유 시점에 미확정 */
+  arrive: string | null;
+  start: string | null;
+  end: string | null;
+  /** 이전 장소에서 오는 자동차 경로 (null = 첫 장소 또는 조회 실패·위치 미확인) */
+  legBefore: { durationMin: number; distanceM: number } | null;
+}
+
 /** 공유본에 담는 방문 항목 — 개인 메모 제외 */
-export type PublicVisitItem = Omit<VisitItem, "memo">;
+export type PublicVisitItem = Omit<VisitItem, "memo"> & { times?: PublicItemTimes };
 
 /** 공개 시점 사본 — 개인 메모·개인 출발/종료 위치·개인용 SNS 링크 제외 */
 export interface SharedTrip {

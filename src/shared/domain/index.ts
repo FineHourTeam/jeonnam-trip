@@ -2,5 +2,7 @@
 export * from "./collections";
 export * from "./content";
 export * from "./region";
+export * from "./planning";
 export * from "./routing";
+export * from "./taxonomy";
 export * from "./trip";

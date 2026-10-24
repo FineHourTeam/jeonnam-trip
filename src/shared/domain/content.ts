@@ -72,6 +72,21 @@ export const DEFAULT_STAY_MIN: Record<PlaceCategory | "festival", number> = {
   lodging: 0,
 };
 
+/**
+ * 운영 콘텐츠 사진 — 사용 가능한 이미지만 등록한다 (서비스기획 §5). SNS 원문 저장이 이미지 복제 권한을 뜻하지 않는다.
+ * 라이선스가 저작자 표시를 요구하면(CC BY 등) credit·license·sourceUrl을 채우고 화면에 노출한다.
+ */
+export interface PhotoAsset {
+  url: string;
+  alt?: string;
+  /** 저작자 표시 (예: "홍길동") */
+  credit?: string;
+  /** 라이선스 약칭 (예: "CC BY-SA 4.0", "공공누리 1유형") */
+  license?: string;
+  /** 원본 출처 페이지 */
+  sourceUrl?: string;
+}
+
 export interface SourceLink {
   platform: "official" | "instagram" | "youtube" | "blog" | "other";
   url: string;
@@ -101,7 +116,7 @@ export interface Place {
     pets: boolean | null;
   };
   phone?: string;
-  photos: string[];
+  photos: PhotoAsset[];
   sources: SourceLink[];
   checks: {
     location: FieldCheck;
@@ -143,7 +158,7 @@ export interface Festival {
   parking?: string;
   contact?: string;
   officialUrl?: string;
-  photos: string[];
+  photos: PhotoAsset[];
   /** 변경·취소 상태 — 취소는 상세 열람 가능, 신규 일정 추가 차단 */
   state: FestivalState;
   stateNote?: string;

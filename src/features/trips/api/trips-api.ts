@@ -10,7 +10,6 @@ import {
   query,
   runTransaction,
   setDoc,
-  updateDoc,
   where,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -90,12 +89,14 @@ export async function saveTrip(trip: Trip): Promise<Trip> {
   });
 }
 
-/** 공유본 id 연결/해제 — 공유 기능이 사용. 버전도 함께 올린다 */
-export async function setTripShareId(trip: Trip, shareId: string | null): Promise<void> {
-  await updateDoc(doc(db, COL.trips, trip.id), {
-    shareId,
-    version: trip.version + 1,
-    updatedAt: new Date().toISOString(),
+/** 공유본 id 연결/해제 — 공유 기능이 사용. 서버의 현재 버전에서 1 올린다 (편집 중 저장과 겹쳐도 규칙을 통과하게) */
+export async function setTripShareId(tripId: string, shareId: string | null): Promise<void> {
+  const ref = doc(db, COL.trips, tripId);
+  await runTransaction(db, async (tx) => {
+    const snap = await tx.get(ref);
+    if (!snap.exists()) return;
+    const server = snap.data() as TripDoc;
+    tx.update(ref, { shareId, version: server.version + 1, updatedAt: new Date().toISOString() });
   });
 }
 
