@@ -181,7 +181,14 @@ export function TripEditor({
           <UnplacedList
             items={trip.unplaced}
             onPlace={setPlacePick}
-            onRemove={(i) => { apply((t) => removeUnplaced(t, i)); }}
+            onRemove={(i) => {
+              const before = trip;
+              if (apply((t) => removeUnplaced(t, i))) {
+                toast.success(`${trip.unplaced[i]?.snapshot.name ?? "장소"} 후보를 지웠어요.`, {
+                  action: { label: "되돌리기", onClick: () => { update(() => before); } },
+                });
+              }
+            }}
           />
         </div>
 
