@@ -263,6 +263,7 @@ export function TripEditor({
           initialTab={picker.tab}
           date={trip.days[picker.day]?.date ?? trip.startDate}
           siguns={trip.siguns}
+          dayItems={trip.days[picker.day]?.items ?? []}
           onPick={(items) => {
             const first = items[0];
             if (picker.mode === "replace" && picker.index !== undefined && first) {

@@ -1,7 +1,7 @@
 // 코스에 장소 넣기·교체하기 — 등록 장소 검색 / 보관함에서 꺼내오기 / 그날 축제 (S10 "장소 추가·보관함에서 꺼내오기", FES-05).
 import { useState } from "react";
 import { BottomSheet } from "@/components/bottom-sheet";
-import { AddIcon, LockIcon, SearchIcon } from "@/components/icons";
+import { AddIcon, CheckIcon, LockIcon, SearchIcon } from "@/components/icons";
 import { EmptyState, ErrorState, RowListSkeleton } from "@/components/state-views";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -19,8 +19,9 @@ import { useCustomPlaces, useSavedPlaces } from "@/features/library";
 import { useCurrentUid, visitFromCustomPlace, visitFromFestival, visitFromPlace } from "@/features/trips";
 import { sigunName, type SigunCode, type VisitItem } from "@/shared/domain";
 import { formatDateShort } from "@/shared/lib/date";
+import { cn } from "@/lib/utils";
 
-function SearchTab({ siguns, onPick }: { siguns: SigunCode[]; onPick: (items: VisitItem[]) => void }) {
+function SearchTab({ siguns, inDay, onPick }: { siguns: SigunCode[]; inDay: Set<string>; onPick: (items: VisitItem[]) => void }) {
   const [sigun, setSigun] = useState<SigunCode | null>(siguns[0] ?? null);
   const [keyword, setKeyword] = useState("");
   const q = usePlaces({ sigun });
@@ -64,10 +65,17 @@ function SearchTab({ siguns, onPick }: { siguns: SigunCode[]; onPick: (items: Vi
               place={p}
               to={null}
               trailing={
-                <Button size="touch" variant="outline" onClick={() => { onPick([visitFromPlace(p)]); }} aria-label={`${p.name} 담기`}>
-                  <AddIcon size="sm" />
-                  담기
-                </Button>
+                inDay.has(p.id) ? (
+                  <Button size="touch" variant="outline" disabled aria-label={`${p.name} 이 일차에 있어요`}>
+                    <CheckIcon size="sm" />
+                    담음
+                  </Button>
+                ) : (
+                  <Button size="touch" variant="outline" onClick={() => { onPick([visitFromPlace(p)]); }} aria-label={`${p.name} 담기`}>
+                    <AddIcon size="sm" />
+                    담기
+                  </Button>
+                )
               }
             />
           ))}
@@ -77,7 +85,7 @@ function SearchTab({ siguns, onPick }: { siguns: SigunCode[]; onPick: (items: Vi
   );
 }
 
-function LibraryTab({ single, onPick }: { single: boolean; onPick: (items: VisitItem[]) => void }) {
+function LibraryTab({ single, inDay, onPick }: { single: boolean; inDay: Set<string>; onPick: (items: VisitItem[]) => void }) {
   const uid = useCurrentUid();
   const saved = useSavedPlaces();
   const custom = useCustomPlaces();
@@ -89,18 +97,19 @@ function LibraryTab({ single, onPick }: { single: boolean; onPick: (items: Visit
   }
   if (saved.isPending || places.isPending) return <RowListSkeleton />;
   if (saved.isError) return <ErrorState error={saved.error} onRetry={() => void saved.refetch()} className="py-6" />;
-  const rows: { key: string; label: string; note: string; item: () => VisitItem; place?: NonNullable<typeof places.data>[number] }[] = [];
+  const rows: { key: string; refId: string; label: string; note: string; item: () => VisitItem; place?: NonNullable<typeof places.data>[number] }[] = [];
   for (const s of saved.data) {
     if (s.ref.kind === "place") {
       const placeId = s.ref.placeId;
       const p = places.data?.find((x) => x.id === placeId);
-      if (p) rows.push({ key: s.id, label: p.name, note: s.memo, item: () => visitFromPlace(p), place: p });
+      if (p) rows.push({ key: s.id, refId: p.id, label: p.name, note: s.memo, item: () => visitFromPlace(p), place: p });
     } else {
       const customId = s.ref.customPlaceId;
       const cp = custom.data?.find((x) => x.id === customId);
       if (cp)
         rows.push({
           key: s.id,
+          refId: cp.id,
           label: cp.name,
           note: cp.location ? "내가 등록한 장소" : "내가 등록한 장소 · 위치 확인 필요",
           item: () => visitFromCustomPlace(cp),
@@ -110,33 +119,41 @@ function LibraryTab({ single, onPick }: { single: boolean; onPick: (items: Visit
   if (rows.length === 0) return <EmptyState title="보관함이 비어 있어요" description="장소 화면에서 저장하면 여기서 꺼내올 수 있어요." className="py-6" />;
   return (
     <div className="flex flex-col gap-3">
-      {rows.map((r) => (
-        <label key={r.key} className="border-border flex cursor-pointer items-center gap-3 rounded-xl border p-3">
-          {single ? null : (
-            <Checkbox
-              checked={checked.has(r.key)}
-              onCheckedChange={(v) => {
-                setChecked((prev) => {
-                  const next = new Set(prev);
-                  if (v === true) next.add(r.key);
-                  else next.delete(r.key);
-                  return next;
-                });
-              }}
-              aria-label={`${r.label} 선택`}
-            />
-          )}
-          <span className="flex min-w-0 flex-1 flex-col">
-            <span className="truncate font-semibold">{r.label}</span>
-            {r.note ? <span className="text-muted-foreground truncate text-sm">{r.note}</span> : null}
-          </span>
-          {single ? (
-            <Button size="touch" variant="outline" onClick={() => { onPick([r.item()]); }}>
-              고르기
-            </Button>
-          ) : null}
-        </label>
-      ))}
+      {rows.map((r) => {
+        const here = inDay.has(r.refId);
+        return (
+          <label key={r.key} className={cn("border-border flex items-center gap-3 rounded-xl border p-3", here ? "opacity-60" : "cursor-pointer")}>
+            {single ? null : (
+              <Checkbox
+                disabled={here}
+                checked={checked.has(r.key)}
+                onCheckedChange={(v) => {
+                  setChecked((prev) => {
+                    const next = new Set(prev);
+                    if (v === true) next.add(r.key);
+                    else next.delete(r.key);
+                    return next;
+                  });
+                }}
+                aria-label={`${r.label} 선택`}
+              />
+            )}
+            <span className="flex min-w-0 flex-1 flex-col">
+              <span className="truncate font-semibold">{r.label}</span>
+              {here ? (
+                <span className="text-muted-foreground truncate text-sm">이 일차에 있어요</span>
+              ) : r.note ? (
+                <span className="text-muted-foreground truncate text-sm">{r.note}</span>
+              ) : null}
+            </span>
+            {single ? (
+              <Button size="touch" variant="outline" disabled={here} onClick={() => { onPick([r.item()]); }}>
+                고르기
+              </Button>
+            ) : null}
+          </label>
+        );
+      })}
       {single ? null : (
         <Button
           size="xl"
@@ -200,6 +217,7 @@ export function PlacePickerSheet({
   mode,
   date,
   siguns,
+  dayItems,
   onPick,
   initialTab = "search",
 }: {
@@ -209,8 +227,13 @@ export function PlacePickerSheet({
   mode: "add" | "replace";
   date: string;
   siguns: SigunCode[];
+  /** 고르는 일차에 이미 있는 방문 — 다시 담지 않게 표시한다 */
+  dayItems: VisitItem[];
   onPick: (items: VisitItem[]) => void;
 }) {
+  const inDay = new Set(
+    dayItems.flatMap((x) => (x.ref.kind === "place" ? [x.ref.placeId] : x.ref.kind === "custom" ? [x.ref.customPlaceId] : [])),
+  );
   const pick = (items: VisitItem[]) => {
     onPick(items);
     onOpenChange(false);
@@ -230,10 +253,10 @@ export function PlacePickerSheet({
           <TabsTrigger value="festival">그날 축제</TabsTrigger>
         </TabsList>
         <TabsContent value="search" className="pt-3">
-          <SearchTab siguns={siguns} onPick={pick} />
+          <SearchTab siguns={siguns} inDay={inDay} onPick={pick} />
         </TabsContent>
         <TabsContent value="library" className="pt-3">
-          <LibraryTab single={mode === "replace"} onPick={pick} />
+          <LibraryTab single={mode === "replace"} inDay={inDay} onPick={pick} />
         </TabsContent>
         <TabsContent value="festival" className="pt-3">
           <FestivalTab date={date} siguns={siguns} onPick={pick} />
