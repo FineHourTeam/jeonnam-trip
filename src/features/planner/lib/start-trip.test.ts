@@ -110,4 +110,12 @@ describe("buildStartDraft", () => {
     expect(names).toContain("꼭 갈 곳");
     expect(d.unplaced).toEqual([]);
   });
+
+  test("제목을 비우면 지역 이름으로 정한다", () => {
+    expect(buildStartDraft(base).title).toBe("순천시 여행");
+    expect(buildStartDraft({ ...base, siguns: ["suncheon", "yeosu"] }).title).toBe("순천시·여수시 여행");
+    expect(buildStartDraft({ ...base, siguns: ["suncheon", "yeosu", "mokpo"] }).title).toBe("순천시 외 2곳 여행");
+    expect(buildStartDraft({ ...base, siguns: [] }).title).toBe("새 여행");
+    expect(buildStartDraft({ ...base, title: "  가을 여행 " }).title).toBe("가을 여행");
+  });
 });

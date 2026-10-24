@@ -1,6 +1,7 @@
 // 여행 시작(S09) → 편집기(S10)로 넘길 초안 조립 — 추천·직접 만들기·축제·크리에이터 코스 복사가 같은 모양의 초안을 만든다.
 // 크리에이터 코스: 원본 장소·순서를 개인 편집본으로 가져오고, 기간이 짧으면 넘치는 일차는 미배치 후보로 보존한다 (기능명세 §5).
 import { newTripDraft, visitFromFestival, visitFromPlace } from "@/features/trips";
+import { sigunName } from "@/shared/domain";
 import type {
   CreatorCourse,
   Festival,
@@ -105,5 +106,9 @@ function copyCourse(draft: TripDraft, course: CreatorCourse, places: Place[]): T
 function defaultTitle(input: StartTripInput): string {
   if (input.course) return input.course.course.title.replace(/^\[샘플\]\s*/, "") + " (내 코스)";
   if (input.festival) return `${input.festival.festival.name.replace(/^\[샘플\]\s*/, "")} 여행`;
-  return "새 여행";
+  // 내 여행 목록에서 구분되도록 지역 이름으로 — "순천시 여행", "순천시·여수시 여행", "순천시 외 2곳 여행"
+  const [first, second, ...rest] = input.siguns.map(sigunName);
+  if (!first) return "새 여행";
+  if (!second) return `${first} 여행`;
+  return rest.length === 0 ? `${first}·${second} 여행` : `${first} 외 ${String(rest.length + 1)}곳 여행`;
 }
