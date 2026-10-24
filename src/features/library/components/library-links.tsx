@@ -55,7 +55,7 @@ export function LibraryLinks() {
         <p className="text-muted-foreground text-sm">
           링크 {all.length}개 · 장소 연결 전 {all.filter((l) => l.linked.length === 0).length}개
         </p>
-        <Toggle variant="chip" size="chip" pressed={onlyUnlinked} onPressedChange={setOnlyUnlinked}>
+        <Toggle variant="chip" size="chip" pressed={onlyUnlinked} onPressedChange={setOnlyUnlinked} className="shrink-0">
           장소 연결 전만
         </Toggle>
       </div>

@@ -181,6 +181,7 @@ export default function PlaceListPage() {
           onPressedChange={() => {
             setFilterOpen(true);
           }}
+          className="shrink-0"
           aria-label={`상세 필터${filters > 0 ? ` ${String(filters)}개 적용 중` : ""}`}
         >
           <FilterIcon size="sm" />
