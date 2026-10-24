@@ -1,4 +1,5 @@
 // 사용자 표시용 숫자·시간 서식 — 한국식 표기 (rules.md § 한국어 카피 — 변수·숫자·서식).
+import { todayKst } from "./date";
 
 /** 분 → "1시간 5분" / "45분" / "0분" */
 export function formatDuration(min: number): string {
@@ -25,9 +26,10 @@ export function formatClock(min: number): string {
   return day > 0 ? `다음 날 ${hh}:${mm}` : `${hh}:${mm}`;
 }
 
-/** ISO 일시 → "2026. 10. 16." (마지막 마침표까지) */
+/** ISO 일시 → "2026. 10. 16." (마지막 마침표까지) — 시각이 있으면 한국 날짜 기준 */
 export function formatDateDot(iso: string): string {
-  const [y = "", m = "", d = ""] = iso.slice(0, 10).split("-");
+  const date = iso.length > 10 ? todayKst(new Date(iso)) : iso;
+  const [y = "", m = "", d = ""] = date.split("-");
   return `${y}. ${String(Number(m))}. ${String(Number(d))}.`;
 }
 
