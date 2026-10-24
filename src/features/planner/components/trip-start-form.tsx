@@ -17,7 +17,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { DEFAULT_DAY_END, DEFAULT_DAY_START } from "@/features/trips";
 import { cn } from "@/lib/utils";
 import { MAX_TRIP_DAYS, type SigunCode, type TripPace } from "@/shared/domain";
-import { addDays, diffDays, formatDateShort, todayKst } from "@/shared/lib/date";
+import { diffDays, formatDateShort, todayKst } from "@/shared/lib/date";
 import { tripLengthLabel } from "@/shared/lib/format";
 
 const HHMM = /^([01]\d|2[0-3]):[0-5]\d$/;
@@ -105,18 +105,26 @@ export function TripStartForm({
   const end = form.watch("endDate");
   const days = start && end ? diffDays(start, end) + 1 : 0;
 
-  const submit = form.handleSubmit((v) => {
-    onSubmit({
-      startDate: v.startDate,
-      endDate: v.endDate,
-      siguns: v.siguns as SigunCode[],
-      startMode: v.startMode,
-      pace: v.pace === "none" ? null : v.pace,
-      dayStart: v.dayStart,
-      dayEnd: v.dayEnd,
-      title: v.title,
-    });
-  });
+  const submit = form.handleSubmit(
+    (v) => {
+      onSubmit({
+        startDate: v.startDate,
+        endDate: v.endDate,
+        siguns: v.siguns as SigunCode[],
+        startMode: v.startMode,
+        pace: v.pace === "none" ? null : v.pace,
+        dayStart: v.dayStart,
+        dayEnd: v.dayEnd,
+        title: v.title,
+      });
+    },
+    (e) => {
+      // 달력·지역 칩은 포커스할 입력이 없어 맨 아래 버튼에서는 오류가 안 보인다 — 첫 오류 칸으로 옮긴다
+      const section = e.startDate || e.endDate ? "start-dates" : e.siguns ? "start-region" : null;
+      if (section) document.getElementById(section)?.scrollIntoView({ behavior: "smooth", block: "center" });
+      else setDetailOpen(true);
+    },
+  );
 
   return (
     <form
@@ -147,16 +155,15 @@ export function TripStartForm({
             numberOfMonths={1}
             defaultMonth={start ? toDate(start) : mustInclude ? toDate(mustInclude) : undefined}
             selected={start ? { from: toDate(start), to: end ? toDate(end) : undefined } : undefined}
-            onSelect={(r) => {
-              const from = r?.from ? fromDate(r.from) : "";
-              const to = r?.to ? fromDate(r.to) : "";
+            onSelect={(r, picked) => {
+              let from = r?.from ? fromDate(r.from) : "";
+              let to = r?.to ? fromDate(r.to) : "";
+              // 최대 기간을 넘기는 클릭은 그 날부터 새로 고르는 것으로 본다 (오류 문구 대신)
+              if (from && to && diffDays(from, to) >= MAX_TRIP_DAYS) from = to = fromDate(picked);
               form.setValue("startDate", from, { shouldValidate: false });
               form.setValue("endDate", to, { shouldValidate: Boolean(to) });
             }}
-            disabled={[
-              { before: toDate(today) },
-              ...(start && !end ? [{ after: toDate(addDays(start, MAX_TRIP_DAYS - 1)) }] : []),
-            ]}
+            disabled={{ before: toDate(today) }}
             className="w-full [--cell-size:--spacing(11)]"
           />
         </div>
