@@ -14,6 +14,16 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* shadcn radix-nova 스타일은 Base UI식 상태 속성(data-open·data-checked…)으로 쓰였는데, Radix는 data-state·data-orientation을 단다.
+ * 두 방식을 모두 잡아 체크·탭 활성·열림 상태 스타일이 빠지지 않게 한다 (2026-10-17). */
+@custom-variant data-open (&:is([data-state="open"], [data-open]:not([data-open="false"])));
+@custom-variant data-closed (&:is([data-state="closed"], [data-closed]:not([data-closed="false"])));
+@custom-variant data-checked (&:is([data-state="checked"], [data-checked]:not([data-checked="false"])));
+@custom-variant data-unchecked (&:is([data-state="unchecked"], [data-unchecked]:not([data-unchecked="false"])));
+@custom-variant data-active (&:is([data-state="active"], [data-active]:not([data-active="false"])));
+@custom-variant data-horizontal (&:is([data-orientation="horizontal"], [data-horizontal]));
+@custom-variant data-vertical (&:is([data-orientation="vertical"], [data-vertical]));
+
 :root {
   /* ── 브랜드 ──
    * 기본값은 의도적 무채색 플레이스홀더 — 설치 H단계에서 반드시 브랜드색으로 치환한다
@@ -21,6 +31,9 @@
    * 모든 프로젝트가 "AI가 만든 티"가 나는 색으로 시작한다 (rules.md § 팔레트 정량 상한). */
   --primary: oklch(0.475 0.095 65); /* #805117 황토 갈색 — 시드 브랜드색 */
   --primary-foreground: oklch(0.985 0 0);
+  /* 연한 황토 — 선택한 칩·다음 장소·강조 영역 (용도 토큰, 2026-10-17) */
+  --primary-soft: oklch(0.962 0.024 76);
+  --primary-soft-foreground: oklch(0.43 0.09 62);
 
   /* ── 표면 ──
    * 페이지·섹션 배경은 흰색이 기본. 회색 배경이 필요하면 background-subtle(#f9f9f9)만 쓴다 —
@@ -48,6 +61,13 @@
   --success-foreground: oklch(0.985 0 0);
   --warning: oklch(0.795 0.16 86);
   --warning-foreground: oklch(0.205 0 0);
+  /* 상태 안내 영역(충돌·휴무·확인됨) — 진한 상태색은 배지·아이콘, 연한 쌍은 안내 상자 배경 (용도 토큰, 2026-10-17) */
+  --destructive-soft: oklch(0.968 0.018 25);
+  --destructive-soft-foreground: oklch(0.47 0.17 27);
+  --warning-soft: oklch(0.975 0.035 92);
+  --warning-soft-foreground: oklch(0.43 0.085 68);
+  --success-soft: oklch(0.968 0.025 152);
+  --success-soft-foreground: oklch(0.42 0.1 150);
 
   /* ── 경계 ── */
   --border: oklch(0.922 0 0);
@@ -77,6 +97,8 @@
 .dark {
   --primary: oklch(0.74 0.11 68);
   --primary-foreground: oklch(0.205 0 0);
+  --primary-soft: oklch(0.27 0.035 65);
+  --primary-soft-foreground: oklch(0.86 0.075 74);
 
   --background: oklch(0.145 0 0);
   --background-subtle: oklch(0.18 0 0);
@@ -99,6 +121,12 @@
   --success-foreground: oklch(0.145 0 0);
   --warning: oklch(0.828 0.155 86);
   --warning-foreground: oklch(0.145 0 0);
+  --destructive-soft: oklch(0.26 0.05 25);
+  --destructive-soft-foreground: oklch(0.85 0.09 25);
+  --warning-soft: oklch(0.27 0.04 85);
+  --warning-soft-foreground: oklch(0.88 0.1 88);
+  --success-soft: oklch(0.26 0.04 150);
+  --success-soft-foreground: oklch(0.86 0.1 150);
 
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
@@ -121,6 +149,8 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-soft-foreground: var(--primary-soft-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
@@ -133,6 +163,12 @@
   --color-success-foreground: var(--success-foreground);
   --color-warning: var(--warning);
   --color-warning-foreground: var(--warning-foreground);
+  --color-destructive-soft: var(--destructive-soft);
+  --color-destructive-soft-foreground: var(--destructive-soft-foreground);
+  --color-warning-soft: var(--warning-soft);
+  --color-warning-soft-foreground: var(--warning-soft-foreground);
+  --color-success-soft: var(--success-soft);
+  --color-success-soft-foreground: var(--success-soft-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -190,4 +226,17 @@
 /* iOS 홈 인디케이터 영역 — 하단 고정 내비게이션용 */
 @utility pb-safe {
   padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 가로 스크롤 레일 — 스크롤바를 숨기고 터치·트랙패드 스크롤만 남긴다 */
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* 하단 탭 바(h-16) 위에 뜨는 고정 영역 — 탭 바가 있는 화면의 선택 바 등 */
+@utility bottom-tabbar {
+  bottom: calc(4rem + env(safe-area-inset-bottom));
 }

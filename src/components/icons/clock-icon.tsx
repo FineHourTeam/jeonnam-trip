@@ -1,0 +1,9 @@
+import { createIcon } from "./icon";
+
+export const ClockIcon = createIcon(
+  "ClockIcon",
+  <>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M12 7v5l3 2" />
+  </>,
+);

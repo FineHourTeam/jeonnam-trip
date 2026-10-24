@@ -71,3 +71,43 @@ import { DeleteIcon } from "@/components/icons";
 | `SearchIcon` | 검색 | 2026-10-16 |
 | `ChevronLeftIcon` | 이전·뒤로 (달력 등) | 2026-10-16 |
 | `ChevronUpIcon` | 접기·위로 (셀렉트 스크롤) | 2026-10-16 |
+| `CompassIcon` | 탐색 탭 | 2026-10-17 |
+| `BookmarkIcon` | 저장(보관함에 담기) · 보관함 탭 | 2026-10-17 |
+| `BookmarkFilledIcon` | 저장됨 상태 | 2026-10-17 |
+| `TripIcon` | 내 여행 탭 · 여행 코스 | 2026-10-17 |
+| `CalendarIcon` | 날짜 · 달력 | 2026-10-17 |
+| `MapIcon` | 지도 보기 | 2026-10-17 |
+| `ListIcon` | 목록 보기 | 2026-10-17 |
+| `ClockIcon` | 시각 · 체류 · 이동시간 | 2026-10-17 |
+| `CarIcon` | 자동차 이동 | 2026-10-17 |
+| `PinIcon` | 위치 · 주소 | 2026-10-17 |
+| `ShareIcon` | 공유 | 2026-10-17 |
+| `LinkIcon` | 링크 · SNS 원문 | 2026-10-17 |
+| `ExternalLinkIcon` | 외부 사이트로 이동 | 2026-10-17 |
+| `FilterIcon` | 필터 | 2026-10-17 |
+| `MoreIcon` | 더보기 메뉴 | 2026-10-17 |
+| `LockIcon` | 고정 시각(프로그램) | 2026-10-17 |
+| `RefreshIcon` | 다시 불러오기 · 재계산 | 2026-10-17 |
+| `UserIcon` | 계정 | 2026-10-17 |
+| `LogoutIcon` | 로그아웃 | 2026-10-17 |
+| `PhoneIcon` | 전화 문의 | 2026-10-17 |
+| `ParkingIcon` | 주차 | 2026-10-17 |
+| `GlobeIcon` | 공식 홈페이지 | 2026-10-17 |
+| `CopyIcon` | 링크 복사 · 내 코스로 복사 | 2026-10-17 |
+| `SwapIcon` | 장소 교체 | 2026-10-17 |
+| `FlagIcon` | 꼭 가볼 곳 | 2026-10-17 |
+| `FestivalIcon` | 축제 | 2026-10-17 |
+| `CafeIcon` | 카페 | 2026-10-17 |
+| `RestaurantIcon` | 식당 | 2026-10-17 |
+| `ShopIcon` | 상점 | 2026-10-17 |
+| `AttractionIcon` | 관광지 | 2026-10-17 |
+| `LodgingIcon` | 숙소 | 2026-10-17 |
+| `PhotoIcon` | 사진 없음 자리 | 2026-10-17 |
+| `NoteIcon` | 개인 메모 | 2026-10-17 |
+| `TagIcon` | 태그 | 2026-10-17 |
+| `RouteIcon` | 추천 코스 · 동선 | 2026-10-17 |
+| `ArrowLeftIcon` | 뒤로 가기 | 2026-10-17 |
+| `ArrowRightIcon` | 다음 · 이동 | 2026-10-17 |
+| `SettingsIcon` | 일차 설정 | 2026-10-17 |
+| `UploadIcon` | 사진 올리기 | 2026-10-17 |
+| `EyeIcon` | 미리보기 | 2026-10-17 |
