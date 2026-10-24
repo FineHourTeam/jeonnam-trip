@@ -11,7 +11,7 @@ import globals from "globals";
 export default tseslint.config(
   // e2e·설정 파일은 앱 tsconfig(include: src) 밖이라 type-aware 파서가 못 찾는다.
   // E2E 스펙은 Playwright가 실행 시 자체 타입체크하므로 메인 lint에서 제외 (표준 패턴).
-  { ignores: ["dist", "coverage", "functions", "e2e", "playwright.config.ts", "playwright.e2e.config.ts", "*.config.js"] },
+  { ignores: ["dist", "coverage", "functions", "e2e", "playwright.config.ts", "playwright.e2e.config.ts", "*.config.js", ".claude/worktrees"] },
   {
     files: ["**/*.{ts,tsx}"],
     extends: [
