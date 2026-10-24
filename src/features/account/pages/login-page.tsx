@@ -35,11 +35,13 @@ export default function LoginPage() {
   const test = useTestSignIn();
   const [testEmail, setTestEmail] = useState("user@test.local");
 
-  if (auth.status === "authed") return <Navigate to={from} replace />;
+  // 저장하려고 온 경우 돌아간 화면이 저장을 이어서 한다
+  const resume = state?.purpose === "save" ? { resumeSave: true } : null;
+  if (auth.status === "authed") return <Navigate to={from} replace state={resume} />;
 
   const done = () => {
     toast.success("로그인했어요.");
-    void navigate(from, { replace: true });
+    void navigate(from, { replace: true, state: resume });
   };
   const fail = (e: unknown) => {
     const msg = loginErrorMessage(e);
@@ -64,7 +66,7 @@ export default function LoginPage() {
 
         {hasDraft ? (
           <Notice tone="info" title="작성 중인 여행이 이 기기에 있어요">
-            로그인해도, 취소해도 그대로 남아요. 로그인하면 저장을 이어서 할 수 있어요.
+            로그인해도, 취소해도 그대로 남아요. {resume ? "로그인하면 바로 이어서 저장해요." : "로그인하면 저장을 이어서 할 수 있어요."}
           </Notice>
         ) : null}
 

@@ -1,7 +1,7 @@
 // S10 코스 편집 화면 — 상태(불러오는 중·작성 중 없음·권한 없음·준비) 분기 + 저장(로그인 연결·버전 충돌).
 // 실제 서버 성공 응답 전에는 저장 완료를 표시하지 않는다. 로그인 취소·실패에도 작성 내용은 이 기기에 남는다 (ACC-02).
-import { useState } from "react";
-import { Link, useNavigate, useParams } from "react-router";
+import { useEffect, useRef, useState } from "react";
+import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 import { paths } from "@/app/paths";
 import { useAuthState } from "@/app/use-auth-state";
@@ -21,6 +21,7 @@ import { useTripEditor } from "../hooks/use-trip-editor";
 export default function TripEditPage() {
   const { tripId = "draft" } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const auth = useAuthState();
   const editor = useTripEditor(tripId);
   const [discardOpen, setDiscardOpen] = useState(false);
@@ -42,6 +43,16 @@ export default function TripEditPage() {
       toast.error(`저장하지 못했어요. ${errorMessage(e)}`);
     }
   }
+
+  // "로그인하고 저장"으로 로그인한 뒤 돌아오면 저장까지 이어서 한다 (한 번만 — 실패하면 저장 버튼으로 다시)
+  const resumeSave = (location.state as { resumeSave?: boolean } | null)?.resumeSave === true;
+  const canResume = resumeSave && state.status === "ready" && state.isDraft && !editor.needsLogin;
+  const resumed = useRef(false);
+  useEffect(() => {
+    if (!canResume || resumed.current) return;
+    resumed.current = true;
+    void onSave();
+  });
 
   if (state.status === "loading" || (tripId !== "draft" && auth.status === "loading")) {
     return (
