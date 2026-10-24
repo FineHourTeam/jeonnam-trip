@@ -1,0 +1,218 @@
+[
+  {
+    "id": "mokpo-harbor-2026",
+    "name": "2026 목포항구축제",
+    "sigun": "mokpo",
+    "startDate": "2026-10-16",
+    "endDate": "2026-10-18",
+    "dailyHours": "12:00~21:00",
+    "venue": "목포항 및 삼학도 일원",
+    "address": null,
+    "lat": 34.783744,
+    "lng": 126.3936788,
+    "programs": [
+      {
+        "name": "파시 경매쇼",
+        "date": "2026-10-16",
+        "start": "14:00",
+        "end": "14:30"
+      },
+      {
+        "name": "파시 경매쇼",
+        "date": "2026-10-16",
+        "start": "16:00",
+        "end": "16:30"
+      },
+      {
+        "name": "파시 경매쇼",
+        "date": "2026-10-17",
+        "start": "13:00",
+        "end": "13:30"
+      },
+      {
+        "name": "파시 경매쇼",
+        "date": "2026-10-17",
+        "start": "15:00",
+        "end": "15:30"
+      },
+      {
+        "name": "목포수협 경매",
+        "date": "2026-10-17",
+        "start": "17:00",
+        "end": "17:30"
+      },
+      {
+        "name": "파시 경매쇼",
+        "date": "2026-10-18",
+        "start": "13:00",
+        "end": "13:30"
+      },
+      {
+        "name": "파시 경매쇼",
+        "date": "2026-10-18",
+        "start": "15:00",
+        "end": "15:30"
+      },
+      {
+        "name": "목포수협 경매",
+        "date": "2026-10-18",
+        "start": "17:00",
+        "end": "17:30"
+      }
+    ],
+    "summary": "목포항과 삼학도 일원에서 사흘 동안 열리는 항구 축제예요. 옛 파시(바다 위 생선 시장)를 재현한 공연과 수산물 경매쇼, 레트로 선창거리를 즐길 수 있고 입장은 무료예요.",
+    "officialUrl": "https://mokpoharborfestival.com/",
+    "sourceUrls": [
+      "https://www.mcst.go.kr/site/s_culture/festival/festivalView.jsp?pSeq=11833",
+      "https://mokpoharborfestival.com/"
+    ],
+    "checkedAt": "2026-10-17",
+    "confidence": "high",
+    "notes": "기준일(10/17) 현재 진행 중이며 10/18에 끝나요. 기간·운영시간은 공식 누리집과 문체부 지역축제 정보가 일치해요(일부 안내 사이트엔 13:00~22:00로 나와 있다는 검색 결과가 있었지만 공식 기준으로 적었어요). '파시 만선이다'(10/16·10/17 18:00, 파시무대)와 매일 19:00 주무대 공연은 종료 시각이 없어 programs에서 뺐어요. 주소는 도로명 대신 '목포항 및 삼학도 일원'으로만 안내돼요. 좌표는 OpenStreetMap '삼학도공원' 지점(대략)."
+  },
+  {
+    "id": "hwasun-dolmen-autumn-flower-2026",
+    "name": "2026 세계문화유산 화순 고인돌 가을꽃 축제",
+    "sigun": "hwasun",
+    "startDate": "2026-10-16",
+    "endDate": "2026-10-25",
+    "dailyHours": "09:00~18:00",
+    "venue": "화순 고인돌 유적지 (도곡면 효산리·춘양면 대신리 일원)",
+    "address": null,
+    "lat": 34.98664,
+    "lng": 126.9169095,
+    "programs": [],
+    "summary": "세계문화유산 화순 고인돌 유적지에서 열흘 동안 열리는 가을꽃 축제예요. 고인돌 유적 사이로 국화 정원과 분재 전시가 꾸며지고, 청동기 생활 체험과 공연도 함께 열려요.",
+    "officialUrl": "https://www.hwasun.go.kr/festival/index.do?S=S11",
+    "sourceUrls": [
+      "https://www.mcst.go.kr/site/s_culture/festival/festivalView.jsp?pSeq=13512",
+      "https://news.mtn.co.kr/news-detail/2026100714431553836",
+      "https://www.hwasun.go.kr/festival/index.do?S=S11"
+    ],
+    "checkedAt": "2026-10-17",
+    "confidence": "high",
+    "notes": "입장료 5,000원(전액 화순사랑상품권 환급), 화순군민·미취학아동·장애인·국가유공자 등은 무료예요. 보도(MTN 2026-10-07)에 따르면 10/16은 전원 무료, 10/17부터 유료예요. 공연은 17일 'DM 트롯', 18일 'DM 레트로', 25일 'DM 발라드'로 보도됐지만 시각이 없어 programs에서 뺐어요. 도로명 주소는 없고 지역(효산리·대신리 일원)으로만 안내돼요. 좌표는 OpenStreetMap '고인돌 유적지 종합안내소' 지점이라 축제장 중심과 다를 수 있어요."
+  },
+  {
+    "id": "hampyeong-gukhyang-2026",
+    "name": "2026 대한민국 국향대전",
+    "sigun": "hampyeong",
+    "startDate": "2026-10-23",
+    "endDate": "2026-11-08",
+    "dailyHours": "10:00~18:00",
+    "venue": "함평엑스포공원 일원",
+    "address": "전남광주통합특별시 함평군 함평읍 곤재로 27",
+    "lat": 35.0545747,
+    "lng": 126.5219242,
+    "programs": [],
+    "summary": "함평엑스포공원 일원에서 17일 동안 열리는 국화 축제예요. 올해는 '신화의 국화동산'을 주제로 대형 국화 작품과 국화 분재를 전시하고 공연·체험 행사도 함께 열려요.",
+    "officialUrl": "https://www.hpftf.or.kr/",
+    "sourceUrls": [
+      "https://www.mcst.go.kr/site/s_culture/festival/festivalView.jsp?pSeq=11973",
+      "https://www.wikitree.co.kr/articles/1162352",
+      "https://nol.yanolja.com/ticket/products/26013613"
+    ],
+    "checkedAt": "2026-10-17",
+    "confidence": "high",
+    "notes": "기간은 문체부 지역축제 정보와 보도(위키트리 2026-09-28)가 일치해요. 운영시간은 문체부 10:00~18:00, 예매처(NOL 티켓) 검색 결과 09:00~18:00·매표 08:30~17:00으로 서로 달라 확인이 필요해요. 유료 축제지만 요금은 확인하지 못했어요. 함평축제관광재단 누리집은 지난 축제 배너가 남아 있어 근거로 쓰지 않았어요. 주소는 검색 결과(함평군 문서 포함) 기준, 좌표는 OpenStreetMap '함평엑스포공원'."
+  },
+  {
+    "id": "suncheon-naganeupseong-folk-2026",
+    "name": "순천 낙안읍성 민속문화축제",
+    "sigun": "suncheon",
+    "startDate": "2026-10-24",
+    "endDate": "2026-10-25",
+    "dailyHours": "11:00~17:00",
+    "venue": "순천 낙안읍성",
+    "address": "전남광주통합특별시 순천시 낙안면 충민길 30",
+    "lat": 34.906111,
+    "lng": 127.335833,
+    "programs": [],
+    "summary": "조선시대 성곽과 초가마을이 남아 있는 낙안읍성에서 이틀 동안 열리는 전통민속 축제예요. 낙안군수 부임행렬과 수문장 교대식 같은 재현 행사, 큰줄다리기·씨름 같은 참여 행사가 열려요.",
+    "officialUrl": "https://www.suncheon.go.kr/nagan/page02/0002/0001/",
+    "sourceUrls": [
+      "https://www.mcst.go.kr/site/s_culture/festival/festivalView.jsp?pSeq=11963",
+      "https://www.suncheon.go.kr/nagan/page02/0002/0001/"
+    ],
+    "checkedAt": "2026-10-17",
+    "confidence": "medium",
+    "notes": "2026년 일정·시간은 문체부 지역축제 정보에서만 확인했어요(제31회, 주제 '낙안(樂安), 즐거움을 쌓고 세대를 잇다'). 순천시 축제 소개 페이지는 오래전 갱신분이라 '매년 10월중'으로만 안내하고, 뉴스 보도로는 교차 확인하지 못했어요. 요금은 문체부 표기상 유료(성인 4,000원, 청소년·군인 2,500원, 어린이 1,500원)예요. 프로그램별 시각은 발표되지 않았어요."
+  },
+  {
+    "id": "yeosu-night-sea-fireworks-2026",
+    "name": "2026 여수밤바다 불꽃축제",
+    "sigun": "yeosu",
+    "startDate": "2026-10-31",
+    "endDate": "2026-10-31",
+    "dailyHours": "19:00~21:10",
+    "venue": "여수세계박람회장 일원",
+    "address": "전남광주통합특별시 여수시 박람회길 1",
+    "lat": 34.7486768,
+    "lng": 127.7472043,
+    "programs": [
+      {
+        "name": "식전공연",
+        "date": "2026-10-31",
+        "start": "19:00",
+        "end": "19:45"
+      },
+      {
+        "name": "개막식",
+        "date": "2026-10-31",
+        "start": "19:45",
+        "end": "20:00"
+      },
+      {
+        "name": "해상 불꽃쇼 1부 (해외 초청팀)",
+        "date": "2026-10-31",
+        "start": "20:00",
+        "end": "20:10"
+      },
+      {
+        "name": "해상 불꽃쇼 2부 (한국팀)",
+        "date": "2026-10-31",
+        "start": "20:10",
+        "end": "20:35"
+      },
+      {
+        "name": "식후공연",
+        "date": "2026-10-31",
+        "start": "20:35",
+        "end": "21:10"
+      }
+    ],
+    "summary": "여수세계박람회장 앞바다에서 하루 저녁 열리는 해상 불꽃 축제예요. 해외 초청팀과 한국팀이 차례로 불꽃쇼를 펼치고, 관람은 무료예요.",
+    "officialUrl": "https://www.yeosu.go.kr/ysff",
+    "sourceUrls": [
+      "https://www.mcst.go.kr/site/s_culture/festival/festivalView.jsp?pSeq=13374",
+      "https://www.yeosu.go.kr/ysff",
+      "https://www.yeosu.go.kr/ysff/guide"
+    ],
+    "checkedAt": "2026-10-17",
+    "confidence": "high",
+    "notes": "공식 행사일정표에서 불꽃쇼 행은 '20:00~20:10 / 1부(해외 초청팀)', '20:10~20:35 / 2부(한국팀)'로 읽었어요(표 병합 구조라 1부·2부 경계는 해석이에요). 관람존은 이미지로만 안내돼요. 안내전화 1899-2012. 주소는 검색 결과(박람회장 안내) 기준, 좌표는 OpenStreetMap '여수세계박람회장'."
+  },
+  {
+    "id": "goheung-yuja-2026",
+    "name": "제6회 고흥유자축제",
+    "sigun": "goheung",
+    "startDate": "2026-11-12",
+    "endDate": "2026-11-15",
+    "dailyHours": "10:00~22:00",
+    "venue": "고흥유자축제장 (풍양면 한동리 일원)",
+    "address": "전남광주통합특별시 고흥군 풍양면 한동리 701-7 일원 (지번)",
+    "lat": 34.57738,
+    "lng": 127.22726,
+    "programs": [],
+    "summary": "유자 주산지인 고흥 풍양면 유자밭 일대에서 나흘 동안 열리는 특산물 축제예요. 유자청 만들기와 유자 요리 시식 같은 체험을 즐길 수 있고, 밤에는 야간 경관 조명이 켜져요.",
+    "officialUrl": "https://www.goheungyuja.com/",
+    "sourceUrls": [
+      "https://www.mcst.go.kr/site/s_culture/festival/festivalView.jsp?pSeq=11905",
+      "https://www.goheungyuja.com/sub.do?menuCd=01_01",
+      "https://www.goheungyuja.com/sub.do?menuCd=01_02"
+    ],
+    "checkedAt": "2026-10-17",
+    "confidence": "high",
+    "notes": "기간·장소는 공식 누리집 축제개요와 문체부 정보가 일치해요. 운영시간 10:00~22:00은 문체부 정보 기준이에요. 공식 일정표는 '준비중'이라 프로그램 시각이 없어요. 요금은 '무료(일부 유료)'. 좌표는 OpenStreetMap 한동리 마을 중심점이라 실제 축제장(701-7번지)과 차이가 날 수 있어요."
+  }
+]
