@@ -1,6 +1,7 @@
 // 보관함 · 저장한 장소 — 지역·종류·개인 태그로 다시 찾고, 여러 곳을 골라 일차에 꺼내온다 (S06, PLC-03·04).
 // 필터를 바꿔도 고른 장소는 유지한다. 저장 해제는 이미 담은 코스에 영향을 주지 않는다 (PLC-06).
 import { useState } from "react";
+import { Link } from "react-router";
 import { toast } from "sonner";
 import { paths } from "@/app/paths";
 import { CategoryIcon } from "@/components/content-meta";
@@ -78,6 +79,11 @@ export function LibraryPlaces() {
         icon={<BookmarkIcon />}
         title="아직 저장한 장소가 없어요"
         description="장소 화면에서 저장하거나 SNS 링크로 장소를 모아 보세요."
+        action={
+          <Button asChild size="touch">
+            <Link to={paths.places}>장소 둘러보기</Link>
+          </Button>
+        }
       />
     );
   }
