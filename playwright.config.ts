@@ -7,6 +7,8 @@ const PORT = 4173; // vite preview 기본 포트
 
 export default defineConfig({
   testDir: "./e2e",
+  // 핵심 흐름(flows.spec.ts)은 에뮬레이터가 필요해 playwright.e2e.config.ts가 돌린다
+  testMatch: /smoke\.spec\.ts/,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,

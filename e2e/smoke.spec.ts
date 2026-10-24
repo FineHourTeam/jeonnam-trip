@@ -11,9 +11,13 @@ import { expect, test } from "@playwright/test";
 
 // src/app/paths.ts와 정합 유지 — 공개(비인증) 라우트만. 인증 필요 라우트는 별도 로그인 픽스처로.
 const ROUTES: { path: string; expectText?: RegExp }[] = [
-  { path: "/" },
-  { path: "/login" },
-  // { path: "/notices", expectText: /공지/ },   // 예시 — 기능 추가 시 등록
+  { path: "/", expectText: /어디로 떠날까요/ },
+  { path: "/festivals", expectText: /축제/ },
+  { path: "/places", expectText: /장소/ },
+  { path: "/creators", expectText: /크리에이터 코스/ },
+  { path: "/library", expectText: /보관함/ },
+  { path: "/trips/new", expectText: /언제 가요/ },
+  { path: "/login", expectText: /Google 계정으로 계속하기/ },
 ];
 
 // 콘솔 에러가 하나라도 있으면 실패로 취급할 때 무시할 알려진 소음(브라우저 확장 등)
@@ -30,7 +34,8 @@ for (const route of ROUTES) {
     });
     page.on("pageerror", (err) => errors.push(err.message));
 
-    const res = await page.goto(route.path, { waitUntil: "networkidle" });
+    // Firestore는 상시 연결을 유지해 networkidle이 오지 않는다 — load 뒤 화면 문구로 확인
+    const res = await page.goto(route.path, { waitUntil: "load" });
     expect(res?.ok(), `${route.path} HTTP 응답`).toBeTruthy();
 
     // #root가 비어있지 않아야 함 — 마운트 실패(흰 화면)를 잡는다
