@@ -53,8 +53,33 @@
 ```bash
 npm run emulators      # auth·firestore·storage 에뮬레이터 (Java 필요)
 npm run seed:test      # 테스트 계정 (admin@test.local / user@test.local, 비밀번호 test123456!)
-npm run seed:sample    # [샘플] 축제·장소·크리에이터 코스 + admin@test.local 관리자 등록
+npm run seed:sample    # 축제·장소·크리에이터 코스 + admin@test.local 관리자 등록
 npm run dev
 ```
 
-샘플 데이터는 모두 가상이다. 실제 콘텐츠 수집·검증·입력은 발주자 담당이다.
+기본 포트(8080·9099·9199)를 다른 프로젝트가 쓰고 있으면 대체 포트로 띄운다:
+
+```bash
+npm run emulators:alt  # 18080·19099·19199 (firebase.e2e.json)
+# 시드·dev 서버에 같은 포트를 알려 준다
+FIRESTORE_EMULATOR_HOST=127.0.0.1:18080 FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:19099 npm run seed:sample
+VITE_EMULATOR_AUTH_PORT=19099 VITE_EMULATOR_FIRESTORE_PORT=18080 VITE_EMULATOR_STORAGE_PORT=19199 npm run dev
+```
+
+테스트:
+
+```bash
+npm run e2e            # 핵심 흐름 (에뮬레이터·dev 서버를 띄우고 데이터를 새로 넣는다, 경로 API는 가로채 고정)
+npm run smoke          # 프로덕션 번들 라우트 렌더·콘솔 에러 확인
+npm --prefix functions test   # 경로 프록시 함수
+```
+
+시드 데이터 구분: 실제 관광지 12곳·실제 축제 6건은 공개 자료(지자체·한국관광공사·문체부)를 2026-10-17에 옮긴 것이고 출처·확인일을
+checks에 남겼다(10월 기준 시간). 이름에 [샘플]이 붙은 업체·축제는 기능 검증용 가상 데이터다. 사진은 Wikimedia Commons CC 사진
+(`scripts/sample-photos.json`에 저작자·라이선스). 실제 운영 콘텐츠의 수집·검증·입력은 발주자 담당이다.
+
+## 경로 프록시 (functions/)
+
+`POST /api/directions` → Cloud Function `api`(asia-northeast3) → 네이버 Directions 5 driving. Hosting rewrite로 같은 오리진이다.
+Client ID는 `functions/.env`(공개 값), Client Secret은 Secret Manager `NAVER_MAP_CLIENT_SECRET`. 요청은 구간 30개·한국 좌표 범위로 제한한다.
+배포: `firebase deploy --only functions --project jeonnam-trip` (Blaze 플랜). 배포 전에는 코스 편집에서 경로가 "불러오지 못했어요"로 보인다.
