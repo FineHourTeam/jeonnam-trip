@@ -26,17 +26,17 @@ export default defineConfig({
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
-  // 로컬 dev CORS 회피 — /api 호출을 에뮬레이터 함수로 프록시 (docs/CORS.md § 4).
-  // Cloud Function을 쓸 때만 주석 해제하고 target의 project/region을 실제 값으로.
-  // server: {
-  //   proxy: {
-  //     "/api": {
-  //       target: "http://127.0.0.1:5001/jeonnam-trip/asia-northeast3",
-  //       changeOrigin: true,
-  //       rewrite: (p) => p.replace(/^\/api/, ""),
-  //     },
-  //   },
-  // },
+  // 로컬 dev CORS 회피 — /api 호출을 함수 에뮬레이터로 프록시 (docs/CORS.md § 4).
+  // 함수 에뮬레이터가 없으면 프록시 오류 → 앱은 "경로를 불러오지 못했어요"로 처리한다.
+  server: {
+    proxy: {
+      "/api": {
+        target: `http://127.0.0.1:${process.env.FUNCTIONS_EMULATOR_PORT ?? "5001"}`,
+        changeOrigin: true,
+        rewrite: (p) => `/jeonnam-trip/asia-northeast3/api${p}`,
+      },
+    },
+  },
   build: {
     sourcemap: "hidden", // Sentry 업로드용 생성, dist에서 참조 주석은 제거
     rollupOptions: {
@@ -58,6 +58,8 @@ export default defineConfig({
     // Vitest — vite config 공유 (vitest.config 별도 파일 불필요)
     globals: true,
     environment: "jsdom",
+    // fork 워커는 부하가 큰 Windows 개발 머신에서 시작 시간 초과가 난다 — 스레드 풀로 고정
+    pool: "threads",
     setupFiles: ["./src/test/setup.ts"],
     include: ["src/**/*.test.{ts,tsx}"], // e2e/*.spec.ts는 Playwright 몫
 
