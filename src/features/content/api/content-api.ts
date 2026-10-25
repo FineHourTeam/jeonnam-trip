@@ -38,7 +38,8 @@ export function normalizePhotos(raw: unknown): PhotoAsset[] {
   if (!Array.isArray(raw)) return [];
   return raw.flatMap((p: unknown): PhotoAsset[] => {
     if (typeof p === "string") return p ? [{ url: p }] : [];
-    if (p && typeof p === "object" && typeof (p as PhotoAsset).url === "string") return [p as PhotoAsset];
+    if (p && typeof p === "object" && typeof (p as PhotoAsset).url === "string")
+      return [p as PhotoAsset];
     return [];
   });
 }
@@ -55,13 +56,22 @@ export function placeFromDoc(id: string, data: Record<string, unknown>): Place {
     purposes: p.purposes ?? [],
     sources: p.sources ?? [],
     photos: normalizePhotos(data.photos),
-    hours: p.hours ?? { weekly: { 0: null, 1: null, 2: null, 3: null, 4: null, 5: null, 6: null }, exceptions: [] },
+    hours: p.hours ?? {
+      weekly: { 0: null, 1: null, 2: null, 3: null, 4: null, 5: null, 6: null },
+      exceptions: [],
+    },
   };
 }
 
 export function festivalFromDoc(id: string, data: Record<string, unknown>): Festival {
   const f = data as unknown as Loose<Festival, "days" | "programs">;
-  return { ...f, id, days: f.days ?? [], programs: f.programs ?? [], photos: normalizePhotos(data.photos) };
+  return {
+    ...f,
+    id,
+    days: f.days ?? [],
+    programs: f.programs ?? [],
+    photos: normalizePhotos(data.photos),
+  };
 }
 
 export function courseFromDoc(id: string, data: Record<string, unknown>): CreatorCourse {

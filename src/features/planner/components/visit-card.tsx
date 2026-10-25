@@ -53,7 +53,11 @@ function detailHref(item: VisitItem): string | null {
 }
 
 /** 충돌 이유별로 고를 수 있는 동작 (2~3개) */
-function fixesFor(code: IssueCode, item: VisitItem, a: VisitActions): { label: string; run: () => void }[] {
+function fixesFor(
+  code: IssueCode,
+  item: VisitItem,
+  a: VisitActions,
+): { label: string; run: () => void }[] {
   const out: { label: string; run: () => void }[] = [];
   const push = (label: string, run: (() => void) | null) => {
     if (run) out.push({ label, run });
@@ -118,7 +122,11 @@ export function VisitCard({
   const href = detailHref(item);
   const timeKnown = s?.start !== null && s?.start !== undefined && s.end !== null;
   return (
-    <li id={`visit-${item.id}`} className="relative flex gap-3" data-issue={errors.length > 0 ? "error" : warnings.length > 0 ? "warning" : undefined}>
+    <li
+      id={`visit-${item.id}`}
+      className="relative flex gap-3"
+      data-issue={errors.length > 0 ? "error" : warnings.length > 0 ? "warning" : undefined}
+    >
       <div className="flex flex-col items-center">
         <span
           className={cn(
@@ -142,12 +150,19 @@ export function VisitCard({
         aria-label={`${String(index + 1)}번째 방문 ${item.snapshot.name}`}
       >
         <div className="flex items-start gap-2">
-          <button type="button" className="flex min-w-0 flex-1 flex-col gap-1 text-left" onClick={onSelect}>
+          <button
+            type="button"
+            className="flex min-w-0 flex-1 flex-col gap-1 text-left"
+            onClick={onSelect}
+          >
             <span className="text-muted-foreground flex items-center gap-1 text-xs tabular-nums">
               {timeKnown && s.start !== null && s.end !== null ? (
                 <>
                   <ClockIcon size="sm" />
-                  <span className="text-foreground text-sm font-semibold">{formatClock(s.start)}</span>~{formatClock(s.end)}
+                  <span className="text-foreground text-sm font-semibold">
+                    {formatClock(s.start)}
+                  </span>
+                  ~{formatClock(s.end)}
                 </>
               ) : s?.legBefore?.status === "pending" ? (
                 "시간 계산 중"
@@ -156,13 +171,22 @@ export function VisitCard({
               )}
             </span>
             <span className="flex items-center gap-1.5">
-              <CategoryIcon category={item.snapshot.category} size="sm" className="text-muted-foreground shrink-0" />
+              <CategoryIcon
+                category={item.snapshot.category}
+                size="sm"
+                className="text-muted-foreground shrink-0"
+              />
               <span className="truncate text-base font-semibold">{item.snapshot.name}</span>
             </span>
           </button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon-touch" aria-label={`${item.snapshot.name} 더보기`} className="-mt-2 -mr-2">
+              <Button
+                variant="ghost"
+                size="icon-touch"
+                aria-label={`${item.snapshot.name} 더보기`}
+                className="-mt-2 -mr-2"
+              >
                 <MoreIcon />
               </Button>
             </DropdownMenuTrigger>
@@ -175,11 +199,17 @@ export function VisitCard({
                 <ChevronUpIcon size="sm" />
                 위로
               </DropdownMenuItem>
-              <DropdownMenuItem disabled={!actions.onMoveDown} onSelect={() => actions.onMoveDown?.()}>
+              <DropdownMenuItem
+                disabled={!actions.onMoveDown}
+                onSelect={() => actions.onMoveDown?.()}
+              >
                 <ChevronDownIcon size="sm" />
                 아래로
               </DropdownMenuItem>
-              <DropdownMenuItem disabled={!actions.onMoveDay} onSelect={() => actions.onMoveDay?.()}>
+              <DropdownMenuItem
+                disabled={!actions.onMoveDay}
+                onSelect={() => actions.onMoveDay?.()}
+              >
                 <CalendarIcon size="sm" />
                 다른 일차로
               </DropdownMenuItem>
@@ -196,7 +226,9 @@ export function VisitCard({
                 </DropdownMenuItem>
               ) : null}
               <DropdownMenuSeparator />
-              <DropdownMenuItem onSelect={actions.onUnplace}>일정에서 빼기 (후보로 남기기)</DropdownMenuItem>
+              <DropdownMenuItem onSelect={actions.onUnplace}>
+                일정에서 빼기 (후보로 남기기)
+              </DropdownMenuItem>
               <DropdownMenuItem variant="destructive" onSelect={actions.onRemove}>
                 <DeleteIcon size="sm" />
                 삭제
@@ -221,9 +253,15 @@ export function VisitCard({
             <dd>
               체류 {formatDuration(s?.stayMin ?? item.stayMin)}
               {item.stayLocked && !item.fixedStart ? " (직접 정함)" : ""}
-              {s?.stayReduced ? ` · 기본 ${formatDuration(s.stayPlannedMin)}에서 맞춰 줄였어요` : ""}
+              {s?.stayReduced
+                ? ` · 기본 ${formatDuration(s.stayPlannedMin)}에서 맞춰 줄였어요`
+                : ""}
             </dd>
-            {s && s.arrive !== null && s.waitMin > 0 ? <dd>· {formatClock(s.arrive)} 도착, {formatDuration(s.waitMin)} 대기</dd> : null}
+            {s && s.arrive !== null && s.waitMin > 0 ? (
+              <dd>
+                · {formatClock(s.arrive)} 도착, {formatDuration(s.waitMin)} 대기
+              </dd>
+            ) : null}
           </div>
           {s?.window ? (
             <div>
@@ -238,8 +276,11 @@ export function VisitCard({
             <div>
               <dt className="sr-only">한도</dt>
               <dd>
-                늦어도 <strong className="text-foreground font-semibold">{formatClock(s.latestStart)}</strong> 시작 ·{" "}
-                {s.limitBy.name} {formatClock(s.limitBy.at)} 기준
+                늦어도{" "}
+                <strong className="text-foreground font-semibold">
+                  {formatClock(s.latestStart)}
+                </strong>{" "}
+                시작 · {s.limitBy.name} {formatClock(s.limitBy.at)} 기준
               </dd>
             </div>
           ) : null}
@@ -266,13 +307,23 @@ export function VisitCard({
               )}
             >
               <p className="flex items-start gap-1.5">
-                {issue.severity === "error" ? <ErrorIcon size="sm" className="mt-0.5 shrink-0" /> : <WarningIcon size="sm" className="mt-0.5 shrink-0" />}
+                {issue.severity === "error" ? (
+                  <ErrorIcon size="sm" className="mt-0.5 shrink-0" />
+                ) : (
+                  <WarningIcon size="sm" className="mt-0.5 shrink-0" />
+                )}
                 {issue.message}
               </p>
               {fixes.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
                   {fixes.map((f) => (
-                    <Button key={f.label} size="sm" variant="outline" className="bg-background" onClick={f.run}>
+                    <Button
+                      key={f.label}
+                      size="sm"
+                      variant="outline"
+                      className="bg-background"
+                      onClick={f.run}
+                    >
                       {f.label === "다시 시도" ? <RefreshIcon size="sm" /> : null}
                       {f.label}
                     </Button>

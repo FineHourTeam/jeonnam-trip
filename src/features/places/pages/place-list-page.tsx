@@ -76,7 +76,12 @@ export default function PlaceListPage() {
     };
     put("sigun", next.sigun);
     put("category", next.category);
-    put("sub", next.category && next.subcategory && SUBCATEGORIES[next.category].includes(next.subcategory) ? next.subcategory : null);
+    put(
+      "sub",
+      next.category && next.subcategory && SUBCATEGORIES[next.category].includes(next.subcategory)
+        ? next.subcategory
+        : null,
+    );
     put("moods", next.moods.join(","));
     put("purposes", next.purposes.join(","));
     put("facts", next.facts.join(","));
@@ -86,9 +91,16 @@ export default function PlaceListPage() {
 
   const loaded = q.data?.pages.flatMap((pg) => pg.items) ?? [];
   const origin = near.data?.location ?? null;
-  const distanceOf = (p: Place) => (origin && p.location ? straightDistanceM(origin, p.location) : null);
-  let results = sortPlacesByTagMatch(loaded.filter((p) => matchesPlace(p, filter)), filter);
-  if (origin) results = [...results].sort((a, b) => (distanceOf(a) ?? Infinity) - (distanceOf(b) ?? Infinity));
+  const distanceOf = (p: Place) =>
+    origin && p.location ? straightDistanceM(origin, p.location) : null;
+  let results = sortPlacesByTagMatch(
+    loaded.filter((p) => matchesPlace(p, filter)),
+    filter,
+  );
+  if (origin)
+    results = [...results].sort(
+      (a, b) => (distanceOf(a) ?? Infinity) - (distanceOf(b) ?? Infinity),
+    );
   const moreAvailable = q.hasNextPage;
   const filters = activeFilterCount(filter);
   const summary = [
@@ -115,8 +127,17 @@ export default function PlaceListPage() {
   const mapPicked = results.find((p) => p.id === mapPick) ?? null;
 
   return (
-    <PageBody width="xl" className={cn("gap-4 pt-5 md:pt-8", selecting && selected.size > 0 ? "pb-44 md:pb-28" : "pb-8")}>
-      <Seo title="전남 장소" description="전남 시군별 카페·식당·관광지를 분위기와 목적으로 찾아보세요." />
+    <PageBody
+      width="xl"
+      className={cn(
+        "gap-4 pt-5 md:pt-8",
+        selecting && selected.size > 0 ? "pb-44 md:pb-28" : "pb-8",
+      )}
+    >
+      <Seo
+        title="전남 장소"
+        description="전남 시군별 카페·식당·관광지를 분위기와 목적으로 찾아보세요."
+      />
       <div className="flex items-end justify-between gap-3">
         <div className="flex min-w-0 flex-col gap-1">
           <h1 className="text-2xl font-bold tracking-tight">장소</h1>
@@ -173,7 +194,7 @@ export default function PlaceListPage() {
         />
       </InputGroup>
 
-      <div className="scrollbar-none -mx-4 flex items-center gap-2 overflow-x-auto px-4 md:mx-0 md:px-0">
+      <div className="-mx-4 flex scrollbar-none items-center gap-2 overflow-x-auto px-4 md:mx-0 md:px-0">
         <Toggle
           variant="chip"
           size="chip"
@@ -187,14 +208,24 @@ export default function PlaceListPage() {
           <FilterIcon size="sm" />
           필터{filters > 0 ? ` ${String(filters)}` : ""}
         </Toggle>
-        <SigunPickerButton value={filter.sigun} onChange={(v) => { setFilter({ ...filter, sigun: v }); }} />
+        <SigunPickerButton
+          value={filter.sigun}
+          onChange={(v) => {
+            setFilter({ ...filter, sigun: v });
+          }}
+        />
         <ToggleGroup
           type="single"
           variant="chip"
           size="chip"
           value={filter.category ?? "all"}
           onValueChange={(v) => {
-            if (v) setFilter({ ...filter, category: v === "all" ? null : (v as Place["category"]), subcategory: null });
+            if (v)
+              setFilter({
+                ...filter,
+                category: v === "all" ? null : (v as Place["category"]),
+                subcategory: null,
+              });
           }}
           aria-label="장소 종류"
           className="flex-nowrap"
@@ -215,7 +246,11 @@ export default function PlaceListPage() {
       ) : results.length === 0 ? (
         <EmptyState
           title={`${summary}에 맞는 장소가 없어요`}
-          description={moreAvailable ? "아직 불러오지 않은 장소가 있어요. 더 불러오거나 조건을 바꿔 보세요." : "조건을 바꿔 보세요."}
+          description={
+            moreAvailable
+              ? "아직 불러오지 않은 장소가 있어요. 더 불러오거나 조건을 바꿔 보세요."
+              : "조건을 바꿔 보세요."
+          }
           action={
             <Button
               variant="outline"
@@ -231,7 +266,12 @@ export default function PlaceListPage() {
       ) : view === "map" ? (
         <div className="flex flex-col gap-3">
           <CourseMap
-            stops={results.map((p, i) => ({ id: p.id, label: String(i + 1), name: p.name, location: p.location }))}
+            stops={results.map((p, i) => ({
+              id: p.id,
+              label: String(i + 1),
+              name: p.name,
+              location: p.location,
+            }))}
             legs={[]}
             selectedId={mapPick}
             onSelect={setMapPick}
@@ -242,12 +282,18 @@ export default function PlaceListPage() {
             <div className="border-border rounded-xl border p-3">
               <PlaceRow
                 place={mapPicked}
-                note={distanceOf(mapPicked) !== null ? `축제에서 직선 ${formatDistance(distanceOf(mapPicked) ?? 0)}` : undefined}
+                note={
+                  distanceOf(mapPicked) !== null
+                    ? `축제에서 직선 ${formatDistance(distanceOf(mapPicked) ?? 0)}`
+                    : undefined
+                }
                 trailing={<SaveButton placeId={mapPicked.id} placeName={mapPicked.name} />}
               />
             </div>
           ) : (
-            <p className="text-muted-foreground text-sm">지도의 번호를 누르면 장소를 볼 수 있어요. 번호는 목록 순서예요.</p>
+            <p className="text-muted-foreground text-sm">
+              지도의 번호를 누르면 장소를 볼 수 있어요. 번호는 목록 순서예요.
+            </p>
           )}
         </div>
       ) : (
@@ -302,11 +348,26 @@ export default function PlaceListPage() {
       ) : null}
 
       {selecting && selected.size > 0 ? (
-        <StickyActionBar overTabBar className="md:fixed md:inset-x-0 md:bottom-0 md:border-t md:bg-background/95 md:px-4">
-          <Button variant="outline" size="xl" onClick={() => { setSelected(new Map()); }}>
+        <StickyActionBar
+          overTabBar
+          className="md:bg-background/95 md:fixed md:inset-x-0 md:bottom-0 md:border-t md:px-4"
+        >
+          <Button
+            variant="outline"
+            size="xl"
+            onClick={() => {
+              setSelected(new Map());
+            }}
+          >
             선택 해제
           </Button>
-          <Button size="xl" className="flex-1" onClick={() => { setAddOpen(true); }}>
+          <Button
+            size="xl"
+            className="flex-1"
+            onClick={() => {
+              setAddOpen(true);
+            }}
+          >
             {selected.size}곳 일정에 담기
           </Button>
         </StickyActionBar>

@@ -58,17 +58,24 @@ export function useAdminMutations(kind: AdminKind) {
   const invalidate = useInvalidate();
   const opts = { onSuccess: invalidate };
   return {
-    create: useMutation({ mutationFn: (input: ContentInput<AdminKind>) => createContent(kind, input), ...opts }),
+    create: useMutation({
+      mutationFn: (input: ContentInput<AdminKind>) => createContent(kind, input),
+      ...opts,
+    }),
     saveDraft: useMutation({
-      mutationFn: (v: { id: string; status: ContentStatus; input: ContentInput<AdminKind> }) => saveDraft(kind, v.id, v.status, v.input),
+      mutationFn: (v: { id: string; status: ContentStatus; input: ContentInput<AdminKind> }) =>
+        saveDraft(kind, v.id, v.status, v.input),
       ...opts,
     }),
     publish: useMutation({
-      mutationFn: (v: { id: string; input: ContentInput<AdminKind> }) => publishContent(kind, v.id, v.input),
+      mutationFn: (v: { id: string; input: ContentInput<AdminKind> }) =>
+        publishContent(kind, v.id, v.input),
       ...opts,
     }),
     hide: useMutation({ mutationFn: (id: string) => hideContent(kind, id), ...opts }),
     discardDraft: useMutation({ mutationFn: (id: string) => discardDraft(kind, id), ...opts }),
-    upload: useMutation({ mutationFn: (v: { id: string; file: File }) => uploadContentPhoto(kind, v.id, v.file) }),
+    upload: useMutation({
+      mutationFn: (v: { id: string; file: File }) => uploadContentPhoto(kind, v.id, v.file),
+    }),
   };
 }

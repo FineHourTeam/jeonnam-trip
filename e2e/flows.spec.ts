@@ -56,7 +56,10 @@ async function startDirect(page: Page, day: string) {
 }
 
 /** 로그인 화면에 온 상태에서 새 테스트 계정으로 로그인 */
-async function loginHere(page: Page, email = `e2e-${String(Date.now())}-${String(seq++)}@test.local`) {
+async function loginHere(
+  page: Page,
+  email = `e2e-${String(Date.now())}-${String(seq++)}@test.local`,
+) {
   await expect(page).toHaveURL(/\/login$/);
   await page.getByLabel(/test\.local 이메일/).fill(email);
   await page.getByRole("button", { name: "테스트 계정으로 로그인" }).click();
@@ -69,7 +72,9 @@ async function saveAndGetId(page: Page): Promise<string> {
   return page.url().split("/").pop() ?? "";
 }
 
-test("축제에서 여행 만들기 → 고정 프로그램·경로 계산 → 비회원 저장은 로그인 뒤 바로 저장된다", async ({ page }) => {
+test("축제에서 여행 만들기 → 고정 프로그램·경로 계산 → 비회원 저장은 로그인 뒤 바로 저장된다", async ({
+  page,
+}) => {
   await prepare(page);
   await startFromFestival(page);
   await expect(page.getByText("18:30~19:30 고정")).toBeVisible();
@@ -89,13 +94,20 @@ test("축제에서 여행 만들기 → 고정 프로그램·경로 계산 → �
 
 test("경로가 길어 영업 종료 뒤 도착하면 충돌 이유와 고칠 동작을 보여 준다", async ({ page }) => {
   await prepare(page, 300);
-  await page.goto("/trips/new?festival=sample-fes-river&date=2026-10-23&program=opening&places=suncheon-national-garden");
+  await page.goto(
+    "/trips/new?festival=sample-fes-river&date=2026-10-23&program=opening&places=suncheon-national-garden",
+  );
   await page.getByRole("button", { name: "여행 만들기", exact: true }).click();
   await expect(page).toHaveURL(/\/trips\/draft/);
   await expect(page.getByText("충돌 있음")).toBeVisible();
   const alert = page.getByRole("alert").filter({ hasText: "마감" }).first();
   await expect(alert).toBeVisible();
-  await expect(alert.getByRole("button", { name: "다른 일차로" }).or(alert.getByRole("button", { name: "일정에서 빼기" })).first()).toBeVisible();
+  await expect(
+    alert
+      .getByRole("button", { name: "다른 일차로" })
+      .or(alert.getByRole("button", { name: "일정에서 빼기" }))
+      .first(),
+  ).toBeVisible();
 });
 
 test("장소 저장 → 보관함에서 골라 새 여행 → 미배치 후보를 일차에 넣기", async ({ page }) => {
@@ -146,7 +158,10 @@ async function guestPage(browser: Browser) {
   return p;
 }
 
-test("공유 링크 만들기 → 받은 사람은 보기 전용 → 공유 중지하면 열 수 없다", async ({ page, browser }) => {
+test("공유 링크 만들기 → 받은 사람은 보기 전용 → 공유 중지하면 열 수 없다", async ({
+  page,
+  browser,
+}) => {
   await prepare(page);
   await login(page);
   await startFromFestival(page);
@@ -180,7 +195,10 @@ test("공유 링크 만들기 → 받은 사람은 보기 전용 → 공유 중�
   await expect(guest.getByRole("heading", { name: "강변 가을축제 여행" })).toBeVisible();
 });
 
-test("관리자: 새 장소 임시저장 → 공개하면 사용자 화면에 보인다, 일반 사용자는 막힌다", async ({ page, browser }) => {
+test("관리자: 새 장소 임시저장 → 공개하면 사용자 화면에 보인다, 일반 사용자는 막힌다", async ({
+  page,
+  browser,
+}) => {
   const user = await guestPage(browser);
   await login(user);
   await user.goto("/admin");
@@ -201,7 +219,9 @@ test("관리자: 새 장소 임시저장 → 공개하면 사용자 화면에 �
   await expect(page.getByText("영업시간 확인 필요").first()).toBeVisible();
 });
 
-test("비회원 보관함은 로그인을 안내하고, 내 여행은 로그인 뒤 원래 화면으로 돌아온다", async ({ page }) => {
+test("비회원 보관함은 로그인을 안내하고, 내 여행은 로그인 뒤 원래 화면으로 돌아온다", async ({
+  page,
+}) => {
   await prepare(page);
   await page.goto("/library");
   await expect(page.getByText("로그인하면 저장한 장소를 모아 볼 수 있어요")).toBeVisible();
@@ -211,7 +231,9 @@ test("비회원 보관함은 로그인을 안내하고, 내 여행은 로그인 
   await expect(page.getByText("아직 저장한 여행이 없어요")).toBeVisible();
 });
 
-test("여행 시작: 빈 칸은 오류 위치로 데려가고, 4일을 넘기는 날짜는 그 날부터 다시 고른다 → 지역 이름 제목의 추천 일정", async ({ page }) => {
+test("여행 시작: 빈 칸은 오류 위치로 데려가고, 4일을 넘기는 날짜는 그 날부터 다시 고른다 → 지역 이름 제목의 추천 일정", async ({
+  page,
+}) => {
   await prepare(page);
   await page.goto("/trips/new");
   await page.getByRole("button", { name: "여행 만들기", exact: true }).click();
@@ -235,17 +257,22 @@ test("여행 시작: 빈 칸은 오류 위치로 데려가고, 4일을 넘기는
   await expect(page.getByRole("article").first()).toBeVisible();
 });
 
-test("코스 편집: 이미 넣은 곳은 담음으로 보이고, 순서 바꾸기·지우기·후보로 빼기를 되돌릴 수 있다", async ({ page }) => {
+test("코스 편집: 이미 넣은 곳은 담음으로 보이고, 순서 바꾸기·지우기·후보로 빼기를 되돌릴 수 있다", async ({
+  page,
+}) => {
   await prepare(page);
   await startDirect(page, "2026. 10. 24.");
   const sheet = page.getByRole("dialog");
-  const order = () => page.getByRole("article").evaluateAll((els) => els.map((e) => e.getAttribute("aria-label")));
+  const order = () =>
+    page.getByRole("article").evaluateAll((els) => els.map((e) => e.getAttribute("aria-label")));
 
   await page.getByRole("button", { name: "장소 넣기" }).click();
   await sheet.getByRole("button", { name: "순천만국가정원 담기" }).click();
   await expect(page.getByText("1일차에 1곳을 넣었어요.")).toBeVisible();
   await page.getByRole("button", { name: "장소 넣기" }).click();
-  await expect(sheet.getByRole("button", { name: "순천만국가정원 이 일차에 있어요" })).toBeDisabled();
+  await expect(
+    sheet.getByRole("button", { name: "순천만국가정원 이 일차에 있어요" }),
+  ).toBeDisabled();
   await sheet.getByRole("button", { name: "순천만습지 담기" }).click();
   await expect.poll(order).toEqual(["1번째 방문 순천만국가정원", "2번째 방문 순천만습지"]);
 
@@ -295,7 +322,9 @@ test("내 여행: 수정일은 한국 날짜로 보이고, 복사·삭제가 목
   await expect(page.getByText("순천시 여행", { exact: true })).toBeVisible();
 });
 
-test("비회원이 일정에 담으려 하면 로그인으로 안내하고 보던 장소로 돌아온다 → 빈 보관함에서 장소 목록으로", async ({ page }) => {
+test("비회원이 일정에 담으려 하면 로그인으로 안내하고 보던 장소로 돌아온다 → 빈 보관함에서 장소 목록으로", async ({
+  page,
+}) => {
   await prepare(page);
   await page.goto("/places/suncheon-national-garden");
   await page.getByRole("button", { name: "일정에 추가" }).click();
@@ -321,7 +350,9 @@ test("비회원이 일정에 담으려 하면 로그인으로 안내하고 보�
   await expect(page.getByRole("searchbox", { name: "장소 검색" })).toHaveValue("");
 });
 
-test("PC에서는 일정과 지도를 함께 보여 주고, 지도를 못 불러와도 일정은 그대로다 @desktop", async ({ page }) => {
+test("PC에서는 일정과 지도를 함께 보여 주고, 지도를 못 불러와도 일정은 그대로다 @desktop", async ({
+  page,
+}) => {
   await prepare(page);
   await startFromFestival(page);
   await expect(page.getByRole("region", { name: "코스 지도" })).toBeAttached();

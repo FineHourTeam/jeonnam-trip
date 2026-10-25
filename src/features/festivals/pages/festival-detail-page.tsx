@@ -38,18 +38,25 @@ function NearbyPlaces({ festival }: { festival: Festival }) {
     <DetailSection
       title="주변 장소"
       aside={
-        <Link to={`${paths.places}?sigun=${festival.sigun}&near=${festival.id}`} className="text-muted-foreground text-sm">
+        <Link
+          to={`${paths.places}?sigun=${festival.sigun}&near=${festival.id}`}
+          className="text-muted-foreground text-sm"
+        >
           더 보기
         </Link>
       }
     >
-      <p className="text-muted-foreground -mt-1 text-xs">거리는 축제 장소에서 잰 직선거리예요. 실제 이동시간은 코스에서 계산해요.</p>
+      <p className="text-muted-foreground -mt-1 text-xs">
+        거리는 축제 장소에서 잰 직선거리예요. 실제 이동시간은 코스에서 계산해요.
+      </p>
       {q.isPending ? (
         <RowListSkeleton count={3} />
       ) : q.isError ? (
         <ErrorState error={q.error} onRetry={() => void q.refetch()} className="py-6" />
       ) : list.length === 0 ? (
-        <p className="text-muted-foreground text-sm">{sigunName(festival.sigun)}에 등록된 장소가 아직 없어요.</p>
+        <p className="text-muted-foreground text-sm">
+          {sigunName(festival.sigun)}에 등록된 장소가 아직 없어요.
+        </p>
       ) : (
         <div className="flex flex-col gap-4">
           {list.map(({ p, d }) => (
@@ -117,10 +124,19 @@ export default function FestivalDetailPage() {
 
   return (
     <div className="flex flex-col pb-28 md:pb-10">
-      <Seo title={f.name} description={f.summary ?? `${sigunName(f.sigun)} · ${formatPeriodKo(f.startDate, f.endDate)}`} />
+      <Seo
+        title={f.name}
+        description={
+          f.summary ?? `${sigunName(f.sigun)} · ${formatPeriodKo(f.startDate, f.endDate)}`
+        }
+      />
       <PageTopBar fallback={paths.festivals} title={f.name} />
       <div className="mx-auto w-full max-w-screen-md md:px-4 md:pt-4">
-        <PhotoGallery photos={f.photos} alt={f.name} fallbackIcon={<CategoryIcon category="festival" size="lg" />} />
+        <PhotoGallery
+          photos={f.photos}
+          alt={f.name}
+          fallbackIcon={<CategoryIcon category="festival" size="lg" />}
+        />
       </div>
       <div className="mx-auto flex w-full max-w-screen-md flex-col gap-8 px-4 pt-5">
         <header className="flex flex-col gap-2">
@@ -128,16 +144,21 @@ export default function FestivalDetailPage() {
             <FestivalBadges festival={f} />
             <span className="text-muted-foreground text-sm">{sigunName(f.sigun)}</span>
           </div>
-          <h1 className={`text-2xl font-bold tracking-tight text-balance ${cancelled ? "text-muted-foreground line-through" : ""}`}>
+          <h1
+            className={`text-2xl font-bold tracking-tight text-balance ${cancelled ? "text-muted-foreground line-through" : ""}`}
+          >
             {f.name}
           </h1>
           <p className="text-base font-medium">{formatPeriodKo(f.startDate, f.endDate)}</p>
-          {f.summary ? <p className="text-muted-foreground leading-relaxed text-pretty">{f.summary}</p> : null}
+          {f.summary ? (
+            <p className="text-muted-foreground leading-relaxed text-pretty">{f.summary}</p>
+          ) : null}
         </header>
 
         {cancelled ? (
           <Notice tone="destructive" title="취소된 축제예요">
-            {f.stateNote ? `${f.stateNote} ` : ""}정보는 볼 수 있지만 새 일정에는 담을 수 없어요. 이미 담은 코스는 열 때 안내해요.
+            {f.stateNote ? `${f.stateNote} ` : ""}정보는 볼 수 있지만 새 일정에는 담을 수 없어요.
+            이미 담은 코스는 열 때 안내해요.
           </Notice>
         ) : f.state === "changed" ? (
           <Notice tone="warning" title="일정이 바뀌었어요">
@@ -148,12 +169,21 @@ export default function FestivalDetailPage() {
         <DetailSection title="날짜별 운영" aside={<VerifyBadge check={f.checks.schedule} />}>
           <ul className="divide-border border-border divide-y rounded-xl border">
             {f.days.map((d) => (
-              <li key={d.date} className="flex items-center justify-between gap-3 px-4 py-3 text-sm">
+              <li
+                key={d.date}
+                className="flex items-center justify-between gap-3 px-4 py-3 text-sm"
+              >
                 <span className={d.date === today ? "font-semibold" : ""}>
                   {formatDateKo(d.date)}
                   {d.date === today ? " · 오늘" : ""}
                 </span>
-                <span className={d.ranges ? "text-foreground" : "text-warning-soft-foreground bg-warning-soft rounded-md px-1.5 py-0.5 text-xs"}>
+                <span
+                  className={
+                    d.ranges
+                      ? "text-foreground"
+                      : "text-warning-soft-foreground bg-warning-soft rounded-md px-1.5 py-0.5 text-xs"
+                  }
+                >
                   {dayHoursLabel(f, d.date)}
                 </span>
               </li>
@@ -169,20 +199,27 @@ export default function FestivalDetailPage() {
             <div className="flex flex-col gap-4">
               {programsByDate.map((date) => (
                 <div key={date} className="flex flex-col gap-2">
-                  <h3 className="text-muted-foreground text-sm font-semibold">{formatDateKo(date)}</h3>
+                  <h3 className="text-muted-foreground text-sm font-semibold">
+                    {formatDateKo(date)}
+                  </h3>
                   <ul className="flex flex-col gap-2">
                     {f.programs
                       .filter((p) => p.date === date)
                       .sort((a, b) => a.start.localeCompare(b.start))
                       .map((p) => (
-                        <li key={p.id} className="border-border flex items-center gap-3 rounded-xl border p-3">
+                        <li
+                          key={p.id}
+                          className="border-border flex items-center gap-3 rounded-xl border p-3"
+                        >
                           <span className="bg-primary-soft text-primary-soft-foreground flex shrink-0 items-center gap-1 rounded-lg px-2 py-1 text-sm font-semibold tabular-nums">
                             <LockIcon size="sm" />
                             {p.start}~{p.end}
                           </span>
                           <span className="flex min-w-0 flex-col">
                             <span className="truncate font-medium">{p.name}</span>
-                            {p.place ? <span className="text-muted-foreground text-xs">{p.place}</span> : null}
+                            {p.place ? (
+                              <span className="text-muted-foreground text-xs">{p.place}</span>
+                            ) : null}
                           </span>
                         </li>
                       ))}
@@ -196,7 +233,11 @@ export default function FestivalDetailPage() {
         <DetailSection title="이용 정보" aside={<VerifyBadge check={f.checks.info} />}>
           <div className="divide-border divide-y">
             {f.address ? (
-              <InfoRow icon={<PinIcon size="sm" />} label="장소" aside={<VerifyBadge check={f.checks.location} />}>
+              <InfoRow
+                icon={<PinIcon size="sm" />}
+                label="장소"
+                aside={<VerifyBadge check={f.checks.location} />}
+              >
                 {f.address}
               </InfoRow>
             ) : null}
@@ -208,7 +249,10 @@ export default function FestivalDetailPage() {
             {f.contact ? (
               <InfoRow icon={<PhoneIcon size="sm" />} label="문의">
                 {/^[\d-]+$/.test(f.contact.split(" ")[0] ?? "") ? (
-                  <a href={`tel:${f.contact.split(" ")[0] ?? ""}`} className="underline-offset-2 hover:underline">
+                  <a
+                    href={`tel:${f.contact.split(" ")[0] ?? ""}`}
+                    className="underline-offset-2 hover:underline"
+                  >
                     {f.contact}
                   </a>
                 ) : (
@@ -218,13 +262,20 @@ export default function FestivalDetailPage() {
             ) : null}
             {official ? (
               <InfoRow icon={<GlobeIcon size="sm" />} label="공식 안내">
-                <a href={official} target="_blank" rel="noreferrer noopener" className="text-primary break-all underline-offset-2 hover:underline">
+                <a
+                  href={official}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="text-primary break-all underline-offset-2 hover:underline"
+                >
                   공식 홈페이지에서 보기
                 </a>
               </InfoRow>
             ) : null}
           </div>
-          {f.checks.info.source ? <p className="text-muted-foreground text-xs">출처 · {f.checks.info.source}</p> : null}
+          {f.checks.info.source ? (
+            <p className="text-muted-foreground text-xs">출처 · {f.checks.info.source}</p>
+          ) : null}
         </DetailSection>
 
         {f.location ? (
@@ -242,15 +293,31 @@ export default function FestivalDetailPage() {
 
       <StickyActionBar className="md:mx-auto md:mt-8 md:w-full md:max-w-screen-md md:px-4">
         {blockedReason ? (
-          <p className="text-muted-foreground flex h-12 flex-1 items-center justify-center text-sm" role="status">
+          <p
+            className="text-muted-foreground flex h-12 flex-1 items-center justify-center text-sm"
+            role="status"
+          >
             {blockedReason}
           </p>
         ) : (
           <>
-            <Button variant="outline" size="xl" className="flex-1" onClick={() => { setSheet("add"); }}>
+            <Button
+              variant="outline"
+              size="xl"
+              className="flex-1"
+              onClick={() => {
+                setSheet("add");
+              }}
+            >
               일정에 추가
             </Button>
-            <Button size="xl" className="flex-[1.4]" onClick={() => { setSheet("new"); }}>
+            <Button
+              size="xl"
+              className="flex-[1.4]"
+              onClick={() => {
+                setSheet("new");
+              }}
+            >
               이 축제로 여행 만들기
             </Button>
           </>

@@ -77,13 +77,21 @@ export function SectionHeader({
 }
 
 /** 가로 스크롤 목록 — 모바일에서 화면 끝까지 붙여 다음 카드가 살짝 보이게 한다 */
-export function Rail({ children, className, label }: { children: ReactNode; className?: string; label: string }) {
+export function Rail({
+  children,
+  className,
+  label,
+}: {
+  children: ReactNode;
+  className?: string;
+  label: string;
+}) {
   return (
     <div
       role="list"
       aria-label={label}
       className={cn(
-        "scrollbar-none -mx-4 flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-1 md:mx-0 md:px-0",
+        "-mx-4 flex snap-x snap-mandatory scroll-px-4 scrollbar-none gap-3 overflow-x-auto px-4 pb-1 md:mx-0 md:px-0",
         className,
       )}
     >

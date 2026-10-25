@@ -10,7 +10,9 @@ import { PLACE_CATEGORY_LABEL, sigunName, type Place } from "@/shared/domain";
 import { nowKstTime, todayKst } from "@/shared/lib/date";
 import { openStateAt, openStateShortLabel } from "../lib/content-status";
 
-export function placeMetaLine(p: Pick<Place, "category" | "subcategory" | "sigun" | "area">): string {
+export function placeMetaLine(
+  p: Pick<Place, "category" | "subcategory" | "sigun" | "area">,
+): string {
   return [p.subcategory ?? PLACE_CATEGORY_LABEL[p.category], sigunName(p.sigun), p.area]
     .filter(Boolean)
     .join(" · ");
@@ -38,7 +40,10 @@ export function PlaceCard({
   const state = openStateAt(place, todayKst(), nowKstTime());
   return (
     <article className={cn("relative flex flex-col gap-2", className)}>
-      <Link to={paths.placeDetail(place.id)} className="group flex flex-col gap-2 rounded-xl outline-none">
+      <Link
+        to={paths.placeDetail(place.id)}
+        className="group flex flex-col gap-2 rounded-xl outline-none"
+      >
         <Photo
           photo={place.photos[0]}
           alt={place.name}
@@ -114,7 +119,10 @@ export function PlaceRow({
   return (
     <div className="flex items-center gap-3">
       {to ? (
-        <Link to={to} className="flex min-w-0 flex-1 items-center gap-3 rounded-lg outline-none focus-visible:underline">
+        <Link
+          to={to}
+          className="flex min-w-0 flex-1 items-center gap-3 rounded-lg outline-none focus-visible:underline"
+        >
           {body}
         </Link>
       ) : (

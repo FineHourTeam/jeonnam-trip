@@ -84,24 +84,33 @@ function useAfterShareChange() {
 export function useCreateShare() {
   const after = useAfterShareChange();
   return useMutation({
-    mutationFn: ({ trip, content }: { trip: Trip; content: ShareContent }) => createShare(trip, content),
-    onSuccess: (s) => { after(s.tripId); },
+    mutationFn: ({ trip, content }: { trip: Trip; content: ShareContent }) =>
+      createShare(trip, content),
+    onSuccess: (s) => {
+      after(s.tripId);
+    },
   });
 }
 
 export function useUpdateShare() {
   const after = useAfterShareChange();
   return useMutation({
-    mutationFn: ({ share, content }: { share: SharedTrip; content: ShareContent }) => updateShare(share, content),
-    onSuccess: (_, v) => { after(v.share.tripId); },
+    mutationFn: ({ share, content }: { share: SharedTrip; content: ShareContent }) =>
+      updateShare(share, content),
+    onSuccess: (_, v) => {
+      after(v.share.tripId);
+    },
   });
 }
 
 export function useStopShare() {
   const after = useAfterShareChange();
   return useMutation({
-    mutationFn: ({ shareId, tripId }: { shareId: string; tripId: string }) => stopShare(shareId, tripId),
-    onSuccess: (_, v) => { after(v.tripId); },
+    mutationFn: ({ shareId, tripId }: { shareId: string; tripId: string }) =>
+      stopShare(shareId, tripId),
+    onSuccess: (_, v) => {
+      after(v.tripId);
+    },
   });
 }
 

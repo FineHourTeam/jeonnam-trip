@@ -65,8 +65,7 @@ export interface ScheduleIssue {
 }
 
 export type LimitAnchor =
-  | { kind: "fixed"; itemId: string; name: string; at: number }
-  | { kind: "dayEnd"; at: number };
+  { kind: "fixed"; itemId: string; name: string; at: number } | { kind: "dayEnd"; at: number };
 
 export interface ItemSchedule {
   itemId: string;
@@ -173,7 +172,11 @@ function pickWindow(
   windows: OpenWindow[],
   arrive: number,
   needStay: number,
-): { window: OpenWindow | null; start: number; problem: "arrive-after-close" | "short-stay" | null } {
+): {
+  window: OpenWindow | null;
+  start: number;
+  problem: "arrive-after-close" | "short-stay" | null;
+} {
   let partial: { window: OpenWindow; start: number } | null = null;
   for (const w of windows) {
     const start = Math.max(arrive, w.open);
@@ -182,11 +185,19 @@ function pickWindow(
     partial ??= { window: w, start };
   }
   if (partial) return { ...partial, problem: "short-stay" };
-  return { window: windows[windows.length - 1] ?? null, start: arrive, problem: "arrive-after-close" };
+  return {
+    window: windows[windows.length - 1] ?? null,
+    start: arrive,
+    problem: "arrive-after-close",
+  };
 }
 
 /** 다음 한도(늦어도 출발)를 지키며 이 장소에서 시작할 수 있는 가장 늦은 시각 */
-function latestStartWithin(windows: OpenWindow[], latestDepart: number, need: number): number | null {
+function latestStartWithin(
+  windows: OpenWindow[],
+  latestDepart: number,
+  need: number,
+): number | null {
   let best: number | null = null;
   for (const w of windows) {
     const cand = Math.min(latestDepart - need, w.lastOrder ?? w.close, w.close - need);
@@ -216,9 +227,7 @@ export function fitVisit(
 }
 
 function anchorLabel(a: LimitAnchor): string {
-  return a.kind === "fixed"
-    ? `${a.name} ${formatClock(a.at)}`
-    : `일일 종료 ${formatClock(a.at)}`;
+  return a.kind === "fixed" ? `${a.name} ${formatClock(a.at)}` : `일일 종료 ${formatClock(a.at)}`;
 }
 
 export function computeDaySchedule(
@@ -229,7 +238,8 @@ export function computeDaySchedule(
   const items = day.items;
   const n = items.length;
   const dayStart = toMinutes(day.startTime);
-  const dayEnd = toMinutes(day.endTime) <= dayStart ? toMinutes(day.endTime) + 1440 : toMinutes(day.endTime);
+  const dayEnd =
+    toMinutes(day.endTime) <= dayStart ? toMinutes(day.endTime) + 1440 : toMinutes(day.endTime);
   const hours = items.map((it) => hoursForDate(it, day.date));
 
   // ── 역방향: 늦어도 출발/시작 한도 ──
@@ -260,7 +270,10 @@ export function computeDaySchedule(
       ls = null;
     } else {
       const need = requiredStay(it, config);
-      ls = h.state === "known" ? latestStartWithin(h.windows, nextDepartLimit, need) : nextDepartLimit - need;
+      ls =
+        h.state === "known"
+          ? latestStartWithin(h.windows, nextDepartLimit, need)
+          : nextDepartLimit - need;
     }
     latestStart[i] = ls;
     const leg = legs.legsBefore[i];
@@ -297,13 +310,21 @@ export function computeDaySchedule(
     }
 
     if (it.snapshot.festivalState === "cancelled") {
-      add("festival-cancelled", "error", "취소된 축제예요. 일정에서 빼거나 다른 장소로 바꿔 주세요.");
+      add(
+        "festival-cancelled",
+        "error",
+        "취소된 축제예요. 일정에서 빼거나 다른 장소로 바꿔 주세요.",
+      );
     }
     if (it.snapshot.location === null) {
       add("location-unknown", "warning", "위치가 확인되지 않아 경로 계산에서 뺐어요.");
     }
     if (leg?.status === "failed") {
-      add("route-failed", "warning", "이전 장소에서 오는 경로를 불러오지 못했어요. 이후 시각은 확정되지 않았어요.");
+      add(
+        "route-failed",
+        "warning",
+        "이전 장소에서 오는 경로를 불러오지 못했어요. 이후 시각은 확정되지 않았어요.",
+      );
     } else if (leg?.status === "skipped" && it.snapshot.location !== null) {
       add("route-unknown", "warning", "앞 장소의 위치를 몰라 도착 시각을 계산하지 못했어요.");
     }
@@ -376,7 +397,11 @@ export function computeDaySchedule(
     if (h.state === "closed" && !it.fixedStart) {
       add("closed", "error", h.note ? `이날은 휴무예요 (${h.note}).` : "이날은 휴무예요.");
     } else if (h.state === "unknown" && !it.fixedStart) {
-      add("hours-unknown", "warning", "영업시간이 확인되지 않았어요. 방문 전에 직접 확인해 주세요.");
+      add(
+        "hours-unknown",
+        "warning",
+        "영업시간이 확인되지 않았어요. 방문 전에 직접 확인해 주세요.",
+      );
     }
 
     const ls = latestStart[i] ?? null;
@@ -384,7 +409,13 @@ export function computeDaySchedule(
     const departLimit = latestDepart[i] ?? null;
     // 다음 일정 기준 한도만 본다 — 영업 종료 때문에 못 맞추는 경우는 위의 마감·체류 사유가 설명한다
     const nextStartLimit = departLimit === null ? null : departLimit - need;
-    if (!it.fixedStart && start !== null && nextStartLimit !== null && start > nextStartLimit && anchor) {
+    if (
+      !it.fixedStart &&
+      start !== null &&
+      nextStartLimit !== null &&
+      start > nextStartLimit &&
+      anchor
+    ) {
       add(
         anchor.kind === "fixed" ? "late-for-next" : "over-day-end",
         anchor.kind === "fixed" ? "error" : "warning",
@@ -420,10 +451,17 @@ export function computeDaySchedule(
   let dayFinish: number | null = prevEnd;
   if (legs.legToEnd && prevEnd !== null) {
     dayFinish =
-      legs.legToEnd.status === "ok" ? prevEnd + legs.legToEnd.durationMin + config.accessBufferMin : null;
+      legs.legToEnd.status === "ok"
+        ? prevEnd + legs.legToEnd.durationMin + config.accessBufferMin
+        : null;
   }
   const last = out[out.length - 1];
-  if (last && dayFinish !== null && dayFinish > dayEnd && !last.issues.some((x) => x.code === "over-day-end")) {
+  if (
+    last &&
+    dayFinish !== null &&
+    dayFinish > dayEnd &&
+    !last.issues.some((x) => x.code === "over-day-end")
+  ) {
     last.issues.push({
       code: "over-day-end",
       severity: "warning",
@@ -448,7 +486,10 @@ export function computeDaySchedule(
       missingLegs += 1;
     }
   }
-  const errorCount = out.reduce((s, x) => s + x.issues.filter((i) => i.severity === "error").length, 0);
+  const errorCount = out.reduce(
+    (s, x) => s + x.issues.filter((i) => i.severity === "error").length,
+    0,
+  );
   const warningCount = out.reduce(
     (s, x) => s + x.issues.filter((i) => i.severity === "warning").length,
     0,

@@ -4,7 +4,14 @@
 //   tab(기본) = 상단 로고 바 + 하단 탭, detail = 모바일에서 상단·하단 셸 숨김(화면이 PageTopBar·StickyActionBar를 그린다)
 import type { ComponentType } from "react";
 import { Link, NavLink, Outlet, ScrollRestoration, useMatches } from "react-router";
-import { AddIcon, BookmarkIcon, CompassIcon, TripIcon, UserIcon, type IconProps } from "@/components/icons";
+import {
+  AddIcon,
+  BookmarkIcon,
+  CompassIcon,
+  TripIcon,
+  UserIcon,
+  type IconProps,
+} from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { paths } from "./paths";
@@ -25,7 +32,9 @@ const TABS: { to: string; label: string; end: boolean; icon: ComponentType<IconP
   { to: paths.home, label: "탐색", end: true, icon: CompassIcon },
   { to: paths.library, label: "보관함", end: false, icon: BookmarkIcon },
 ];
-const TABS_AFTER: typeof TABS = [{ to: paths.myTrips, label: "내 여행", end: false, icon: TripIcon }];
+const TABS_AFTER: typeof TABS = [
+  { to: paths.myTrips, label: "내 여행", end: false, icon: TripIcon },
+];
 
 function useChrome(): RouteChrome {
   const matches = useMatches();
@@ -79,7 +88,9 @@ export function AppLayout() {
                 className={({ isActive }) =>
                   cn(
                     "rounded-lg px-3 py-2 text-sm font-medium",
-                    isActive ? "text-primary bg-primary-soft" : "text-muted-foreground hover:text-foreground",
+                    isActive
+                      ? "text-primary bg-primary-soft"
+                      : "text-muted-foreground hover:text-foreground",
                   )
                 }
               >
@@ -88,7 +99,12 @@ export function AppLayout() {
             ))}
           </nav>
           <div className="ml-auto flex items-center gap-2">
-            <Button asChild variant="ghost" size="icon-touch" aria-label={auth.status === "authed" ? "계정" : "로그인"}>
+            <Button
+              asChild
+              variant="ghost"
+              size="icon-touch"
+              aria-label={auth.status === "authed" ? "계정" : "로그인"}
+            >
               <Link to={auth.status === "authed" ? paths.account : paths.login}>
                 <UserIcon />
               </Link>
@@ -115,7 +131,10 @@ export function AppLayout() {
           {TABS.map((t) => (
             <TabLink key={t.to} {...t} />
           ))}
-          <Link to={paths.tripNew} className="flex h-16 flex-col items-center justify-center gap-1 text-xs font-semibold">
+          <Link
+            to={paths.tripNew}
+            className="flex h-16 flex-col items-center justify-center gap-1 text-xs font-semibold"
+          >
             <span className="bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-full shadow-sm">
               <AddIcon size="sm" />
             </span>

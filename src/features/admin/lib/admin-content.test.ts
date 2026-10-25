@@ -18,7 +18,12 @@ describe("reviewForPublish", () => {
   });
 
   test("축제는 개최 기간과 기간 안 프로그램이 필요하다", () => {
-    const f = { ...emptyInput("festivals"), name: "축제", startDate: "2026-10-23", endDate: "2026-10-25" };
+    const f = {
+      ...emptyInput("festivals"),
+      name: "축제",
+      startDate: "2026-10-23",
+      endDate: "2026-10-25",
+    };
     f.programs = [{ id: "p", name: "공연", date: "2026-10-30", start: "10:00", end: "11:00" }];
     expect(reviewForPublish("festivals", f).errors).toContain("개최 기간 밖의 프로그램이 있어요.");
   });

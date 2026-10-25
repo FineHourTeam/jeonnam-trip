@@ -7,7 +7,10 @@ import type { ShareContent } from "../api/account-api";
 
 const clock = (m: number | null) => (m === null ? null : formatClock(m));
 
-export function buildShareContent(trip: Pick<Trip, "title" | "startDate" | "endDate" | "mode" | "siguns" | "days">, schedules: DaySchedule[]): ShareContent {
+export function buildShareContent(
+  trip: Pick<Trip, "title" | "startDate" | "endDate" | "mode" | "siguns" | "days">,
+  schedules: DaySchedule[],
+): ShareContent {
   return {
     title: trip.title,
     startDate: trip.startDate,
@@ -29,7 +32,10 @@ export function buildShareContent(trip: Pick<Trip, "title" | "startDate" | "endD
             start: clock(s?.start ?? null),
             end: clock(s?.end ?? null),
             // 출발 위치에서 오는 구간은 개인 주소가 드러나므로 뺀다
-            legBefore: leg?.status === "ok" && ii > 0 ? { durationMin: leg.durationMin, distanceM: leg.distanceM } : null,
+            legBefore:
+              leg?.status === "ok" && ii > 0
+                ? { durationMin: leg.durationMin, distanceM: leg.distanceM }
+                : null,
           },
         };
       }),
@@ -61,7 +67,10 @@ export function draftFromShare(share: SharedTrip): TripDraft {
       date: d.date,
       startTime: d.startTime,
       endTime: d.endTime,
-      items: d.items.map(({ times: _times, ...it }): VisitItem => ({ ...it, id: crypto.randomUUID() })),
+      items: d.items.map(({ times: _times, ...it }): VisitItem => ({
+        ...it,
+        id: crypto.randomUUID(),
+      })),
     })),
     unplaced: [],
     origin: { kind: "share", shareId: share.id },

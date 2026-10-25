@@ -16,16 +16,31 @@ import {
   usePlacesByIds,
 } from "@/features/content";
 import { useCustomPlaces, useSavedPlaces } from "@/features/library";
-import { useCurrentUid, visitFromCustomPlace, visitFromFestival, visitFromPlace } from "@/features/trips";
+import {
+  useCurrentUid,
+  visitFromCustomPlace,
+  visitFromFestival,
+  visitFromPlace,
+} from "@/features/trips";
 import { sigunName, type SigunCode, type VisitItem } from "@/shared/domain";
 import { formatDateShort } from "@/shared/lib/date";
 import { cn } from "@/lib/utils";
 
-function SearchTab({ siguns, inDay, onPick }: { siguns: SigunCode[]; inDay: Set<string>; onPick: (items: VisitItem[]) => void }) {
+function SearchTab({
+  siguns,
+  inDay,
+  onPick,
+}: {
+  siguns: SigunCode[];
+  inDay: Set<string>;
+  onPick: (items: VisitItem[]) => void;
+}) {
   const [sigun, setSigun] = useState<SigunCode | null>(siguns[0] ?? null);
   const [keyword, setKeyword] = useState("");
   const q = usePlaces({ sigun });
-  const list = (q.data?.pages.flatMap((p) => p.items) ?? []).filter((p) => matchesPlace(p, { ...EMPTY_PLACE_FILTER, keyword }));
+  const list = (q.data?.pages.flatMap((p) => p.items) ?? []).filter((p) =>
+    matchesPlace(p, { ...EMPTY_PLACE_FILTER, keyword }),
+  );
   return (
     <div className="flex flex-col gap-3">
       <InputGroup className="h-11 rounded-xl">
@@ -45,7 +60,14 @@ function SearchTab({ siguns, inDay, onPick }: { siguns: SigunCode[]; inDay: Set<
       {siguns.length > 1 ? (
         <div className="flex flex-wrap gap-2">
           {siguns.map((s) => (
-            <Button key={s} size="sm" variant={s === sigun ? "default" : "outline"} onClick={() => { setSigun(s); }}>
+            <Button
+              key={s}
+              size="sm"
+              variant={s === sigun ? "default" : "outline"}
+              onClick={() => {
+                setSigun(s);
+              }}
+            >
               {sigunName(s)}
             </Button>
           ))}
@@ -56,7 +78,11 @@ function SearchTab({ siguns, inDay, onPick }: { siguns: SigunCode[]; inDay: Set<
       ) : q.isError ? (
         <ErrorState error={q.error} onRetry={() => void q.refetch()} className="py-6" />
       ) : list.length === 0 ? (
-        <EmptyState title="맞는 장소가 없어요" description="이름을 바꿔 찾거나 다른 지역을 골라 보세요." className="py-6" />
+        <EmptyState
+          title="맞는 장소가 없어요"
+          description="이름을 바꿔 찾거나 다른 지역을 골라 보세요."
+          className="py-6"
+        />
       ) : (
         <div className="flex flex-col gap-3">
           {list.slice(0, 40).map((p) => (
@@ -66,12 +92,24 @@ function SearchTab({ siguns, inDay, onPick }: { siguns: SigunCode[]; inDay: Set<
               to={null}
               trailing={
                 inDay.has(p.id) ? (
-                  <Button size="touch" variant="outline" disabled aria-label={`${p.name} 이 일차에 있어요`}>
+                  <Button
+                    size="touch"
+                    variant="outline"
+                    disabled
+                    aria-label={`${p.name} 이 일차에 있어요`}
+                  >
                     <CheckIcon size="sm" />
                     담음
                   </Button>
                 ) : (
-                  <Button size="touch" variant="outline" onClick={() => { onPick([visitFromPlace(p)]); }} aria-label={`${p.name} 담기`}>
+                  <Button
+                    size="touch"
+                    variant="outline"
+                    onClick={() => {
+                      onPick([visitFromPlace(p)]);
+                    }}
+                    aria-label={`${p.name} 담기`}
+                  >
                     <AddIcon size="sm" />
                     담기
                   </Button>
@@ -85,24 +123,56 @@ function SearchTab({ siguns, inDay, onPick }: { siguns: SigunCode[]; inDay: Set<
   );
 }
 
-function LibraryTab({ single, inDay, onPick }: { single: boolean; inDay: Set<string>; onPick: (items: VisitItem[]) => void }) {
+function LibraryTab({
+  single,
+  inDay,
+  onPick,
+}: {
+  single: boolean;
+  inDay: Set<string>;
+  onPick: (items: VisitItem[]) => void;
+}) {
   const uid = useCurrentUid();
   const saved = useSavedPlaces();
   const custom = useCustomPlaces();
-  const placeIds = (saved.data ?? []).flatMap((s) => (s.ref.kind === "place" ? [s.ref.placeId] : []));
+  const placeIds = (saved.data ?? []).flatMap((s) =>
+    s.ref.kind === "place" ? [s.ref.placeId] : [],
+  );
   const places = usePlacesByIds(placeIds);
   const [checked, setChecked] = useState<Set<string>>(new Set());
   if (!uid) {
-    return <EmptyState title="로그인하면 보관함에서 꺼내올 수 있어요" description="작성 중인 코스는 그대로 남아요." className="py-6" />;
+    return (
+      <EmptyState
+        title="로그인하면 보관함에서 꺼내올 수 있어요"
+        description="작성 중인 코스는 그대로 남아요."
+        className="py-6"
+      />
+    );
   }
   if (saved.isPending || places.isPending) return <RowListSkeleton />;
-  if (saved.isError) return <ErrorState error={saved.error} onRetry={() => void saved.refetch()} className="py-6" />;
-  const rows: { key: string; refId: string; label: string; note: string; item: () => VisitItem; place?: NonNullable<typeof places.data>[number] }[] = [];
+  if (saved.isError)
+    return <ErrorState error={saved.error} onRetry={() => void saved.refetch()} className="py-6" />;
+  const rows: {
+    key: string;
+    refId: string;
+    label: string;
+    note: string;
+    item: () => VisitItem;
+    place?: NonNullable<typeof places.data>[number];
+  }[] = [];
   for (const s of saved.data) {
     if (s.ref.kind === "place") {
       const placeId = s.ref.placeId;
       const p = places.data?.find((x) => x.id === placeId);
-      if (p) rows.push({ key: s.id, refId: p.id, label: p.name, note: s.memo, item: () => visitFromPlace(p), place: p });
+      if (p)
+        rows.push({
+          key: s.id,
+          refId: p.id,
+          label: p.name,
+          note: s.memo,
+          item: () => visitFromPlace(p),
+          place: p,
+        });
     } else {
       const customId = s.ref.customPlaceId;
       const cp = custom.data?.find((x) => x.id === customId);
@@ -116,13 +186,26 @@ function LibraryTab({ single, inDay, onPick }: { single: boolean; inDay: Set<str
         });
     }
   }
-  if (rows.length === 0) return <EmptyState title="보관함이 비어 있어요" description="장소 화면에서 저장하면 여기서 꺼내올 수 있어요." className="py-6" />;
+  if (rows.length === 0)
+    return (
+      <EmptyState
+        title="보관함이 비어 있어요"
+        description="장소 화면에서 저장하면 여기서 꺼내올 수 있어요."
+        className="py-6"
+      />
+    );
   return (
     <div className="flex flex-col gap-3">
       {rows.map((r) => {
         const here = inDay.has(r.refId);
         return (
-          <label key={r.key} className={cn("border-border flex items-center gap-3 rounded-xl border p-3", here ? "opacity-60" : "cursor-pointer")}>
+          <label
+            key={r.key}
+            className={cn(
+              "border-border flex items-center gap-3 rounded-xl border p-3",
+              here ? "opacity-60" : "cursor-pointer",
+            )}
+          >
             {single ? null : (
               <Checkbox
                 disabled={here}
@@ -147,7 +230,14 @@ function LibraryTab({ single, inDay, onPick }: { single: boolean; inDay: Set<str
               ) : null}
             </span>
             {single ? (
-              <Button size="touch" variant="outline" disabled={here} onClick={() => { onPick([r.item()]); }}>
+              <Button
+                size="touch"
+                variant="outline"
+                disabled={here}
+                onClick={() => {
+                  onPick([r.item()]);
+                }}
+              >
                 고르기
               </Button>
             ) : null}
@@ -170,13 +260,28 @@ function LibraryTab({ single, inDay, onPick }: { single: boolean; inDay: Set<str
   );
 }
 
-function FestivalTab({ date, siguns, onPick }: { date: string; siguns: SigunCode[]; onPick: (items: VisitItem[]) => void }) {
+function FestivalTab({
+  date,
+  siguns,
+  onPick,
+}: {
+  date: string;
+  siguns: SigunCode[];
+  onPick: (items: VisitItem[]) => void;
+}) {
   const q = useFestivals({ from: date, to: date });
   const list = (q.data ?? []).filter((f) => siguns.length === 0 || siguns.includes(f.sigun));
   if (q.isPending) return <RowListSkeleton count={2} />;
-  if (q.isError) return <ErrorState error={q.error} onRetry={() => void q.refetch()} className="py-6" />;
+  if (q.isError)
+    return <ErrorState error={q.error} onRetry={() => void q.refetch()} className="py-6" />;
   if (list.length === 0) {
-    return <EmptyState title={`${formatDateShort(date)}에 열리는 축제가 없어요`} description="축제가 없어도 일반 코스를 만들 수 있어요." className="py-6" />;
+    return (
+      <EmptyState
+        title={`${formatDateShort(date)}에 열리는 축제가 없어요`}
+        description="축제가 없어도 일반 코스를 만들 수 있어요."
+        className="py-6"
+      />
+    );
   }
   return (
     <div className="flex flex-col gap-4">
@@ -190,14 +295,29 @@ function FestivalTab({ date, siguns, onPick }: { date: string; siguns: SigunCode
               <span className="text-muted-foreground shrink-0 text-xs">{sigunName(f.sigun)}</span>
             </div>
             {cancelled ? (
-              <p className="text-destructive-soft-foreground bg-destructive-soft rounded-lg p-2 text-sm">취소된 축제라 담을 수 없어요.</p>
+              <p className="text-destructive-soft-foreground bg-destructive-soft rounded-lg p-2 text-sm">
+                취소된 축제라 담을 수 없어요.
+              </p>
             ) : (
               <div className="flex flex-wrap gap-2">
-                <Button size="touch" variant="outline" onClick={() => { onPick([visitFromFestival(f, date)]); }}>
+                <Button
+                  size="touch"
+                  variant="outline"
+                  onClick={() => {
+                    onPick([visitFromFestival(f, date)]);
+                  }}
+                >
                   일반 방문으로 담기
                 </Button>
                 {programs.map((p) => (
-                  <Button key={p.id} size="touch" variant="outline" onClick={() => { onPick([visitFromFestival(f, date, p.id)]); }}>
+                  <Button
+                    key={p.id}
+                    size="touch"
+                    variant="outline"
+                    onClick={() => {
+                      onPick([visitFromFestival(f, date, p.id)]);
+                    }}
+                  >
                     <LockIcon size="sm" />
                     {p.start} {p.name}
                   </Button>
@@ -232,7 +352,13 @@ export function PlacePickerSheet({
   onPick: (items: VisitItem[]) => void;
 }) {
   const inDay = new Set(
-    dayItems.flatMap((x) => (x.ref.kind === "place" ? [x.ref.placeId] : x.ref.kind === "custom" ? [x.ref.customPlaceId] : [])),
+    dayItems.flatMap((x) =>
+      x.ref.kind === "place"
+        ? [x.ref.placeId]
+        : x.ref.kind === "custom"
+          ? [x.ref.customPlaceId]
+          : [],
+    ),
   );
   const pick = (items: VisitItem[]) => {
     onPick(items);

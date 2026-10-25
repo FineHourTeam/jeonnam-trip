@@ -1,6 +1,12 @@
 // 관리자 폼 공용 조각 — 항목 머리글·묶음·시군 고르기.
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { SIGUNS, type SigunCode } from "@/shared/domain";
 
 /**
@@ -45,9 +51,20 @@ export function Section({ title, children }: { title: string; children: React.Re
   );
 }
 
-export function SigunSelect({ value, onChange }: { value: SigunCode; onChange: (v: SigunCode) => void }) {
+export function SigunSelect({
+  value,
+  onChange,
+}: {
+  value: SigunCode;
+  onChange: (v: SigunCode) => void;
+}) {
   return (
-    <Select value={value} onValueChange={(v) => { onChange(v as SigunCode); }}>
+    <Select
+      value={value}
+      onValueChange={(v) => {
+        onChange(v as SigunCode);
+      }}
+    >
       <SelectTrigger className="w-full" aria-label="시군">
         <SelectValue />
       </SelectTrigger>

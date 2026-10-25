@@ -14,12 +14,16 @@ export function FestivalBadges({ festival }: { festival: Festival }) {
   return (
     <div className="flex flex-wrap gap-1">
       {festival.state === "cancelled" ? null : (
-        <PhotoBadge tone={phase === "ongoing" ? "primary" : phase === "ended" ? "muted" : "neutral"}>
+        <PhotoBadge
+          tone={phase === "ongoing" ? "primary" : phase === "ended" ? "muted" : "neutral"}
+        >
           {FESTIVAL_PHASE_LABEL[phase]}
         </PhotoBadge>
       )}
       {stateLabel ? (
-        <PhotoBadge tone={festival.state === "cancelled" ? "destructive" : "warning"}>{stateLabel}</PhotoBadge>
+        <PhotoBadge tone={festival.state === "cancelled" ? "destructive" : "warning"}>
+          {stateLabel}
+        </PhotoBadge>
       ) : null}
     </div>
   );
@@ -28,7 +32,10 @@ export function FestivalBadges({ festival }: { festival: Festival }) {
 export function FestivalCard({ festival, className }: { festival: Festival; className?: string }) {
   return (
     <article className={cn("relative", className)}>
-      <Link to={paths.festivalDetail(festival.id)} className="group flex flex-col gap-2 rounded-xl outline-none">
+      <Link
+        to={paths.festivalDetail(festival.id)}
+        className="group flex flex-col gap-2 rounded-xl outline-none"
+      >
         <div className="relative">
           <Photo
             photo={festival.photos[0]}
@@ -50,7 +57,9 @@ export function FestivalCard({ festival, className }: { festival: Festival; clas
           >
             {festival.name}
           </h3>
-          <p className="text-muted-foreground text-sm">{formatPeriodKo(festival.startDate, festival.endDate)}</p>
+          <p className="text-muted-foreground text-sm">
+            {formatPeriodKo(festival.startDate, festival.endDate)}
+          </p>
         </div>
       </Link>
     </article>

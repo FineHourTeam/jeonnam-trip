@@ -12,11 +12,18 @@ function place(id: string, over: Partial<Place> = {}): Place {
     moods: [],
     purposes: [],
     location: { lat: 34.95, lng: 127.49 },
-    hours: { weekly: { 0: OPEN, 1: OPEN, 2: OPEN, 3: OPEN, 4: OPEN, 5: OPEN, 6: OPEN }, exceptions: [] },
+    hours: {
+      weekly: { 0: OPEN, 1: OPEN, 2: OPEN, 3: OPEN, 4: OPEN, 5: OPEN, 6: OPEN },
+      exceptions: [],
+    },
     facts: { parking: null, reservation: null, pets: null },
     photos: [],
     sources: [],
-    checks: { location: { state: "verified" }, hours: { state: "verified" }, info: { state: "unverified" } },
+    checks: {
+      location: { state: "verified" },
+      hours: { state: "verified" },
+      info: { state: "unverified" },
+    },
     status: "published",
     updatedAt: "2026-10-16T00:00:00Z",
     ...over,
@@ -46,14 +53,21 @@ const festival: Festival = {
   location: { lat: 34.94, lng: 127.5 },
   photos: [],
   state: "scheduled",
-  checks: { schedule: { state: "verified" }, location: { state: "verified" }, info: { state: "unverified" } },
+  checks: {
+    schedule: { state: "verified" },
+    location: { state: "verified" },
+    info: { state: "unverified" },
+  },
   status: "published",
   updatedAt: "2026-10-16T00:00:00Z",
 };
 
 describe("buildStartDraft", () => {
   test("일차별 시작·종료 시각을 적용하고, 축제는 방문일 일차에 프로그램 시간을 고정해 넣는다", () => {
-    const d = buildStartDraft({ ...base, festival: { festival, date: "2026-10-24", programId: "p1" } });
+    const d = buildStartDraft({
+      ...base,
+      festival: { festival, date: "2026-10-24", programId: "p1" },
+    });
     expect(d.days.map((x) => x.startTime)).toEqual(["10:00", "10:00"]);
     expect(d.days[1]?.items[0]?.fixedStart).toBe("18:30");
     expect(d.title).toBe("강변 가을축제 여행");
@@ -113,8 +127,12 @@ describe("buildStartDraft", () => {
 
   test("제목을 비우면 지역 이름으로 정한다", () => {
     expect(buildStartDraft(base).title).toBe("순천시 여행");
-    expect(buildStartDraft({ ...base, siguns: ["suncheon", "yeosu"] }).title).toBe("순천시·여수시 여행");
-    expect(buildStartDraft({ ...base, siguns: ["suncheon", "yeosu", "mokpo"] }).title).toBe("순천시 외 2곳 여행");
+    expect(buildStartDraft({ ...base, siguns: ["suncheon", "yeosu"] }).title).toBe(
+      "순천시·여수시 여행",
+    );
+    expect(buildStartDraft({ ...base, siguns: ["suncheon", "yeosu", "mokpo"] }).title).toBe(
+      "순천시 외 2곳 여행",
+    );
     expect(buildStartDraft({ ...base, siguns: [] }).title).toBe("새 여행");
     expect(buildStartDraft({ ...base, title: "  가을 여행 " }).title).toBe("가을 여행");
   });

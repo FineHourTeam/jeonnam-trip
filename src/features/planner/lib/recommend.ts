@@ -126,7 +126,10 @@ export function recommendTrip(input: RecommendInput): RecommendResult {
             : 0;
           if (fit.end + toNext > deadline) return;
           const score =
-            drive + (fit.start - arrive) * 0.5 + mealScore(cand.item, fit.start, chosen.at(-1)) - cand.priority;
+            drive +
+            (fit.start - arrive) * 0.5 +
+            mealScore(cand.item, fit.start, chosen.at(-1)) -
+            cand.priority;
           if (!best || score < best.score) best = { idx, end: fit.end, score };
         });
       }

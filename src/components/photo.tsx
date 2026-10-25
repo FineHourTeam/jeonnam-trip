@@ -34,7 +34,12 @@ export function Photo({
   const [failed, setFailed] = useState(false);
   const creditText = photo ? photoCreditText(photo) : null;
   return (
-    <div className={cn("bg-background-subtle text-muted-foreground relative overflow-hidden", className)}>
+    <div
+      className={cn(
+        "bg-background-subtle text-muted-foreground relative overflow-hidden",
+        className,
+      )}
+    >
       {photo && !failed ? (
         <img
           src={photo.url}
@@ -47,7 +52,11 @@ export function Photo({
           className="size-full object-cover"
         />
       ) : (
-        <div className="flex size-full items-center justify-center" role="img" aria-label={`${alt} 사진 없음`}>
+        <div
+          className="flex size-full items-center justify-center"
+          role="img"
+          aria-label={`${alt} 사진 없음`}
+        >
           {fallbackIcon ?? <PhotoIcon size="lg" />}
         </div>
       )}

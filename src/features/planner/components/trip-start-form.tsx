@@ -37,7 +37,10 @@ const schema = z
     path: ["endDate"],
     message: `여행 기간은 최대 ${String(MAX_TRIP_DAYS)}일까지 만들 수 있어요.`,
   })
-  .refine((v) => v.dayEnd > v.dayStart, { path: ["dayEnd"], message: "종료 시각이 시작 시각보다 늦어야 해요." });
+  .refine((v) => v.dayEnd > v.dayStart, {
+    path: ["dayEnd"],
+    message: "종료 시각이 시작 시각보다 늦어야 해요.",
+  });
 
 export type TripStartValues = z.infer<typeof schema>;
 
@@ -82,10 +85,13 @@ export function TripStartForm({
   const form = useForm<TripStartValues>({
     resolver: zodResolver(
       mustInclude
-        ? schema.refine((v) => !v.startDate || (v.startDate <= mustInclude && v.endDate >= mustInclude), {
-            path: ["endDate"],
-            message: `축제 방문일(${formatDateShort(mustInclude)})이 여행 기간에 들어가야 해요.`,
-          })
+        ? schema.refine(
+            (v) => !v.startDate || (v.startDate <= mustInclude && v.endDate >= mustInclude),
+            {
+              path: ["endDate"],
+              message: `축제 방문일(${formatDateShort(mustInclude)})이 여행 기간에 들어가야 해요.`,
+            },
+          )
         : schema,
     ),
     defaultValues: {
@@ -121,7 +127,8 @@ export function TripStartForm({
     (e) => {
       // 달력·지역 칩은 포커스할 입력이 없어 맨 아래 버튼에서는 오류가 안 보인다 — 첫 오류 칸으로 옮긴다
       const section = e.startDate || e.endDate ? "start-dates" : e.siguns ? "start-region" : null;
-      if (section) document.getElementById(section)?.scrollIntoView({ behavior: "smooth", block: "center" });
+      if (section)
+        document.getElementById(section)?.scrollIntoView({ behavior: "smooth", block: "center" });
       else setDetailOpen(true);
     },
   );
@@ -154,7 +161,9 @@ export function TripStartForm({
             locale={ko}
             numberOfMonths={1}
             defaultMonth={start ? toDate(start) : mustInclude ? toDate(mustInclude) : undefined}
-            selected={start ? { from: toDate(start), to: end ? toDate(end) : undefined } : undefined}
+            selected={
+              start ? { from: toDate(start), to: end ? toDate(end) : undefined } : undefined
+            }
             onSelect={(r, picked) => {
               let from = r?.from ? fromDate(r.from) : "";
               let to = r?.to ? fromDate(r.to) : "";
@@ -201,11 +210,24 @@ export function TripStartForm({
             control={form.control}
             name="startMode"
             render={({ field }) => (
-              <RadioGroup value={field.value} onValueChange={field.onChange} aria-labelledby="start-mode" className="sm:grid-cols-2">
+              <RadioGroup
+                value={field.value}
+                onValueChange={field.onChange}
+                aria-labelledby="start-mode"
+                className="sm:grid-cols-2"
+              >
                 {(
                   [
-                    ["recommend", "추천으로 시작", "고른 장소와 지역 장소로 영업시간·이동을 맞춰 일정을 채워요. 넣지 못한 장소는 이유와 함께 남겨요."],
-                    ["direct", "직접 만들기", "빈 일차에서 시작해 장소를 직접 넣어요. 넣을 때마다 시간을 다시 계산해요."],
+                    [
+                      "recommend",
+                      "추천으로 시작",
+                      "고른 장소와 지역 장소로 영업시간·이동을 맞춰 일정을 채워요. 넣지 못한 장소는 이유와 함께 남겨요.",
+                    ],
+                    [
+                      "direct",
+                      "직접 만들기",
+                      "빈 일차에서 시작해 장소를 직접 넣어요. 넣을 때마다 시간을 다시 계산해요.",
+                    ],
                   ] as const
                 ).map(([value, label, desc]) => (
                   <label
@@ -213,7 +235,8 @@ export function TripStartForm({
                     htmlFor={`start-${value}`}
                     className={cn(
                       "border-border flex cursor-pointer items-start gap-3 rounded-xl border p-4",
-                      field.value === value && "border-primary bg-primary-soft text-primary-soft-foreground",
+                      field.value === value &&
+                        "border-primary bg-primary-soft text-primary-soft-foreground",
                     )}
                   >
                     <RadioGroupItem id={`start-${value}`} value={value} className="mt-1" />
@@ -234,7 +257,9 @@ export function TripStartForm({
           <h2 id="start-pace" className="text-lg font-bold">
             여행 속도 <span className="text-muted-foreground text-sm font-normal">(선택)</span>
           </h2>
-          <p className="text-muted-foreground text-sm">추천 일정의 장소 수와 여유시간에만 쓰여요. 직접 만든 일정은 바꾸지 않아요.</p>
+          <p className="text-muted-foreground text-sm">
+            추천 일정의 장소 수와 여유시간에만 쓰여요. 직접 만든 일정은 바꾸지 않아요.
+          </p>
         </div>
         <Controller
           control={form.control}
@@ -262,24 +287,40 @@ export function TripStartForm({
       <div className="bg-background-subtle flex items-center gap-3 rounded-xl px-4 py-3 text-sm">
         <CarIcon size="sm" className="text-muted-foreground" />
         <span>
-          이동수단 <strong className="font-semibold">자동차</strong> · 장소 사이 이동시간은 실제 자동차 경로로 계산해요.
+          이동수단 <strong className="font-semibold">자동차</strong> · 장소 사이 이동시간은 실제
+          자동차 경로로 계산해요.
         </span>
       </div>
 
       <Collapsible open={detailOpen} onOpenChange={setDetailOpen}>
         <CollapsibleTrigger className="text-muted-foreground flex items-center gap-1 text-sm font-medium">
           상세 설정
-          <ChevronDownIcon size="sm" className={cn("transition-transform", detailOpen && "rotate-180")} />
+          <ChevronDownIcon
+            size="sm"
+            className={cn("transition-transform", detailOpen && "rotate-180")}
+          />
         </CollapsibleTrigger>
         <CollapsibleContent className="flex flex-col gap-4 pt-4">
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="day-start">하루 시작</Label>
-              <Input id="day-start" type="time" inputSize="touch" aria-invalid={Boolean(errors.dayStart)} {...form.register("dayStart")} />
+              <Input
+                id="day-start"
+                type="time"
+                inputSize="touch"
+                aria-invalid={Boolean(errors.dayStart)}
+                {...form.register("dayStart")}
+              />
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="day-end">하루 종료</Label>
-              <Input id="day-end" type="time" inputSize="touch" aria-invalid={Boolean(errors.dayEnd)} {...form.register("dayEnd")} />
+              <Input
+                id="day-end"
+                type="time"
+                inputSize="touch"
+                aria-invalid={Boolean(errors.dayEnd)}
+                {...form.register("dayEnd")}
+              />
             </div>
           </div>
           {errors.dayStart?.message || errors.dayEnd?.message ? (
@@ -289,8 +330,15 @@ export function TripStartForm({
           ) : null}
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="trip-title">여행 제목</Label>
-            <Input id="trip-title" inputSize="touch" placeholder="비워 두면 자동으로 정해요" {...form.register("title")} />
-            {errors.title?.message ? <p className="text-destructive text-sm">{errors.title.message}</p> : null}
+            <Input
+              id="trip-title"
+              inputSize="touch"
+              placeholder="비워 두면 자동으로 정해요"
+              {...form.register("title")}
+            />
+            {errors.title?.message ? (
+              <p className="text-destructive text-sm">{errors.title.message}</p>
+            ) : null}
           </div>
         </CollapsibleContent>
       </Collapsible>

@@ -60,7 +60,9 @@ const FAIL_REASON: Record<number, string> = {
 
 interface NaverResponse {
   code?: number;
-  route?: { trafast?: { summary?: { distance?: number; duration?: number }; path?: [number, number][] }[] };
+  route?: {
+    trafast?: { summary?: { distance?: number; duration?: number }; path?: [number, number][] }[];
+  };
 }
 
 /** 네이버 응답 → 앱 구간 결과 */
@@ -71,8 +73,16 @@ export function toLegResult(json: NaverResponse, req: LegRequest, now: string): 
   }
   const route = json.route?.trafast?.[0];
   const summary = route?.summary;
-  if (json.code !== 0 || !summary || typeof summary.duration !== "number" || typeof summary.distance !== "number") {
-    return { status: "failed", reason: FAIL_REASON[json.code ?? -1] ?? "경로를 불러오지 못했어요." };
+  if (
+    json.code !== 0 ||
+    !summary ||
+    typeof summary.duration !== "number" ||
+    typeof summary.distance !== "number"
+  ) {
+    return {
+      status: "failed",
+      reason: FAIL_REASON[json.code ?? -1] ?? "경로를 불러오지 못했어요.",
+    };
   }
   return {
     status: "ok",
@@ -94,9 +104,16 @@ export async function fetchLeg(
       headers: { "x-ncp-apigw-api-key-id": creds.id, "x-ncp-apigw-api-key": creds.secret },
       signal: AbortSignal.timeout(8_000),
     });
-    if (!res.ok) return { status: "failed", reason: "경로 서버가 응답하지 않았어요. 잠시 후 다시 시도해 주세요." };
+    if (!res.ok)
+      return {
+        status: "failed",
+        reason: "경로 서버가 응답하지 않았어요. 잠시 후 다시 시도해 주세요.",
+      };
     return toLegResult((await res.json()) as NaverResponse, req, new Date().toISOString());
   } catch {
-    return { status: "failed", reason: "경로 서버에 연결하지 못했어요. 잠시 후 다시 시도해 주세요." };
+    return {
+      status: "failed",
+      reason: "경로 서버에 연결하지 못했어요. 잠시 후 다시 시도해 주세요.",
+    };
   }
 }

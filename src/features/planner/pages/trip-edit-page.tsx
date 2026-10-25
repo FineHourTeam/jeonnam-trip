@@ -126,7 +126,14 @@ export default function TripEditPage() {
       ) : dirty ? (
         <Notice tone="warning" title="저장하지 않은 변경이 있어요">
           <span>이 기기에 보관 중이에요. 저장해야 다른 기기에 반영돼요.</span>
-          <Button size="sm" variant="outline" className="bg-background mt-2" onClick={() => { setDiscardOpen(true); }}>
+          <Button
+            size="sm"
+            variant="outline"
+            className="bg-background mt-2"
+            onClick={() => {
+              setDiscardOpen(true);
+            }}
+          >
             변경 버리기
           </Button>
         </Notice>
@@ -155,7 +162,13 @@ export default function TripEditPage() {
               </Button>
             ) : null}
             <Button size="touch" disabled={!dirty || editor.isSaving} onClick={() => void onSave()}>
-              {editor.isSaving ? "저장 중..." : dirty ? (editor.needsLogin ? "로그인하고 저장" : "저장") : "저장됨"}
+              {editor.isSaving
+                ? "저장 중..."
+                : dirty
+                  ? editor.needsLogin
+                    ? "로그인하고 저장"
+                    : "저장"
+                  : "저장됨"}
             </Button>
           </>
         }
@@ -189,7 +202,9 @@ export default function TripEditPage() {
             .overwriteWithMine()
             .then(() => toast.success("내 변경으로 저장했어요."))
             .catch((e: unknown) => toast.error(`저장하지 못했어요. ${errorMessage(e)}`))
-            .finally(() => { setOverwriting(false); });
+            .finally(() => {
+              setOverwriting(false);
+            });
         }}
       />
     </div>

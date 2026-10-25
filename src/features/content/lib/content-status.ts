@@ -12,7 +12,10 @@ import { dayOfWeek, toMinutes } from "@/shared/lib/date";
 
 export type FestivalPhase = "ongoing" | "upcoming" | "ended";
 
-export function festivalPhase(f: Pick<Festival, "startDate" | "endDate">, today: string): FestivalPhase {
+export function festivalPhase(
+  f: Pick<Festival, "startDate" | "endDate">,
+  today: string,
+): FestivalPhase {
   if (today < f.startDate) return "upcoming";
   if (today > f.endDate) return "ended";
   return "ongoing";
@@ -52,7 +55,8 @@ export function openStateAt(place: Pick<Place, "hours">, date: string, now: stri
     const open = toMinutes(r.open);
     let close = toMinutes(r.close);
     if (close <= open) close += 1440;
-    if (t < open) return i === 0 ? { kind: "before", opens: r.open } : { kind: "break", reopen: r.open };
+    if (t < open)
+      return i === 0 ? { kind: "before", opens: r.open } : { kind: "break", reopen: r.open };
     if (t < close) return { kind: "open", until: r.close, lastOrder: r.lastOrder };
   }
   return { kind: "after" };
@@ -65,7 +69,9 @@ export function openStateLabel(s: OpenState): string {
     case "closed-day":
       return "오늘 휴무";
     case "open":
-      return s.lastOrder ? `영업 중 · ${s.until}까지 (주문 마감 ${s.lastOrder})` : `영업 중 · ${s.until}까지`;
+      return s.lastOrder
+        ? `영업 중 · ${s.until}까지 (주문 마감 ${s.lastOrder})`
+        : `영업 중 · ${s.until}까지`;
     case "break":
       return `브레이크타임 · ${s.reopen}에 다시 열어요`;
     case "before":
@@ -118,7 +124,9 @@ export function matchesPlace(p: Place, f: PlaceFilter): boolean {
   if (f.facts.some((k) => p.facts[k] !== true)) return false;
   if (f.keyword.trim()) {
     const k = norm(f.keyword);
-    const hay = norm([p.name, p.area ?? "", p.subcategory ?? "", p.address ?? "", ...p.moods].join(" "));
+    const hay = norm(
+      [p.name, p.area ?? "", p.subcategory ?? "", p.address ?? "", ...p.moods].join(" "),
+    );
     if (!hay.includes(k)) return false;
   }
   return true;
@@ -128,12 +136,11 @@ export function matchesPlace(p: Place, f: PlaceFilter): boolean {
 export function sortPlacesByTagMatch(places: Place[], f: PlaceFilter): Place[] {
   const tags = [...f.moods, ...f.purposes];
   if (tags.length === 0) return places;
-  const score = (p: Place) => tags.filter((t) => p.moods.includes(t) || p.purposes.includes(t)).length;
+  const score = (p: Place) =>
+    tags.filter((t) => p.moods.includes(t) || p.purposes.includes(t)).length;
   return [...places].sort((a, b) => score(b) - score(a) || a.name.localeCompare(b.name, "ko"));
 }
 
 export function activeFilterCount(f: PlaceFilter): number {
-  return (
-    (f.subcategory ? 1 : 0) + f.moods.length + f.purposes.length + f.facts.length
-  );
+  return (f.subcategory ? 1 : 0) + f.moods.length + f.purposes.length + f.facts.length;
 }

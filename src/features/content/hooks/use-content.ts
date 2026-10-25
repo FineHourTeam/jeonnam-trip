@@ -1,5 +1,10 @@
 // 운영 콘텐츠 서버 상태 훅 — queryKey는 contentKeys로만 (rules.md § 상태관리).
-import { keepPreviousData, useInfiniteQuery, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useInfiniteQuery,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import type { Place, PlaceCategory, SigunCode } from "@/shared/domain";
 import {
   getCreatorCourse,
@@ -17,7 +22,8 @@ export const contentKeys = {
   places: (f: { sigun?: SigunCode | null; category?: PlaceCategory | null }) =>
     [...contentKeys.all, "places", f.sigun ?? "", f.category ?? ""] as const,
   place: (id: string) => [...contentKeys.all, "place", id] as const,
-  placesByIds: (ids: string[]) => [...contentKeys.all, "placesByIds", [...ids].sort().join(",")] as const,
+  placesByIds: (ids: string[]) =>
+    [...contentKeys.all, "placesByIds", [...ids].sort().join(",")] as const,
   festivals: (f: { from: string; to: string; sigun?: SigunCode | null }) =>
     [...contentKeys.all, "festivals", f.from, f.to, f.sigun ?? ""] as const,
   festival: (id: string) => [...contentKeys.all, "festival", id] as const,
@@ -87,7 +93,11 @@ export function useFestivalsByIds(ids: string[]) {
 }
 
 export function useCreatorCourses() {
-  return useQuery({ queryKey: contentKeys.courses(), queryFn: listCreatorCourses, staleTime: CONTENT_STALE });
+  return useQuery({
+    queryKey: contentKeys.courses(),
+    queryFn: listCreatorCourses,
+    staleTime: CONTENT_STALE,
+  });
 }
 
 export function useCreatorCourse(id: string | undefined) {

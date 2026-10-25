@@ -34,7 +34,12 @@ export function PlaceMap({
   }, [map, location.lat, location.lng, label]);
   return (
     <MapFrame status={status} fallbackQuery={label} className={className}>
-      <div ref={containerRef} className="size-full" aria-label={`${label} 위치 지도`} role="region" />
+      <div
+        ref={containerRef}
+        className="size-full"
+        aria-label={`${label} 위치 지도`}
+        role="region"
+      />
     </MapFrame>
   );
 }
@@ -82,7 +87,9 @@ export function CourseMap({
     const muted = cssVarToRgb("--muted-foreground");
     const overlays: { setMap: (m: naver.maps.Map | null) => void }[] = [];
     const listeners: object[] = [];
-    const located = stops.filter((s): s is CourseMapStop & { location: LatLng } => s.location !== null);
+    const located = stops.filter(
+      (s): s is CourseMapStop & { location: LatLng } => s.location !== null,
+    );
     for (const s of located) {
       const marker = new maps.Marker({
         position: new maps.LatLng(s.location.lat, s.location.lng),
@@ -106,7 +113,9 @@ export function CourseMap({
       overlays.push(
         new maps.Polyline({
           map,
-          path: (real ? (leg.path ?? []) : [leg.from, leg.to]).map((p) => new maps.LatLng(p.lat, p.lng)),
+          path: (real ? (leg.path ?? []) : [leg.from, leg.to]).map(
+            (p) => new maps.LatLng(p.lat, p.lng),
+          ),
           strokeColor: real ? primary : muted,
           strokeWeight: real ? 5 : 3,
           strokeOpacity: real ? 0.85 : 0.6,

@@ -12,8 +12,14 @@ import { Calendar } from "@/components/ui/calendar";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { FestivalCard, festivalPhase, useFestivals } from "@/features/content";
 import { isSigunCode, sigunName, type Festival } from "@/shared/domain";
-import { addDays, dateRange, formatDateKo, formatPeriodKo, monthRange, todayKst } from "@/shared/lib/date";
-
+import {
+  addDays,
+  dateRange,
+  formatDateKo,
+  formatPeriodKo,
+  monthRange,
+  todayKst,
+} from "@/shared/lib/date";
 
 function toDate(ymd: string): Date {
   const [y = 0, m = 1, d = 1] = ymd.split("-").map(Number);
@@ -63,15 +69,20 @@ export default function FestivalListPage() {
     setParams(p, { replace: true });
   }
 
-  const matched = (q.data ?? []).filter((f) => phase === "all" || festivalPhase(f, today) === phase);
+  const matched = (q.data ?? []).filter(
+    (f) => phase === "all" || festivalPhase(f, today) === phase,
+  );
   const onDay = (d: string) => matched.filter((f) => f.startDate <= d && f.endDate >= d);
   const festivalDays =
     view === "calendar"
-      ? dateRange(monthR.from, monthR.to).filter((d) => onDay(d).some((f) => f.state !== "cancelled"))
+      ? dateRange(monthR.from, monthR.to).filter((d) =>
+          onDay(d).some((f) => f.state !== "cancelled"),
+        )
       : [];
   const dayList = selectedDay ? onDay(selectedDay) : matched;
   const regionLabel = sigun ? sigunName(sigun) : "전남";
-  const periodLabel = view === "calendar" ? `${String(Number(month.slice(5)))}월` : formatPeriodKo(from, to);
+  const periodLabel =
+    view === "calendar" ? `${String(Number(month.slice(5)))}월` : formatPeriodKo(from, to);
   const hasCondition = sigun !== null || phase !== "all" || Boolean(fromParam) || Boolean(toParam);
 
   return (
@@ -81,7 +92,9 @@ export default function FestivalListPage() {
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl font-bold tracking-tight">축제</h1>
           <p className="text-muted-foreground text-sm" aria-live="polite">
-            {q.isPending ? "불러오는 중..." : `${regionLabel} · ${periodLabel} · ${String(dayList.length)}개`}
+            {q.isPending
+              ? "불러오는 중..."
+              : `${regionLabel} · ${periodLabel} · ${String(dayList.length)}개`}
           </p>
         </div>
         <ToggleGroup
@@ -104,8 +117,13 @@ export default function FestivalListPage() {
         </ToggleGroup>
       </div>
 
-      <div className="scrollbar-none -mx-4 flex items-center gap-2 overflow-x-auto px-4 md:mx-0 md:px-0">
-        <SigunPickerButton value={sigun} onChange={(v) => { patch({ sigun: v }); }} />
+      <div className="-mx-4 flex scrollbar-none items-center gap-2 overflow-x-auto px-4 md:mx-0 md:px-0">
+        <SigunPickerButton
+          value={sigun}
+          onChange={(v) => {
+            patch({ sigun: v });
+          }}
+        />
         <ToggleGroup
           type="single"
           variant="chip"
@@ -166,7 +184,9 @@ export default function FestivalListPage() {
             <p className="text-muted-foreground px-2 pb-1 text-xs">굵은 날짜에 축제가 있어요.</p>
           </div>
           <div className="flex min-w-0 flex-1 flex-col gap-3">
-            <h2 className="text-lg font-bold">{selectedDay ? formatDateKo(selectedDay) : `${periodLabel} 전체`}</h2>
+            <h2 className="text-lg font-bold">
+              {selectedDay ? formatDateKo(selectedDay) : `${periodLabel} 전체`}
+            </h2>
             {q.isPending ? (
               <CardGridSkeleton count={4} />
             ) : q.isError ? (
@@ -177,7 +197,13 @@ export default function FestivalListPage() {
                 title={`${selectedDay ? formatDateKo(selectedDay) : periodLabel} · ${regionLabel} 축제가 없어요`}
                 action={
                   selectedDay ? (
-                    <Button variant="outline" size="touch" onClick={() => { patch({ date: null }); }}>
+                    <Button
+                      variant="outline"
+                      size="touch"
+                      onClick={() => {
+                        patch({ date: null });
+                      }}
+                    >
                       이 달 전체 보기
                     </Button>
                   ) : undefined

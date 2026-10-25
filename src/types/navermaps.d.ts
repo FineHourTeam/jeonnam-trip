@@ -35,7 +35,10 @@ declare namespace naver.maps {
     setZoom(z: number, effect?: boolean): void;
     getZoom(): number;
     panTo(c: LatLng): void;
-    fitBounds(b: LatLngBounds, margin?: { top: number; right: number; bottom: number; left: number }): void;
+    fitBounds(
+      b: LatLngBounds,
+      margin?: { top: number; right: number; bottom: number; left: number },
+    ): void;
     destroy(): void;
   }
   interface MarkerIcon {

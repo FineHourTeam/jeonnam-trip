@@ -48,7 +48,12 @@ export default function AdminLayout() {
                 key={k}
                 to={paths.adminList(k)}
                 className={({ isActive }) =>
-                  cn("rounded-lg px-3 py-2 text-sm font-medium whitespace-nowrap", isActive ? "bg-primary-soft text-primary-soft-foreground" : "text-muted-foreground")
+                  cn(
+                    "rounded-lg px-3 py-2 text-sm font-medium whitespace-nowrap",
+                    isActive
+                      ? "bg-primary-soft text-primary-soft-foreground"
+                      : "text-muted-foreground",
+                  )
                 }
               >
                 {KIND_LABEL[k]}

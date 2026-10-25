@@ -24,7 +24,10 @@ export function CourseCard({
 }) {
   return (
     <article className={cn("relative", className)}>
-      <Link to={paths.creatorDetail(course.id)} className="group flex flex-col gap-2 rounded-xl outline-none">
+      <Link
+        to={paths.creatorDetail(course.id)}
+        className="group flex flex-col gap-2 rounded-xl outline-none"
+      >
         <Photo
           photo={cover}
           alt={course.title}
@@ -33,14 +36,20 @@ export function CourseCard({
         />
         <div className="flex min-w-0 flex-col gap-0.5 px-0.5">
           <p className="text-muted-foreground truncate text-xs">
-            {[course.creator.name, tripLengthLabel(course.days.length), course.siguns.map(sigunName).join("·")]
+            {[
+              course.creator.name,
+              tripLengthLabel(course.days.length),
+              course.siguns.map(sigunName).join("·"),
+            ]
               .filter(Boolean)
               .join(" · ")}
           </p>
           <h3 className="line-clamp-2 text-base leading-snug font-semibold group-focus-visible:underline">
             {course.title}
           </h3>
-          <p className="text-muted-foreground text-sm">{ORDER_BASIS_LABEL[course.orderBasis]} 기준</p>
+          <p className="text-muted-foreground text-sm">
+            {ORDER_BASIS_LABEL[course.orderBasis]} 기준
+          </p>
         </div>
       </Link>
     </article>

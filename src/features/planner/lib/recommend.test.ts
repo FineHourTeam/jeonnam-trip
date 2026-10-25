@@ -93,7 +93,9 @@ describe("recommendTrip", () => {
   });
 
   test("여유롭게는 하루 장소 수를 줄이고 체류를 늘린다, 추천 후보는 미배치로 남기지 않는다", () => {
-    const suggestions = Array.from({ length: 8 }, (_, i) => item(`후보${String(i)}`, "attraction", OPEN, 40));
+    const suggestions = Array.from({ length: 8 }, (_, i) =>
+      item(`후보${String(i)}`, "attraction", OPEN, 40),
+    );
     const relaxed = recommendTrip({
       dates: ["2026-10-23"],
       dayStart: "09:00",

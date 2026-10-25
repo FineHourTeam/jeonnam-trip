@@ -18,7 +18,9 @@ function detailText(ranges: TimeRange[]): string | null {
   const sorted = [...ranges].sort((a, b) => a.open.localeCompare(b.open));
   const breaks = sorted.slice(1).map((r, i) => `브레이크타임 ${sorted[i]?.close ?? ""}~${r.open}`);
   const lo = sorted.flatMap((r) => (r.lastOrder ? [r.lastOrder] : []));
-  const parts = [...breaks, lo.length > 0 ? `주문·입장 마감 ${lo.join(" / ")}` : null].filter(Boolean);
+  const parts = [...breaks, lo.length > 0 ? `주문·입장 마감 ${lo.join(" / ")}` : null].filter(
+    Boolean,
+  );
   return parts.length > 0 ? parts.join(" · ") : null;
 }
 
@@ -27,7 +29,10 @@ export function HoursTable({ place }: { place: Place }) {
   const today = todayKst();
   const todayDow = dayOfWeek(today);
   const state = openStateAt(place, today, nowKstTime());
-  const order = Array.from({ length: 7 }, (_, i) => ((todayDow + i) % 7) as 0 | 1 | 2 | 3 | 4 | 5 | 6);
+  const order = Array.from(
+    { length: 7 },
+    (_, i) => ((todayDow + i) % 7) as 0 | 1 | 2 | 3 | 4 | 5 | 6,
+  );
   const upcoming = place.hours.exceptions
     .filter((e) => e.date >= today && e.date <= addDays(today, 60))
     .sort((a, b) => a.date.localeCompare(b.date));
@@ -36,7 +41,10 @@ export function HoursTable({ place }: { place: Place }) {
   return (
     <div className="border-border rounded-xl border">
       <Collapsible open={open} onOpenChange={setOpen}>
-        <CollapsibleTrigger className="flex w-full items-center gap-3 px-4 py-3 text-left" disabled={allUnknown}>
+        <CollapsibleTrigger
+          className="flex w-full items-center gap-3 px-4 py-3 text-left"
+          disabled={allUnknown}
+        >
           <span className="flex min-w-0 flex-1 flex-col gap-0.5">
             <span
               className={cn(
@@ -47,10 +55,20 @@ export function HoursTable({ place }: { place: Place }) {
             >
               {openStateLabel(state)}
             </span>
-            {!allUnknown ? <span className="text-muted-foreground text-xs">요일별 영업시간 {open ? "접기" : "펼치기"}</span> : null}
+            {!allUnknown ? (
+              <span className="text-muted-foreground text-xs">
+                요일별 영업시간 {open ? "접기" : "펼치기"}
+              </span>
+            ) : null}
           </span>
           {!allUnknown ? (
-            <ChevronDownIcon size="sm" className={cn("text-muted-foreground shrink-0 transition-transform", open && "rotate-180")} />
+            <ChevronDownIcon
+              size="sm"
+              className={cn(
+                "text-muted-foreground shrink-0 transition-transform",
+                open && "rotate-180",
+              )}
+            />
           ) : null}
         </CollapsibleTrigger>
         <CollapsibleContent>
@@ -60,13 +78,24 @@ export function HoursTable({ place }: { place: Place }) {
               const extra = ranges && ranges.length > 0 ? detailText(ranges) : null;
               return (
                 <li key={d} className="flex gap-4 px-4 py-2.5 text-sm">
-                  <span className={cn("w-8 shrink-0", i === 0 ? "font-bold" : "text-muted-foreground")}>
+                  <span
+                    className={cn("w-8 shrink-0", i === 0 ? "font-bold" : "text-muted-foreground")}
+                  >
                     {DOW[d]}
                     {i === 0 ? <span className="sr-only"> (오늘)</span> : null}
                   </span>
                   <span className="flex min-w-0 flex-col gap-0.5">
-                    <span className={cn(i === 0 && "font-semibold", ranges === null && "text-muted-foreground")}>
-                      {ranges === null ? "확인 필요" : ranges.length === 0 ? "정기휴무" : rangesText(ranges)}
+                    <span
+                      className={cn(
+                        i === 0 && "font-semibold",
+                        ranges === null && "text-muted-foreground",
+                      )}
+                    >
+                      {ranges === null
+                        ? "확인 필요"
+                        : ranges.length === 0
+                          ? "정기휴무"
+                          : rangesText(ranges)}
                     </span>
                     {extra ? <span className="text-muted-foreground text-xs">{extra}</span> : null}
                   </span>

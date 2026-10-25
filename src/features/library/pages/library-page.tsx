@@ -23,7 +23,9 @@ export default function LibraryPage() {
       <div className="flex items-end justify-between gap-3">
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl font-bold tracking-tight">보관함</h1>
-          <p className="text-muted-foreground text-sm">가고 싶은 곳을 모아 두고 일정에 꺼내 써요. 메모는 나만 봐요.</p>
+          <p className="text-muted-foreground text-sm">
+            가고 싶은 곳을 모아 두고 일정에 꺼내 써요. 메모는 나만 봐요.
+          </p>
         </div>
         <Button asChild variant="outline" size="touch">
           <Link to={paths.snsNew}>

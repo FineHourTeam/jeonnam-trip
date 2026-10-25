@@ -36,7 +36,9 @@ export function BottomSheet({
           {description ? <DrawerDescription>{description}</DrawerDescription> : null}
         </DrawerHeader>
         <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-2">{children}</div>
-        {footer ? <DrawerFooter className="pb-safe border-border border-t">{footer}</DrawerFooter> : null}
+        {footer ? (
+          <DrawerFooter className="pb-safe border-border border-t">{footer}</DrawerFooter>
+        ) : null}
       </DrawerContent>
     </Drawer>
   );

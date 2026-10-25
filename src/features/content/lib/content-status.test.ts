@@ -24,7 +24,15 @@ function place(over: Partial<Place> = {}): Place {
     purposes: ["가족 식사"],
     location: { lat: 34.9, lng: 127.5 },
     hours: {
-      weekly: { 0: [], 1: lunchDinner, 2: lunchDinner, 3: lunchDinner, 4: lunchDinner, 5: lunchDinner, 6: null },
+      weekly: {
+        0: [],
+        1: lunchDinner,
+        2: lunchDinner,
+        3: lunchDinner,
+        4: lunchDinner,
+        5: lunchDinner,
+        6: null,
+      },
       exceptions: [],
     },
     facts: { parking: true, reservation: null, pets: false },
@@ -66,7 +74,9 @@ describe("matchesPlace", () => {
     const p = place();
     expect(matchesPlace(p, { ...EMPTY_PLACE_FILTER, moods: ["한옥", "오션뷰"] })).toBe(true);
     expect(matchesPlace(p, { ...EMPTY_PLACE_FILTER, moods: ["오션뷰"] })).toBe(false);
-    expect(matchesPlace(p, { ...EMPTY_PLACE_FILTER, moods: ["한옥"], purposes: ["데이트"] })).toBe(false);
+    expect(matchesPlace(p, { ...EMPTY_PLACE_FILTER, moods: ["한옥"], purposes: ["데이트"] })).toBe(
+      false,
+    );
     expect(matchesPlace(p, { ...EMPTY_PLACE_FILTER, facts: ["parking"] })).toBe(true);
     expect(matchesPlace(p, { ...EMPTY_PLACE_FILTER, facts: ["reservation"] })).toBe(false);
     expect(matchesPlace(p, { ...EMPTY_PLACE_FILTER, keyword: "골목" })).toBe(true);
@@ -75,7 +85,11 @@ describe("matchesPlace", () => {
   test("태그를 고르면 많이 맞는 순으로 정렬한다", () => {
     const a = place({ id: "a", name: "가", moods: ["정원"], purposes: [] });
     const b = place({ id: "b", name: "나", moods: ["정원"], purposes: ["사진"] });
-    const sorted = sortPlacesByTagMatch([a, b], { ...EMPTY_PLACE_FILTER, moods: ["정원"], purposes: ["사진"] });
+    const sorted = sortPlacesByTagMatch([a, b], {
+      ...EMPTY_PLACE_FILTER,
+      moods: ["정원"],
+      purposes: ["사진"],
+    });
     expect(sorted.map((x) => x.id)).toEqual(["b", "a"]);
   });
 });

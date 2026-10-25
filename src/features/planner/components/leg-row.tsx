@@ -18,14 +18,26 @@ export function LegRow({
   label?: string;
 }) {
   return (
-    <div className="text-muted-foreground flex min-h-10 items-center gap-2 py-1 pl-1 text-sm" role="group" aria-label="이동 구간">
+    <div
+      className="text-muted-foreground flex min-h-10 items-center gap-2 py-1 pl-1 text-sm"
+      role="group"
+      aria-label="이동 구간"
+    >
       <CarIcon size="sm" className="shrink-0" />
       {label ? <span className="shrink-0">{label}</span> : null}
       {leg.status === "ok" ? (
         <span>
-          자동차 <strong className="text-foreground font-semibold">{formatDuration(leg.durationMin)}</strong> ·{" "}
-          {formatDistance(leg.distanceM)}
-          {bufferMin > 0 ? <span className="text-muted-foreground"> + 주차·이동 여유 {formatDuration(bufferMin)}</span> : null}
+          자동차{" "}
+          <strong className="text-foreground font-semibold">
+            {formatDuration(leg.durationMin)}
+          </strong>{" "}
+          · {formatDistance(leg.distanceM)}
+          {bufferMin > 0 ? (
+            <span className="text-muted-foreground">
+              {" "}
+              + 주차·이동 여유 {formatDuration(bufferMin)}
+            </span>
+          ) : null}
         </span>
       ) : leg.status === "pending" ? (
         <span className="flex items-center gap-2" aria-live="polite">

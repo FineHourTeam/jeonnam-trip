@@ -2,7 +2,14 @@
 import type { ReactNode } from "react";
 import { ErrorIcon, RefreshIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
 import { Skeleton } from "@/components/ui/skeleton";
 import { errorMessage } from "@/lib/errors";
 import { cn } from "@/lib/utils";
@@ -67,7 +74,10 @@ export function EmptyState({
 /** 카드 그리드 스켈레톤 */
 export function CardGridSkeleton({ count = 6, className }: { count?: number; className?: string }) {
   return (
-    <div className={cn("grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-3 lg:grid-cols-4", className)} aria-hidden>
+    <div
+      className={cn("grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-3 lg:grid-cols-4", className)}
+      aria-hidden
+    >
       {Array.from({ length: count }, (_, i) => (
         <div key={i} className="flex flex-col gap-2">
           <Skeleton className="aspect-4/3 w-full rounded-xl" />

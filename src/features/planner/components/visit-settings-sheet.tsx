@@ -15,7 +15,11 @@ import { formatDuration } from "@/shared/lib/format";
 const HHMM = /^([01]\d|2[0-3]):[0-5]\d$/;
 const schema = z
   .object({
-    stayMin: z.number().int().min(0, "0분 이상으로 넣어 주세요.").max(720, "체류는 12시간까지 정할 수 있어요."),
+    stayMin: z
+      .number()
+      .int()
+      .min(0, "0분 이상으로 넣어 주세요.")
+      .max(720, "체류는 12시간까지 정할 수 있어요."),
     fixStart: z.boolean(),
     fixedStart: z.string(),
     memo: z.string().max(500, "메모는 500자까지 쓸 수 있어요."),
@@ -134,10 +138,14 @@ export function VisitSettingsSheet({
               />
               <p className="text-muted-foreground text-xs">
                 지금 {formatDuration(form.watch("stayMin"))}
-                {item.stayLocked ? " · 직접 정한 체류" : " · 기본값 (영업 종료·다음 일정에 맞춰 줄 수 있어요)"} · 최소{" "}
-                {formatDuration(minStay)}
+                {item.stayLocked
+                  ? " · 직접 정한 체류"
+                  : " · 기본값 (영업 종료·다음 일정에 맞춰 줄 수 있어요)"}{" "}
+                · 최소 {formatDuration(minStay)}
               </p>
-              {errors.stayMin?.message ? <p className="text-destructive text-sm">{errors.stayMin.message}</p> : null}
+              {errors.stayMin?.message ? (
+                <p className="text-destructive text-sm">{errors.stayMin.message}</p>
+              ) : null}
             </div>
             <div className="flex flex-col gap-3">
               <div className="flex items-center justify-between gap-3">
@@ -161,7 +169,9 @@ export function VisitSettingsSheet({
                   {...form.register("fixedStart")}
                 />
               ) : null}
-              {errors.fixedStart?.message ? <p className="text-destructive text-sm">{errors.fixedStart.message}</p> : null}
+              {errors.fixedStart?.message ? (
+                <p className="text-destructive text-sm">{errors.fixedStart.message}</p>
+              ) : null}
             </div>
           </>
         )}
@@ -170,7 +180,9 @@ export function VisitSettingsSheet({
             개인 메모 <span className="text-muted-foreground font-normal">(공유할 때 빠져요)</span>
           </Label>
           <Textarea id="visit-memo" rows={3} {...form.register("memo")} />
-          {errors.memo?.message ? <p className="text-destructive text-sm">{errors.memo.message}</p> : null}
+          {errors.memo?.message ? (
+            <p className="text-destructive text-sm">{errors.memo.message}</p>
+          ) : null}
         </div>
       </form>
     </BottomSheet>

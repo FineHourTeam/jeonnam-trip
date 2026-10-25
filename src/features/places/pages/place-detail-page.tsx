@@ -30,7 +30,11 @@ const SOURCE_LABEL: Record<SourceLink["platform"], string> = {
 function FactsList({ place }: { place: Place }) {
   const known = (Object.keys(FACT_LABEL) as FactKey[]).filter((k) => place.facts[k] !== null);
   if (known.length === 0) {
-    return <p className="text-muted-foreground text-sm">주차·예약·반려동물 정보는 아직 확인되지 않았어요.</p>;
+    return (
+      <p className="text-muted-foreground text-sm">
+        주차·예약·반려동물 정보는 아직 확인되지 않았어요.
+      </p>
+    );
   }
   return (
     <ul className="flex flex-wrap gap-2">
@@ -59,7 +63,13 @@ function MyNote({ place }: { place: Place }) {
     <DetailSection
       title="내 메모"
       aside={
-        <Button variant="ghost" size="touch" onClick={() => { setOpen(true); }}>
+        <Button
+          variant="ghost"
+          size="touch"
+          onClick={() => {
+            setOpen(true);
+          }}
+        >
           <EditIcon size="sm" />
           고치기
         </Button>
@@ -126,10 +136,21 @@ export default function PlaceDetailPage() {
 
   return (
     <div className="flex flex-col pb-28 md:pb-10">
-      <Seo title={p.name} description={`${placeMetaLine(p)}${p.address ? ` · ${p.address}` : ""}`} />
-      <PageTopBar fallback={paths.places} title={p.name} right={<SaveButton placeId={p.id} placeName={p.name} className="shadow-none" />} />
+      <Seo
+        title={p.name}
+        description={`${placeMetaLine(p)}${p.address ? ` · ${p.address}` : ""}`}
+      />
+      <PageTopBar
+        fallback={paths.places}
+        title={p.name}
+        right={<SaveButton placeId={p.id} placeName={p.name} className="shadow-none" />}
+      />
       <div className="mx-auto w-full max-w-screen-md md:px-4 md:pt-4">
-        <PhotoGallery photos={p.photos} alt={p.name} fallbackIcon={<CategoryIcon category={p.category} size="lg" />} />
+        <PhotoGallery
+          photos={p.photos}
+          alt={p.name}
+          fallbackIcon={<CategoryIcon category={p.category} size="lg" />}
+        />
       </div>
       <div className="mx-auto flex w-full max-w-screen-md flex-col gap-8 px-4 pt-5">
         <header className="flex flex-col gap-2">
@@ -152,13 +173,16 @@ export default function PlaceDetailPage() {
 
         {p.checks.hours.state === "conflict" ? (
           <Notice tone="warning" title="영업시간 자료가 서로 달라요">
-            {p.checks.hours.source ?? "자료를 다시 확인하고 있어요."} 일정의 자동 시간 배정에서는 빼고 수동 후보로 다뤄요.
+            {p.checks.hours.source ?? "자료를 다시 확인하고 있어요."} 일정의 자동 시간 배정에서는
+            빼고 수동 후보로 다뤄요.
           </Notice>
         ) : null}
 
         <DetailSection title="영업시간" aside={<VerifyBadge check={p.checks.hours} />}>
           <HoursTable place={p} />
-          {p.checks.hours.source ? <p className="text-muted-foreground text-xs">출처 · {p.checks.hours.source}</p> : null}
+          {p.checks.hours.source ? (
+            <p className="text-muted-foreground text-xs">출처 · {p.checks.hours.source}</p>
+          ) : null}
         </DetailSection>
 
         <DetailSection title="이용 조건" aside={<VerifyBadge check={p.checks.info} />}>
@@ -203,7 +227,9 @@ export default function PlaceDetailPage() {
                     <NoteIcon size="sm" className="text-muted-foreground shrink-0" />
                     <span className="flex min-w-0 flex-1 flex-col">
                       <span className="font-medium">{s.label ?? SOURCE_LABEL[s.platform]}</span>
-                      <span className="text-muted-foreground truncate text-xs">{new URL(s.href).hostname}</span>
+                      <span className="text-muted-foreground truncate text-xs">
+                        {new URL(s.href).hostname}
+                      </span>
                     </span>
                     <ExternalLinkIcon size="sm" className="text-muted-foreground shrink-0" />
                   </a>
@@ -218,7 +244,13 @@ export default function PlaceDetailPage() {
 
       <StickyActionBar className="md:mx-auto md:mt-8 md:w-full md:max-w-screen-md md:px-4">
         <SaveButton placeId={p.id} placeName={p.name} variant="inline" size="xl" />
-        <Button size="xl" className="flex-1" onClick={() => { setAddOpen(true); }}>
+        <Button
+          size="xl"
+          className="flex-1"
+          onClick={() => {
+            setAddOpen(true);
+          }}
+        >
           일정에 추가
         </Button>
       </StickyActionBar>

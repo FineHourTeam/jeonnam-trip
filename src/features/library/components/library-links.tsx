@@ -20,7 +20,9 @@ import { useCustomPlaces, useDeleteSnsLink, useSnsLinks } from "../hooks/use-lib
 export function LibraryLinks() {
   const links = useSnsLinks();
   const custom = useCustomPlaces();
-  const placeIds = (links.data ?? []).flatMap((l) => l.linked.flatMap((r) => (r.kind === "place" ? [r.placeId] : [])));
+  const placeIds = (links.data ?? []).flatMap((l) =>
+    l.linked.flatMap((r) => (r.kind === "place" ? [r.placeId] : [])),
+  );
   const places = usePlacesByIds(placeIds);
   const remove = useDeleteSnsLink();
   const [onlyUnlinked, setOnlyUnlinked] = useState(false);
@@ -55,12 +57,21 @@ export function LibraryLinks() {
         <p className="text-muted-foreground text-sm">
           링크 {all.length}개 · 장소 연결 전 {all.filter((l) => l.linked.length === 0).length}개
         </p>
-        <Toggle variant="chip" size="chip" pressed={onlyUnlinked} onPressedChange={setOnlyUnlinked} className="shrink-0">
+        <Toggle
+          variant="chip"
+          size="chip"
+          pressed={onlyUnlinked}
+          onPressedChange={setOnlyUnlinked}
+          className="shrink-0"
+        >
           장소 연결 전만
         </Toggle>
       </div>
       {list.length === 0 ? (
-        <EmptyState title="장소 연결 전 링크가 없어요" description="모든 링크에 장소를 연결했어요." />
+        <EmptyState
+          title="장소 연결 전 링크가 없어요"
+          description="모든 링크에 장소를 연결했어요."
+        />
       ) : (
         <ul className="flex flex-col gap-3">
           {list.map((l) => {
@@ -73,9 +84,13 @@ export function LibraryLinks() {
                     <LinkIcon size="sm" />
                   </span>
                   <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                    <span className="truncate font-semibold">{l.title ?? (href ? new URL(href).hostname : l.url)}</span>
+                    <span className="truncate font-semibold">
+                      {l.title ?? (href ? new URL(href).hostname : l.url)}
+                    </span>
                     <span className="text-muted-foreground truncate text-xs">
-                      {SNS_PLATFORM_LABEL[l.platform]} · {l.sigun ? sigunName(l.sigun) : "지역 미분류"} · {formatDateDot(l.createdAt)} 저장
+                      {SNS_PLATFORM_LABEL[l.platform]} ·{" "}
+                      {l.sigun ? sigunName(l.sigun) : "지역 미분류"} · {formatDateDot(l.createdAt)}{" "}
+                      저장
                     </span>
                   </div>
                 </div>
@@ -103,9 +118,17 @@ export function LibraryLinks() {
                     </Button>
                   ) : null}
                   <Button asChild variant="outline" size="sm">
-                    <Link to={`${paths.snsNew}?id=${l.id}`}>{l.linked.length === 0 ? "장소 연결하기" : "고치기"}</Link>
+                    <Link to={`${paths.snsNew}?id=${l.id}`}>
+                      {l.linked.length === 0 ? "장소 연결하기" : "고치기"}
+                    </Link>
                   </Button>
-                  <Button variant="ghost" size="sm" onClick={() => { setDeleting(l); }}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setDeleting(l);
+                    }}
+                  >
                     삭제
                   </Button>
                 </div>
@@ -116,7 +139,9 @@ export function LibraryLinks() {
       )}
       <ConfirmDialog
         open={deleting !== null}
-        onOpenChange={(v) => { if (!v) setDeleting(null); }}
+        onOpenChange={(v) => {
+          if (!v) setDeleting(null);
+        }}
         title="링크를 삭제할까요?"
         description="연결해 둔 장소와 보관함의 메모는 그대로 남아요. 삭제하면 되돌릴 수 없어요."
         actionLabel="삭제하기"

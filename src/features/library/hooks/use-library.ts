@@ -106,8 +106,11 @@ export function useCreateCustomPlace() {
   const getUid = useUidOrThrow();
   const invalidate = useInvalidateLibrary();
   return useMutation({
-    mutationFn: (input: { place: Omit<CustomPlace, "id" | "createdAt">; tags: string[]; memo: string }) =>
-      createCustomPlace(getUid(), input.place, input),
+    mutationFn: (input: {
+      place: Omit<CustomPlace, "id" | "createdAt">;
+      tags: string[];
+      memo: string;
+    }) => createCustomPlace(getUid(), input.place, input),
     onSettled: invalidate,
   });
 }

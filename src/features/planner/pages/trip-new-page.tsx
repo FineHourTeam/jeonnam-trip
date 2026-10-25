@@ -17,7 +17,14 @@ import {
 } from "@/features/content";
 import { TripTooLongError, useTripDraftStore } from "@/features/trips";
 import { errorMessage } from "@/lib/errors";
-import { isSigunCode, MAX_TRIP_DAYS, sigunName, type Place, type SigunCode, type TripDraft } from "@/shared/domain";
+import {
+  isSigunCode,
+  MAX_TRIP_DAYS,
+  sigunName,
+  type Place,
+  type SigunCode,
+  type TripDraft,
+} from "@/shared/domain";
 import { addDays, formatDateShort, todayKst } from "@/shared/lib/date";
 import { tripLengthLabel } from "@/shared/lib/format";
 import { buildStartDraft } from "../lib/start-trip";
@@ -113,7 +120,9 @@ export default function TripNewPage() {
         suggestions: regionPlaces.filter((p) => p.category !== "lodging"),
       });
     } catch (e) {
-      setError(e instanceof TripTooLongError ? e.message : "여행을 만들지 못했어요. 입력을 확인해 주세요.");
+      setError(
+        e instanceof TripTooLongError ? e.message : "여행을 만들지 못했어요. 입력을 확인해 주세요.",
+      );
       return null;
     }
   }
@@ -137,7 +146,11 @@ export default function TripNewPage() {
 
   return (
     <div className="flex flex-col pb-10">
-      <Seo title="여행 만들기" description="날짜와 지역을 고르면 영업시간과 이동시간을 맞춘 일정을 만들어요." noindex />
+      <Seo
+        title="여행 만들기"
+        description="날짜와 지역을 고르면 영업시간과 이동시간을 맞춘 일정을 만들어요."
+        noindex
+      />
       <PageTopBar fallback={paths.home} title={c ? "내 여행으로 복사" : "여행 만들기"} />
       <PageBody className="gap-6 pt-5">
         {f ? (
@@ -152,9 +165,12 @@ export default function TripNewPage() {
                 {program ? (
                   <>
                     {" · "}
-                    <LockIcon size="sm" className="inline" /> {program.start}~{program.end} {program.name}
+                    <LockIcon size="sm" className="inline" /> {program.start}~{program.end}{" "}
+                    {program.name}
                   </>
-                ) : " · 운영시간 안에서 배치"}
+                ) : (
+                  " · 운영시간 안에서 배치"
+                )}
               </span>
             </div>
           </div>
@@ -167,7 +183,8 @@ export default function TripNewPage() {
             <div className="flex min-w-0 flex-col gap-0.5 text-sm">
               <span className="font-semibold">{c.title}</span>
               <span className="text-muted-foreground">
-                원본 {tripLengthLabel(c.days.length)} · 장소 {String(courseIds.length)}곳 · 원본 순서 그대로 가져와요
+                원본 {tripLengthLabel(c.days.length)} · 장소 {String(courseIds.length)}곳 · 원본
+                순서 그대로 가져와요
               </span>
             </div>
           </div>
@@ -182,7 +199,8 @@ export default function TripNewPage() {
         ) : null}
         {c ? (
           <Notice tone="info">
-            기간을 원본({tripLengthLabel(c.days.length)})보다 짧게 고르면 넘치는 일차의 장소는 미배치 후보로 남겨요. 날짜에 맞춰 영업·휴무를 다시 검토해요.
+            기간을 원본({tripLengthLabel(c.days.length)})보다 짧게 고르면 넘치는 일차의 장소는
+            미배치 후보로 남겨요. 날짜에 맞춰 영업·휴무를 다시 검토해요.
           </Notice>
         ) : null}
         {error ? <Notice tone="destructive" title={error} /> : null}

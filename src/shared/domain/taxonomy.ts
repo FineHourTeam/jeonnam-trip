@@ -2,7 +2,13 @@
 // 운영 태그(분위기·목적)는 관리자가 장소에 붙이고, 개인 태그는 사용자가 보관함에서 붙인다 (서로 섞지 않는다).
 import type { PlaceCategory } from "./content";
 
-export const PLACE_CATEGORIES: PlaceCategory[] = ["attraction", "restaurant", "cafe", "shop", "lodging"];
+export const PLACE_CATEGORIES: PlaceCategory[] = [
+  "attraction",
+  "restaurant",
+  "cafe",
+  "shop",
+  "lodging",
+];
 
 /** 세부 종류 — 상위 종류에 연결. 현재 종류와 맞지 않는 세부 종류는 필터에서 초기화한다 */
 export const SUBCATEGORIES: Record<PlaceCategory, string[]> = {
@@ -14,10 +20,26 @@ export const SUBCATEGORIES: Record<PlaceCategory, string[]> = {
 };
 
 /** 분위기 — 주관적 운영 태그 (이용 조건과 구분해 표시) */
-export const MOOD_TAGS = ["오션뷰", "정원", "한옥", "대숲", "자연", "야경", "노을", "빈티지"] as const;
+export const MOOD_TAGS = [
+  "오션뷰",
+  "정원",
+  "한옥",
+  "대숲",
+  "자연",
+  "야경",
+  "노을",
+  "빈티지",
+] as const;
 
 /** 목적 — 여러 개 선택 가능 */
-export const PURPOSE_TAGS = ["사진", "데이트", "혼자 쉬기", "가족 식사", "아이와 함께", "산책"] as const;
+export const PURPOSE_TAGS = [
+  "사진",
+  "데이트",
+  "혼자 쉬기",
+  "가족 식사",
+  "아이와 함께",
+  "산책",
+] as const;
 
 /** 이용 조건 — 확인된 사실만 필터에 쓴다 (미확인은 "있음"으로 치지 않는다) */
 export const FACT_LABEL = { parking: "주차", reservation: "예약", pets: "반려동물" } as const;

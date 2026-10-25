@@ -24,7 +24,10 @@ export const useTripWorkingStore = create<TripWorkingState>()(
       copies: {},
       put: (baseVersion, trip) => {
         set((s) => ({
-          copies: { ...s.copies, [trip.id]: { baseVersion, trip, editedAt: new Date().toISOString() } },
+          copies: {
+            ...s.copies,
+            [trip.id]: { baseVersion, trip, editedAt: new Date().toISOString() },
+          },
         }));
       },
       drop: (tripId) => {

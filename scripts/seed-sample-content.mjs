@@ -15,7 +15,9 @@ const PROJECT = process.env.VITE_FIREBASE_PROJECT_ID ?? "jeonnam-trip";
 const BASE = `http://${FS}/v1/projects/${PROJECT}/databases/(default)/documents`;
 
 const PHOTOS = JSON.parse(readFileSync(new URL("./sample-photos.json", import.meta.url), "utf8"));
-const REAL_FESTIVALS = JSON.parse(readFileSync(new URL("./sample-festivals.json", import.meta.url), "utf8"));
+const REAL_FESTIVALS = JSON.parse(
+  readFileSync(new URL("./sample-festivals.json", import.meta.url), "utf8"),
+);
 
 // ── Firestore REST 값 인코딩 ──
 function enc(v) {
@@ -59,7 +61,9 @@ const SAMPLE = "샘플 데이터 (가상 업체 — 실제 정보 아님)";
 function photo(slug) {
   const p = PHOTOS[slug];
   if (!p) return [];
-  return [{ url: p.file, alt: p.subject, credit: p.author, license: p.license, sourceUrl: p.sourceUrl }];
+  return [
+    { url: p.file, alt: p.subject, credit: p.author, license: p.license, sourceUrl: p.sourceUrl },
+  ];
 }
 
 const place = (id, p) => ({
@@ -101,7 +105,12 @@ const REAL_PLACES = [
     facts: { parking: true, reservation: false, pets: null },
     phone: "061-749-6052",
     photos: photo("suncheon-bay-wetland"),
-    sources: [official("순천만국가정원·습지 관람안내", "https://scbay.suncheon.go.kr/wetland/information/0001/")],
+    sources: [
+      official(
+        "순천만국가정원·습지 관람안내",
+        "https://scbay.suncheon.go.kr/wetland/information/0001/",
+      ),
+    ],
     checks: {
       location: ok("OpenStreetMap"),
       hours: ok("순천만국가정원 관람안내 (9~10월 기준, 11~2월 08:00~18:00)"),
@@ -122,8 +131,14 @@ const REAL_PLACES = [
     facts: { parking: true, reservation: false, pets: null },
     phone: "061-749-3114",
     photos: photo("suncheon-national-garden"),
-    sources: [official("순천만국가정원 관람안내", "https://scbay.suncheon.go.kr/garden/0016/0001/")],
-    checks: { location: ok("OpenStreetMap"), hours: ok("순천만국가정원 관람안내"), info: ok("순천만국가정원 관람안내") },
+    sources: [
+      official("순천만국가정원 관람안내", "https://scbay.suncheon.go.kr/garden/0016/0001/"),
+    ],
+    checks: {
+      location: ok("OpenStreetMap"),
+      hours: ok("순천만국가정원 관람안내"),
+      info: ok("순천만국가정원 관람안내"),
+    },
   }),
   place("naganeupseong", {
     name: "순천 낙안읍성",
@@ -160,8 +175,14 @@ const REAL_PLACES = [
     facts: { parking: true, reservation: false, pets: null },
     phone: "061-659-1822",
     photos: photo("yeosu-odongdo"),
-    sources: [official("여수시 관광 · 오동도", "https://www.yeosu.go.kr/tour/travel/10tour/odongdo")],
-    checks: { location: ok("OpenStreetMap"), hours: ok("한국관광공사 (상시 개방)"), info: ok("여수시 관광") },
+    sources: [
+      official("여수시 관광 · 오동도", "https://www.yeosu.go.kr/tour/travel/10tour/odongdo"),
+    ],
+    checks: {
+      location: ok("OpenStreetMap"),
+      hours: ok("한국관광공사 (상시 개방)"),
+      info: ok("여수시 관광"),
+    },
   }),
   place("yeosu-hyangiram", {
     name: "향일암",
@@ -177,7 +198,9 @@ const REAL_PLACES = [
     facts: { parking: true, reservation: false, pets: null },
     phone: "061-644-4742",
     photos: photo("yeosu-hyangiram"),
-    sources: [official("여수시 관광 · 향일암", "https://www.yeosu.go.kr/tour/travel/10tour/hyangilam")],
+    sources: [
+      official("여수시 관광 · 향일암", "https://www.yeosu.go.kr/tour/travel/10tour/hyangilam"),
+    ],
     checks: {
       location: ok("OpenStreetMap"),
       hours: ok("한국관광공사 (05:00~19:00)"),
@@ -199,7 +222,11 @@ const REAL_PLACES = [
     phone: "061-664-7301",
     photos: photo("yeosu-cable-car"),
     sources: [official("여수해상케이블카", "http://yeosucablecar.com/")],
-    checks: { location: ok("OpenStreetMap"), hours: ok("공식 홈페이지 오늘의 운행시간"), info: un("정기 휴무 안내 없음") },
+    checks: {
+      location: ok("OpenStreetMap"),
+      hours: ok("공식 홈페이지 오늘의 운행시간"),
+      info: un("정기 휴무 안내 없음"),
+    },
   }),
   place("damyang-juknokwon", {
     name: "죽녹원",
@@ -216,7 +243,11 @@ const REAL_PLACES = [
     phone: "061-380-2680",
     photos: photo("damyang-juknokwon"),
     sources: [official("죽녹원 관람안내", "https://www.juknokwon.go.kr")],
-    checks: { location: ok("담양군 문화관광"), hours: ok("죽녹원 관람안내 (하절기 3~10월)"), info: un("주차는 한국관광공사 자료만 확인") },
+    checks: {
+      location: ok("담양군 문화관광"),
+      hours: ok("죽녹원 관람안내 (하절기 3~10월)"),
+      info: un("주차는 한국관광공사 자료만 확인"),
+    },
   }),
   place("damyang-metasequoia", {
     name: "담양 메타세쿼이아 가로수길",
@@ -233,7 +264,11 @@ const REAL_PLACES = [
     phone: "061-380-3149",
     photos: photo("damyang-metasequoia"),
     sources: [official("담양군 관광지 입장료 안내", "https://www.damyang.go.kr")],
-    checks: { location: ok("담양군 문화관광"), hours: conflict("담양군 09:00~18:00 / 한국관광공사 5~8월 19:00까지"), info: un() },
+    checks: {
+      location: ok("담양군 문화관광"),
+      hours: conflict("담양군 09:00~18:00 / 한국관광공사 5~8월 19:00까지"),
+      info: un(),
+    },
   }),
   place("damyang-soswaewon", {
     name: "담양 소쇄원",
@@ -250,7 +285,11 @@ const REAL_PLACES = [
     phone: "061-381-0115",
     photos: photo("damyang-soswaewon"),
     sources: [official("담양군 관광지 입장료 안내", "https://www.damyang.go.kr")],
-    checks: { location: ok("담양군 문화관광"), hours: ok("담양군 (3·4·9·10월 기준, 11~2월 17:00까지)"), info: un() },
+    checks: {
+      location: ok("담양군 문화관광"),
+      hours: ok("담양군 (3·4·9·10월 기준, 11~2월 17:00까지)"),
+      info: un(),
+    },
   }),
   place("boseong-green-tea", {
     name: "대한다원 (보성 녹차밭)",
@@ -267,7 +306,11 @@ const REAL_PLACES = [
     phone: "061-852-4540",
     photos: photo("boseong-green-tea"),
     sources: [official("대한다원 개장안내", "http://www.dhdawon.com")],
-    checks: { location: ok("OpenStreetMap"), hours: ok("대한다원 개장안내 (하계 3~10월, 입장 18:00까지)"), info: un() },
+    checks: {
+      location: ok("OpenStreetMap"),
+      hours: ok("대한다원 개장안내 (하계 3~10월, 입장 18:00까지)"),
+      info: un(),
+    },
   }),
   place("mokpo-yudalsan", {
     name: "유달산",
@@ -283,7 +326,9 @@ const REAL_PLACES = [
     facts: { parking: true, reservation: false, pets: null },
     phone: "061-270-8359",
     photos: photo("mokpo-yudalsan"),
-    sources: [official("목포 관광 · 유달산", "https://www.mokpo.go.kr/tour/attraction/nineplace/yudalsan")],
+    sources: [
+      official("목포 관광 · 유달산", "https://www.mokpo.go.kr/tour/attraction/nineplace/yudalsan"),
+    ],
     checks: { location: ok("OpenStreetMap"), hours: ok("한국관광공사 (상시 개방)"), info: un() },
   }),
   place("mokpo-cable-car", {
@@ -312,7 +357,11 @@ const REAL_PLACES = [
     phone: "061-244-2600",
     photos: photo("mokpo-cable-car"),
     sources: [official("목포해상케이블카 운행 공지", "http://www.mmcablecar.com/")],
-    checks: { location: ok("OpenStreetMap"), hours: ok("공식 공지 (2026-03-01 운행시간)"), info: un() },
+    checks: {
+      location: ok("OpenStreetMap"),
+      hours: ok("공식 공지 (2026-03-01 운행시간)"),
+      info: un(),
+    },
   }),
 ];
 
@@ -390,7 +439,11 @@ const SAMPLE_PLACES = [
     location: { lat: 34.7398, lng: 127.7356 },
     hours: { weekly: week([R("13:00", "22:00", "21:00")], [2]), exceptions: [] },
     photos: photo("food-gejang"),
-    checks: { location: ok(SAMPLE), hours: conflict("샘플: 자료 두 곳의 영업시간이 달라요"), info: un() },
+    checks: {
+      location: ok(SAMPLE),
+      hours: conflict("샘플: 자료 두 곳의 영업시간이 달라요"),
+      info: un(),
+    },
   }),
   place("sample-ys-no-location", {
     name: "[샘플] 좌표 미확인 관광지",
@@ -453,7 +506,10 @@ const SAMPLE_PLACES = [
     subcategory: "해산물",
     purposes: ["가족 식사"],
     location: { lat: 34.7971, lng: 126.3735 },
-    hours: { weekly: week([R("11:30", "15:00", "14:30"), R("17:00", "21:30", "20:40")], [2]), exceptions: [] },
+    hours: {
+      weekly: week([R("11:30", "15:00", "14:30"), R("17:00", "21:30", "20:40")], [2]),
+      exceptions: [],
+    },
     photos: photo("food-nakji"),
     checks: { location: ok(SAMPLE), hours: ok(SAMPLE), info: un() },
   }),
@@ -463,7 +519,11 @@ const PLACES = [...REAL_PLACES, ...SAMPLE_PLACES];
 
 const dayRanges = (start, end, ranges) => {
   const out = [];
-  for (let d = new Date(`${start}T00:00:00Z`); d <= new Date(`${end}T00:00:00Z`); d.setUTCDate(d.getUTCDate() + 1)) {
+  for (
+    let d = new Date(`${start}T00:00:00Z`);
+    d <= new Date(`${end}T00:00:00Z`);
+    d.setUTCDate(d.getUTCDate() + 1)
+  ) {
     out.push({ date: d.toISOString().slice(0, 10), ranges });
   }
   return out;
@@ -495,7 +555,11 @@ const realFestivals = REAL_FESTIVALS.map((f) => {
     checks: {
       schedule: hoursConflict
         ? conflict("문체부 10:00~18:00 / 예매처 09:00~18:00 — 공식 확인 필요")
-        : { state: f.confidence === "high" ? "verified" : "unverified", source: "공식 누리집·문체부 지역축제 정보", checkedAt: CHECKED },
+        : {
+            state: f.confidence === "high" ? "verified" : "unverified",
+            source: "공식 누리집·문체부 지역축제 정보",
+            checkedAt: CHECKED,
+          },
       location: lat ? ok("OpenStreetMap·공식 안내") : un(),
       info: un("요금·주차는 공식 안내를 확인해 주세요"),
     },
@@ -515,7 +579,14 @@ const SAMPLE_FESTIVALS = [
     endDate: "2026-10-25",
     days: dayRanges("2026-10-23", "2026-10-25", [R("10:00", "21:00")]),
     programs: [
-      { id: "opening", name: "개막 공연", date: "2026-10-23", start: "14:00", end: "15:00", place: "주무대" },
+      {
+        id: "opening",
+        name: "개막 공연",
+        date: "2026-10-23",
+        start: "14:00",
+        end: "15:00",
+        place: "주무대",
+      },
       { id: "lantern", name: "등불 행진", date: "2026-10-24", start: "18:30", end: "19:30" },
     ],
     address: "순천시 (샘플 주소)",
@@ -553,14 +624,29 @@ const COURSES = [
   course("sample-crt-suncheon", {
     title: "[샘플] 순천 1박 2일 정원·습지 코스",
     creator: { name: "샘플 크리에이터" },
-    sourceUrl: "https://www.youtube.com/results?search_query=%EC%88%9C%EC%B2%9C%EB%A7%8C+%EC%97%AC%ED%96%89",
+    sourceUrl:
+      "https://www.youtube.com/results?search_query=%EC%88%9C%EC%B2%9C%EB%A7%8C+%EC%97%AC%ED%96%89",
     siguns: ["suncheon"],
     tags: ["정원", "느긋하게"],
     orderBasis: "video_order",
     summary: "영상 등장 순서를 옮긴 가상 코스예요. 실제 방문 순서는 확인되지 않았어요.",
     days: [
-      { day: 1, items: [{ placeId: "suncheon-national-garden" }, { placeId: "sample-sc-restaurant-alley" }, { placeId: "suncheon-bay-wetland", note: "해 질 무렵 용산전망대" }] },
-      { day: 2, items: [{ placeId: "naganeupseong" }, { placeId: "sample-sc-cafe-garden" }, { placeId: "sample-sc-unknown-hours" }] },
+      {
+        day: 1,
+        items: [
+          { placeId: "suncheon-national-garden" },
+          { placeId: "sample-sc-restaurant-alley" },
+          { placeId: "suncheon-bay-wetland", note: "해 질 무렵 용산전망대" },
+        ],
+      },
+      {
+        day: 2,
+        items: [
+          { placeId: "naganeupseong" },
+          { placeId: "sample-sc-cafe-garden" },
+          { placeId: "sample-sc-unknown-hours" },
+        ],
+      },
     ],
   }),
   course("sample-crt-damyang", {
@@ -572,7 +658,16 @@ const COURSES = [
     orderBasis: "editor_suggested",
     summary: "운영팀이 이동을 고려해 짠 가상 코스예요.",
     days: [
-      { day: 1, items: [{ placeId: "damyang-juknokwon" }, { placeId: "sample-dy-tteokgalbi" }, { placeId: "damyang-metasequoia" }, { placeId: "sample-dy-hanok-cafe" }, { placeId: "damyang-soswaewon" }] },
+      {
+        day: 1,
+        items: [
+          { placeId: "damyang-juknokwon" },
+          { placeId: "sample-dy-tteokgalbi" },
+          { placeId: "damyang-metasequoia" },
+          { placeId: "sample-dy-hanok-cafe" },
+          { placeId: "damyang-soswaewon" },
+        ],
+      },
     ],
   }),
   course("sample-crt-yeosu", {
@@ -584,7 +679,14 @@ const COURSES = [
     orderBasis: "verified_trip",
     summary: "가상 코스예요. 둘째 날 아침 일출은 향일암에서 봐요.",
     days: [
-      { day: 1, items: [{ placeId: "yeosu-odongdo" }, { placeId: "sample-ys-restaurant-port" }, { placeId: "yeosu-cable-car" }] },
+      {
+        day: 1,
+        items: [
+          { placeId: "yeosu-odongdo" },
+          { placeId: "sample-ys-restaurant-port" },
+          { placeId: "yeosu-cable-car" },
+        ],
+      },
       { day: 2, items: [{ placeId: "yeosu-hyangiram" }, { placeId: "sample-ys-cafe-ocean" }] },
     ],
   }),
@@ -596,7 +698,11 @@ async function adminUid() {
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: "admin@test.local", password: "test123456!", returnSecureToken: true }),
+      body: JSON.stringify({
+        email: "admin@test.local",
+        password: "test123456!",
+        returnSecureToken: true,
+      }),
     },
   );
   if (!res.ok) return null;
@@ -606,7 +712,9 @@ async function adminUid() {
 for (const p of PLACES) await put("places", p.id, p);
 for (const f of FESTIVALS) await put("festivals", f.id, f);
 for (const c of COURSES) await put("creatorCourses", c.id, c);
-console.log(`✅ 장소 ${PLACES.length} · 축제 ${FESTIVALS.length} · 크리에이터 코스 ${COURSES.length}`);
+console.log(
+  `✅ 장소 ${PLACES.length} · 축제 ${FESTIVALS.length} · 크리에이터 코스 ${COURSES.length}`,
+);
 
 const uid = await adminUid();
 if (uid) {

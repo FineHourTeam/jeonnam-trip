@@ -19,8 +19,10 @@ import { useGoogleSignIn, useTestSignIn } from "../hooks/use-account";
 function loginErrorMessage(e: unknown): string | null {
   const code = (e as { code?: string } | null)?.code ?? "";
   if (code === "auth/popup-closed-by-user" || code === "auth/cancelled-popup-request") return null;
-  if (code === "auth/popup-blocked") return "로그인 창이 막혔어요. 브라우저에서 팝업을 허용한 뒤 다시 눌러 주세요.";
-  if (code === "auth/network-request-failed") return "네트워크 연결을 확인한 뒤 다시 시도해 주세요.";
+  if (code === "auth/popup-blocked")
+    return "로그인 창이 막혔어요. 브라우저에서 팝업을 허용한 뒤 다시 눌러 주세요.";
+  if (code === "auth/network-request-failed")
+    return "네트워크 연결을 확인한 뒤 다시 시도해 주세요.";
   return `로그인하지 못했어요. ${errorMessage(e)}`;
 }
 
@@ -57,16 +59,20 @@ export default function LoginPage() {
         <div className="flex flex-col gap-2">
           <p className="text-primary text-lg font-bold">머물전남.</p>
           <h1 className="text-2xl font-bold tracking-tight text-balance">
-            {state?.purpose === "save" ? "로그인하고 여행을 저장해요" : "로그인하고 여행을 이어 가요"}
+            {state?.purpose === "save"
+              ? "로그인하고 여행을 저장해요"
+              : "로그인하고 여행을 이어 가요"}
           </h1>
           <p className="text-muted-foreground leading-relaxed text-pretty">
-            코스와 보관함을 계정에 저장해 모바일과 PC에서 다시 열 수 있어요. 둘러보기와 코스 작성은 로그인하지 않아도 돼요.
+            코스와 보관함을 계정에 저장해 모바일과 PC에서 다시 열 수 있어요. 둘러보기와 코스 작성은
+            로그인하지 않아도 돼요.
           </p>
         </div>
 
         {hasDraft ? (
           <Notice tone="info" title="작성 중인 여행이 이 기기에 있어요">
-            로그인해도, 취소해도 그대로 남아요. {resume ? "로그인하면 바로 이어서 저장해요." : "로그인하면 저장을 이어서 할 수 있어요."}
+            로그인해도, 취소해도 그대로 남아요.{" "}
+            {resume ? "로그인하면 바로 이어서 저장해요." : "로그인하면 저장을 이어서 할 수 있어요."}
           </Notice>
         ) : null}
 
@@ -95,8 +101,9 @@ export default function LoginPage() {
         </div>
 
         <p className="text-muted-foreground text-xs leading-relaxed">
-          로그인하면 Google 계정의 이름·이메일·프로필 사진을 계정 확인에만 써요. 코스와 보관함은 기본 비공개이고, 공유 링크를 만들 때만
-          고른 내용이 공개돼요. 계정을 삭제하면 저장한 코스·보관함·공유 링크도 함께 지워져요.
+          로그인하면 Google 계정의 이름·이메일·프로필 사진을 계정 확인에만 써요. 코스와 보관함은
+          기본 비공개이고, 공유 링크를 만들 때만 고른 내용이 공개돼요. 계정을 삭제하면 저장한
+          코스·보관함·공유 링크도 함께 지워져요.
         </p>
 
         {isTestAuthEnabled ? (
@@ -110,7 +117,14 @@ export default function LoginPage() {
             <p className="text-sm font-semibold">개발용 테스트 로그인 (에뮬레이터 전용)</p>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="test-email">@{TEST_AUTH.emailDomain} 이메일</Label>
-              <Input id="test-email" inputSize="touch" value={testEmail} onChange={(e) => { setTestEmail(e.target.value); }} />
+              <Input
+                id="test-email"
+                inputSize="touch"
+                value={testEmail}
+                onChange={(e) => {
+                  setTestEmail(e.target.value);
+                }}
+              />
             </div>
             <Button type="submit" variant="secondary" size="touch" disabled={test.isPending}>
               테스트 계정으로 로그인

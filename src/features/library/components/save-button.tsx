@@ -95,7 +95,11 @@ export function SaveButton({
         aria-pressed={isSaved}
         className={className}
       >
-        {isSaved ? <BookmarkFilledIcon size="sm" className="text-primary" /> : <BookmarkIcon size="sm" />}
+        {isSaved ? (
+          <BookmarkFilledIcon size="sm" className="text-primary" />
+        ) : (
+          <BookmarkIcon size="sm" />
+        )}
         {isSaved ? "저장됨" : "저장"}
       </Button>
     );

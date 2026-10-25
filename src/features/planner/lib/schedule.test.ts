@@ -62,7 +62,11 @@ function festival(id: string, fixedStart: string, fixedEnd: string): VisitItem {
   };
 }
 
-const ok = (durationMin: number): LegInput => ({ status: "ok", durationMin, distanceM: durationMin * 700 });
+const ok = (durationMin: number): LegInput => ({
+  status: "ok",
+  durationMin,
+  distanceM: durationMin * 700,
+});
 
 function day(items: VisitItem[], startTime = "09:00", endTime = "21:00"): TripDay {
   return { date: DATE, startTime, endTime, items };
@@ -79,16 +83,34 @@ const at = (hhmm: string) => {
 
 describe("역방향 출발 한도 (기능명세 §6 검수 예시)", () => {
   test("축제 14:00·준비 10분·자동차 20분·식사 60분 → 식당 출발 한도 13:30, 이용 시작 한도 12:30", () => {
-    const restaurant = place("식당", "restaurant", allWeek([{ open: "11:00", close: "21:00" }]), 60);
-    const s = computeDaySchedule(day([restaurant, festival("축제", "14:00", "15:00")]), legs(ok(20)), CONFIG);
+    const restaurant = place(
+      "식당",
+      "restaurant",
+      allWeek([{ open: "11:00", close: "21:00" }]),
+      60,
+    );
+    const s = computeDaySchedule(
+      day([restaurant, festival("축제", "14:00", "15:00")]),
+      legs(ok(20)),
+      CONFIG,
+    );
     expect(s.items[0]?.latestDepart).toBe(at("13:30"));
     expect(s.items[0]?.latestStart).toBe(at("12:30"));
     expect(s.items[0]?.limitBy).toMatchObject({ kind: "fixed", at: at("14:00") });
   });
 
   test("식당이 13:00에 열고 최소 식사 60분이면 충돌 — 식당과 축제 모두에 이유를 남긴다", () => {
-    const restaurant = place("식당", "restaurant", allWeek([{ open: "13:00", close: "21:00" }]), 60);
-    const s = computeDaySchedule(day([restaurant, festival("축제", "14:00", "15:00")]), legs(ok(20)), CONFIG);
+    const restaurant = place(
+      "식당",
+      "restaurant",
+      allWeek([{ open: "13:00", close: "21:00" }]),
+      60,
+    );
+    const s = computeDaySchedule(
+      day([restaurant, festival("축제", "14:00", "15:00")]),
+      legs(ok(20)),
+      CONFIG,
+    );
     const r = s.items[0];
     expect(r?.start).toBe(at("13:00"));
     expect(r?.waitMin).toBe(at("13:00") - at("09:00"));
@@ -109,15 +131,29 @@ describe("역방향 출발 한도 (기능명세 §6 검수 예시)", () => {
   });
 
   test("같은 구간이 50분이면 출발 한도 13:00, 이용 시작 한도 12:00으로 바뀐다", () => {
-    const restaurant = place("식당", "restaurant", allWeek([{ open: "11:00", close: "21:00" }]), 60);
-    const s = computeDaySchedule(day([restaurant, festival("축제", "14:00", "15:00")]), legs(ok(50)), CONFIG);
+    const restaurant = place(
+      "식당",
+      "restaurant",
+      allWeek([{ open: "11:00", close: "21:00" }]),
+      60,
+    );
+    const s = computeDaySchedule(
+      day([restaurant, festival("축제", "14:00", "15:00")]),
+      legs(ok(50)),
+      CONFIG,
+    );
     expect(s.items[0]?.latestDepart).toBe(at("13:00"));
     expect(s.items[0]?.latestStart).toBe(at("12:00"));
   });
 
   test("앞에 카페를 추가하면 카페→식당 이동과 식당 영업조건까지 연쇄 역산한다", () => {
     const cafe = place("카페", "cafe", allWeek([{ open: "10:00", close: "20:00" }]), 45);
-    const restaurant = place("식당", "restaurant", allWeek([{ open: "11:00", close: "21:00" }]), 60);
+    const restaurant = place(
+      "식당",
+      "restaurant",
+      allWeek([{ open: "11:00", close: "21:00" }]),
+      60,
+    );
     const s = computeDaySchedule(
       day([cafe, restaurant, festival("축제", "14:00", "15:00")]),
       legs(ok(15), ok(20)),
@@ -132,7 +168,12 @@ describe("역방향 출발 한도 (기능명세 §6 검수 예시)", () => {
   test("식당이 늦게 열면 그 앞 카페의 한도도 함께 당겨진다 (영업조건 연쇄)", () => {
     const cafe = place("카페", "cafe", allWeek([{ open: "10:00", close: "20:00" }]), 45);
     // 식당 13:00 개점 → 13:00 시작도 축제(12:30 한도)에 못 맞춤 → 영업 구간 안에 한도가 없다
-    const restaurant = place("식당", "restaurant", allWeek([{ open: "13:00", close: "21:00" }]), 60);
+    const restaurant = place(
+      "식당",
+      "restaurant",
+      allWeek([{ open: "13:00", close: "21:00" }]),
+      60,
+    );
     const s = computeDaySchedule(
       day([cafe, restaurant, festival("축제", "14:00", "15:00")]),
       legs(ok(15), ok(20)),
@@ -144,7 +185,12 @@ describe("역방향 출발 한도 (기능명세 §6 검수 예시)", () => {
 
   test("경로 조회 실패는 이전 시간을 확정값으로 쓰지 않는다 — 뒤 도착 미확정, 앞 한도 미확정", () => {
     const cafe = place("카페", "cafe", allWeek([{ open: "10:00", close: "20:00" }]), 45);
-    const restaurant = place("식당", "restaurant", allWeek([{ open: "11:00", close: "21:00" }]), 60);
+    const restaurant = place(
+      "식당",
+      "restaurant",
+      allWeek([{ open: "11:00", close: "21:00" }]),
+      60,
+    );
     const s = computeDaySchedule(
       day([cafe, restaurant, festival("축제", "14:00", "15:00")]),
       legs({ status: "failed", reason: "x" }, ok(20)),
@@ -231,10 +277,15 @@ describe("순방향 도착·영업조건", () => {
   });
 
   test("예외일(임시 휴무)이 요일표보다 우선한다", () => {
-    const item = place("카페", "cafe", {
-      ...allWeek([{ open: "10:00", close: "20:00" }]),
-      exceptions: [{ date: DATE, ranges: [], note: "임시 휴무" }],
-    }, 45);
+    const item = place(
+      "카페",
+      "cafe",
+      {
+        ...allWeek([{ open: "10:00", close: "20:00" }]),
+        exceptions: [{ date: DATE, ranges: [], note: "임시 휴무" }],
+      },
+      45,
+    );
     expect(hoursForDate(item, DATE)).toMatchObject({ state: "closed", note: "임시 휴무" });
     expect(hoursForDate(item, "2026-10-24").state).toBe("known");
   });

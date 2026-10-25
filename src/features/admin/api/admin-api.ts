@@ -18,7 +18,13 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import type { AdminKind } from "@/app/paths";
 import { courseFromDoc, festivalFromDoc, placeFromDoc } from "@/features/content";
 import { db, storage } from "@/lib/firebase";
-import { COL, type ContentStatus, type CreatorCourse, type Festival, type Place } from "@/shared/domain";
+import {
+  COL,
+  type ContentStatus,
+  type CreatorCourse,
+  type Festival,
+  type Place,
+} from "@/shared/domain";
 
 export interface ContentByKind {
   places: Place;
@@ -27,7 +33,9 @@ export interface ContentByKind {
 }
 export type AnyContent = Place | Festival | CreatorCourse;
 /** 편집 폼이 다루는 값 — id·status·updatedAt은 저장소가 정한다 */
-export type ContentInput<K extends AdminKind> = K extends AdminKind ? Omit<ContentByKind[K], "id" | "status" | "updatedAt"> : never;
+export type ContentInput<K extends AdminKind> = K extends AdminKind
+  ? Omit<ContentByKind[K], "id" | "status" | "updatedAt">
+  : never;
 
 const COLLECTION: Record<AdminKind, string> = {
   places: COL.places,
@@ -49,11 +57,16 @@ export async function checkIsAdmin(uid: string): Promise<boolean> {
 }
 
 export async function listContent(kind: AdminKind): Promise<AnyContent[]> {
-  const snap = await getDocs(query(collection(db, COLLECTION[kind]), orderBy("updatedAt", "desc"), limit(300)));
+  const snap = await getDocs(
+    query(collection(db, COLLECTION[kind]), orderBy("updatedAt", "desc"), limit(300)),
+  );
   return snap.docs.map((d) => fromDoc(kind, d.id, d.data()));
 }
 
-export async function getContentWithDraft(kind: AdminKind, id: string): Promise<{ content: AnyContent; draft: AnyContent | null }> {
+export async function getContentWithDraft(
+  kind: AdminKind,
+  id: string,
+): Promise<{ content: AnyContent; draft: AnyContent | null }> {
   const [snap, draftSnap] = await Promise.all([
     getDoc(doc(db, COLLECTION[kind], id)),
     getDoc(doc(db, COL.contentDrafts, draftId(kind, id))),
@@ -66,32 +79,59 @@ export async function getContentWithDraft(kind: AdminKind, id: string): Promise<
 }
 
 /** 새로 등록 — 임시저장(draft) 상태로 만든다. 불완전한 정보도 허용 */
-export async function createContent<K extends AdminKind>(kind: K, input: ContentInput<K>): Promise<string> {
+export async function createContent<K extends AdminKind>(
+  kind: K,
+  input: ContentInput<K>,
+): Promise<string> {
   const r = doc(collection(db, COLLECTION[kind]));
-  await setDoc(r, { ...input, status: "draft" satisfies ContentStatus, updatedAt: new Date().toISOString() });
+  await setDoc(r, {
+    ...input,
+    status: "draft" satisfies ContentStatus,
+    updatedAt: new Date().toISOString(),
+  });
   return r.id;
 }
 
 /** 초안 저장 — 공개 중이면 공개본은 두고 초안 문서에, 아니면 본문서에 저장 */
-export async function saveDraft<K extends AdminKind>(kind: K, id: string, status: ContentStatus, input: ContentInput<K>): Promise<void> {
+export async function saveDraft<K extends AdminKind>(
+  kind: K,
+  id: string,
+  status: ContentStatus,
+  input: ContentInput<K>,
+): Promise<void> {
   const now = new Date().toISOString();
   if (status === "published") {
-    await setDoc(doc(db, COL.contentDrafts, draftId(kind, id)), { ...input, status, updatedAt: now });
+    await setDoc(doc(db, COL.contentDrafts, draftId(kind, id)), {
+      ...input,
+      status,
+      updatedAt: now,
+    });
     return;
   }
   await setDoc(doc(db, COLLECTION[kind], id), { ...input, status, updatedAt: now });
 }
 
 /** 공개(또는 공개본 갱신) — 본문서를 바꾸고 초안을 지운다. updatedAt이 바뀌어 저장 코스가 재검토 안내를 받는다 */
-export async function publishContent<K extends AdminKind>(kind: K, id: string, input: ContentInput<K>): Promise<void> {
+export async function publishContent<K extends AdminKind>(
+  kind: K,
+  id: string,
+  input: ContentInput<K>,
+): Promise<void> {
   const batch = writeBatch(db);
-  batch.set(doc(db, COLLECTION[kind], id), { ...input, status: "published", updatedAt: new Date().toISOString() });
+  batch.set(doc(db, COLLECTION[kind], id), {
+    ...input,
+    status: "published",
+    updatedAt: new Date().toISOString(),
+  });
   batch.delete(doc(db, COL.contentDrafts, draftId(kind, id)));
   await batch.commit();
 }
 
 export async function hideContent(kind: AdminKind, id: string): Promise<void> {
-  await updateDoc(doc(db, COLLECTION[kind], id), { status: "hidden", updatedAt: new Date().toISOString() });
+  await updateDoc(doc(db, COLLECTION[kind], id), {
+    status: "hidden",
+    updatedAt: new Date().toISOString(),
+  });
 }
 
 export async function discardDraft(kind: AdminKind, id: string): Promise<void> {

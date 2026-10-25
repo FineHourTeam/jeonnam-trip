@@ -25,7 +25,9 @@ function hoursWarning(p: Place): string | null {
   if (p.checks.hours.state === "conflict") return "영업시간 정보 상충";
   const all = Object.values(p.hours.weekly);
   if (all.every((r) => r === null)) return "영업시간 확인 필요";
-  const closedDays = Object.entries(p.hours.weekly).filter(([, r]) => Array.isArray(r) && r.length === 0);
+  const closedDays = Object.entries(p.hours.weekly).filter(
+    ([, r]) => Array.isArray(r) && r.length === 0,
+  );
   if (closedDays.length > 0) {
     const DOW = ["일", "월", "화", "수", "목", "금", "토"];
     return `정기휴무 ${closedDays.map(([d]) => DOW[Number(d)] ?? "").join("·")}`;
@@ -76,10 +78,19 @@ export default function CreatorDetailPage() {
 
   return (
     <div className="flex flex-col pb-28 md:pb-10">
-      <Seo title={c.title} description={c.summary ?? `${c.creator.name} · ${tripLengthLabel(c.days.length)}`} />
+      <Seo
+        title={c.title}
+        description={c.summary ?? `${c.creator.name} · ${tripLengthLabel(c.days.length)}`}
+      />
       <PageTopBar fallback={paths.creators} title={c.title} />
       <div className="mx-auto w-full max-w-screen-md md:px-4 md:pt-4">
-        <Photo photo={cover} alt={c.title} credit="overlay" fallbackIcon={<RouteIcon size="lg" />} className="aspect-4/3 w-full md:aspect-video md:rounded-xl" />
+        <Photo
+          photo={cover}
+          alt={c.title}
+          credit="overlay"
+          fallbackIcon={<RouteIcon size="lg" />}
+          className="aspect-4/3 w-full md:aspect-video md:rounded-xl"
+        />
       </div>
       <div className="mx-auto flex w-full max-w-screen-md flex-col gap-8 px-4 pt-5">
         <header className="flex flex-col gap-2">
@@ -89,15 +100,27 @@ export default function CreatorDetailPage() {
           <h1 className="text-2xl font-bold tracking-tight text-balance">{c.title}</h1>
           <p className="text-sm">
             {channel ? (
-              <a href={channel} target="_blank" rel="noreferrer noopener" className="font-medium underline-offset-2 hover:underline">
+              <a
+                href={channel}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="font-medium underline-offset-2 hover:underline"
+              >
                 {c.creator.name}
               </a>
             ) : (
               <span className="font-medium">{c.creator.name}</span>
             )}
-            {c.reviewedAt ? <span className="text-muted-foreground"> · 운영팀 확인 {formatDateDot(c.reviewedAt)}</span> : null}
+            {c.reviewedAt ? (
+              <span className="text-muted-foreground">
+                {" "}
+                · 운영팀 확인 {formatDateDot(c.reviewedAt)}
+              </span>
+            ) : null}
           </p>
-          {c.summary ? <p className="text-muted-foreground leading-relaxed text-pretty">{c.summary}</p> : null}
+          {c.summary ? (
+            <p className="text-muted-foreground leading-relaxed text-pretty">{c.summary}</p>
+          ) : null}
           {c.tags.length > 0 ? (
             <div className="flex flex-wrap gap-1.5">
               {c.tags.map((t) => (
@@ -117,7 +140,10 @@ export default function CreatorDetailPage() {
           ) : null}
         </header>
 
-        <Notice tone={c.orderBasis === "video_order" ? "warning" : "info"} title={`순서 기준 · ${ORDER_BASIS_LABEL[c.orderBasis]}`}>
+        <Notice
+          tone={c.orderBasis === "video_order" ? "warning" : "info"}
+          title={`순서 기준 · ${ORDER_BASIS_LABEL[c.orderBasis]}`}
+        >
           {c.orderBasis === "video_order"
             ? "영상에 나온 순서예요. 실제로 이 순서대로 다녀왔는지는 확인되지 않았어요."
             : c.orderBasis === "verified_trip"

@@ -28,7 +28,8 @@ export function DaySummary({ schedule, dayCount }: { schedule: DaySchedule; dayC
           장소 <strong className="font-semibold">{dayCount}곳</strong>
           {schedule.totalDriveMin > 0 || schedule.missingLegs > 0 ? (
             <>
-              {" · "}이동 <strong className="font-semibold">{formatDuration(schedule.totalDriveMin)}</strong>
+              {" · "}이동{" "}
+              <strong className="font-semibold">{formatDuration(schedule.totalDriveMin)}</strong>
               {schedule.totalDistanceM > 0 ? ` (${formatDistance(schedule.totalDistanceM)})` : ""}
             </>
           ) : null}
@@ -39,8 +40,10 @@ export function DaySummary({ schedule, dayCount }: { schedule: DaySchedule; dayC
             "rounded-md px-2 py-0.5 text-xs font-semibold",
             schedule.status === "ok" && "bg-success-soft text-success-soft-foreground",
             schedule.status === "warning" && "bg-warning-soft text-warning-soft-foreground",
-            schedule.status === "conflict" && "bg-destructive-soft text-destructive-soft-foreground",
-            (schedule.status === "calculating" || schedule.status === "empty") && "bg-muted text-muted-foreground",
+            schedule.status === "conflict" &&
+              "bg-destructive-soft text-destructive-soft-foreground",
+            (schedule.status === "calculating" || schedule.status === "empty") &&
+              "bg-muted text-muted-foreground",
           )}
         >
           {STATUS_LABEL[schedule.status]}
@@ -52,11 +55,16 @@ export function DaySummary({ schedule, dayCount }: { schedule: DaySchedule; dayC
         </p>
       ) : null}
       {dayCount > 1 ? (
-        <p className="text-muted-foreground text-xs">경로 시간은 현재 교통 기준 예상이고, 주차·이동 여유는 구간마다 따로 더했어요.</p>
+        <p className="text-muted-foreground text-xs">
+          경로 시간은 현재 교통 기준 예상이고, 주차·이동 여유는 구간마다 따로 더했어요.
+        </p>
       ) : null}
       {schedule.errorCount + schedule.warningCount > 0 ? (
         <Button size="sm" variant="outline" className="self-start" onClick={firstIssue}>
-          {schedule.errorCount > 0 ? `충돌 ${String(schedule.errorCount)}건` : `확인할 것 ${String(schedule.warningCount)}건`} 보기
+          {schedule.errorCount > 0
+            ? `충돌 ${String(schedule.errorCount)}건`
+            : `확인할 것 ${String(schedule.warningCount)}건`}{" "}
+          보기
         </Button>
       ) : null}
     </div>
@@ -102,7 +110,9 @@ export function DayTimeline({
       {day.items.length === 0 ? (
         <div className="bg-background-subtle flex flex-col items-center gap-3 rounded-xl px-4 py-8 text-center">
           <p className="font-semibold">아직 이 일차에 장소가 없어요</p>
-          <p className="text-muted-foreground text-sm">장소를 넣으면 영업시간과 이동시간을 맞춰 시간을 계산해요.</p>
+          <p className="text-muted-foreground text-sm">
+            장소를 넣으면 영업시간과 이동시간을 맞춰 시간을 계산해요.
+          </p>
         </div>
       ) : (
         <ol className="relative flex flex-col">
@@ -114,7 +124,12 @@ export function DayTimeline({
               <div key={item.id} className="relative flex flex-col">
                 {leg ? (
                   <div className="pl-11">
-                    <LegRow leg={leg} bufferMin={s?.bufferBeforeMin ?? 0} onRetry={onRetryRoutes} label={i === 0 ? "출발 위치에서" : undefined} />
+                    <LegRow
+                      leg={leg}
+                      bufferMin={s?.bufferBeforeMin ?? 0}
+                      onRetry={onRetryRoutes}
+                      label={i === 0 ? "출발 위치에서" : undefined}
+                    />
                   </div>
                 ) : i > 0 ? (
                   <div className="h-3" />
@@ -134,7 +149,12 @@ export function DayTimeline({
           })}
           {schedule.legToEnd ? (
             <div className="pl-11">
-              <LegRow leg={schedule.legToEnd} bufferMin={0} onRetry={onRetryRoutes} label="종료 위치까지" />
+              <LegRow
+                leg={schedule.legToEnd}
+                bufferMin={0}
+                onRetry={onRetryRoutes}
+                label="종료 위치까지"
+              />
             </div>
           ) : null}
         </ol>

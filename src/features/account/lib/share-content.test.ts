@@ -41,7 +41,14 @@ const trip: Trip = {
 describe("share content", () => {
   test("개인 메모·출발 위치를 빼고 시각 사본을 담는다", () => {
     const schedule = {
-      items: [{ arrive: 540, start: 540, end: 600, legBefore: { status: "ok", durationMin: 20, distanceM: 9000 } }],
+      items: [
+        {
+          arrive: 540,
+          start: 540,
+          end: 600,
+          legBefore: { status: "ok", durationMin: 20, distanceM: 9000 },
+        },
+      ],
     } as unknown as DaySchedule;
     const c = buildShareContent(trip, [schedule]);
     const item = c.days[0]?.items[0];
@@ -52,7 +59,15 @@ describe("share content", () => {
   });
 
   test("복사본은 새 방문 id를 받고 공유본을 출처로 남긴다", () => {
-    const share = { ...buildShareContent(trip, []), id: "s1", ownerUid: "u", tripId: "t", active: true, publishedVersion: 1, publishedAt: "x" } as SharedTrip;
+    const share = {
+      ...buildShareContent(trip, []),
+      id: "s1",
+      ownerUid: "u",
+      tripId: "t",
+      active: true,
+      publishedVersion: 1,
+      publishedAt: "x",
+    } as SharedTrip;
     const d = draftFromShare(share);
     expect(d.days[0]?.items[0]?.id).not.toBe("a");
     expect(d.origin).toEqual({ kind: "share", shareId: "s1" });

@@ -25,18 +25,23 @@ export const SNS_PLATFORM_LABEL: Record<SnsPlatform, string> = {
 export function detectSnsPlatform(href: string): SnsPlatform {
   const host = new URL(href).hostname.replace(/^www\.|^m\./, "");
   if (host === "instagram.com" || host.endsWith(".instagram.com")) return "instagram";
-  if (host === "youtube.com" || host === "youtu.be" || host.endsWith(".youtube.com")) return "youtube";
-  if (host.includes("blog") || host === "brunch.co.kr" || host.endsWith("tistory.com")) return "blog";
+  if (host === "youtube.com" || host === "youtu.be" || host.endsWith(".youtube.com"))
+    return "youtube";
+  if (host.includes("blog") || host === "brunch.co.kr" || host.endsWith("tistory.com"))
+    return "blog";
   return "other";
 }
 
 export const MAX_URL_LENGTH = 2000;
 
 /** SNS 링크 입력 검사 — 허용 형식(http/https)과 길이 (기능명세 §4-1) */
-export function validateSnsUrl(raw: string): { ok: true; href: string } | { ok: false; message: string } {
+export function validateSnsUrl(
+  raw: string,
+): { ok: true; href: string } | { ok: false; message: string } {
   const value = raw.trim();
   if (!value) return { ok: false, message: "링크를 붙여 넣어 주세요." };
-  if (value.length > MAX_URL_LENGTH) return { ok: false, message: "링크가 너무 길어요. 2,000자 이하로 넣어 주세요." };
+  if (value.length > MAX_URL_LENGTH)
+    return { ok: false, message: "링크가 너무 길어요. 2,000자 이하로 넣어 주세요." };
   const href = safeHref(value) ?? safeHref(`https://${value}`);
   if (!href || !/^https?:\/\/[^/]+\.[^/]+/.test(href)) {
     return { ok: false, message: "링크 형식이 아니에요. https://로 시작하는 주소를 넣어 주세요." };

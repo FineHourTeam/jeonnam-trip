@@ -3,7 +3,13 @@
 import type { ReactNode } from "react";
 import { InfoIcon, WarningIcon } from "@/components/icons";
 import { Photo } from "@/components/photo";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
 import type { PhotoAsset } from "@/shared/domain";
 

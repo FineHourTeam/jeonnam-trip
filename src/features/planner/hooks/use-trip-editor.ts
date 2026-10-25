@@ -44,7 +44,9 @@ export function useTripEditor(tripId: string) {
 
   let state: EditorState;
   if (isDraft) {
-    state = draft ? { status: "ready", isDraft: true, trip: draft, server: null, dirty: true, staleBase: false } : { status: "no-draft" };
+    state = draft
+      ? { status: "ready", isDraft: true, trip: draft, server: null, dirty: true, staleBase: false }
+      : { status: "no-draft" };
   } else if (copy) {
     state = {
       status: "ready",
@@ -55,7 +57,14 @@ export function useTripEditor(tripId: string) {
       staleBase: Boolean(serverQuery.data && serverQuery.data.version !== copy.baseVersion),
     };
   } else if (serverQuery.data) {
-    state = { status: "ready", isDraft: false, trip: serverQuery.data, server: serverQuery.data, dirty: false, staleBase: false };
+    state = {
+      status: "ready",
+      isDraft: false,
+      trip: serverQuery.data,
+      server: serverQuery.data,
+      dirty: false,
+      staleBase: false,
+    };
   } else if (serverQuery.isError) {
     state = {
       status: "error",

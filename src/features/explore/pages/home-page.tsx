@@ -34,15 +34,21 @@ function periodRange(p: Period, today: string) {
   return { from: today, to: addDays(today, 13) };
 }
 
-const PERIOD_LABEL: Record<Period, string> = { soon: "앞으로 2주", month: "이번 달", next: "다음 달" };
+const PERIOD_LABEL: Record<Period, string> = {
+  soon: "앞으로 2주",
+  month: "이번 달",
+  next: "다음 달",
+};
 const PICK_CATEGORIES: PlaceCategory[] = ["attraction", "cafe", "restaurant"];
-const rank = (c: PlaceCategory) => (PICK_CATEGORIES.includes(c) ? PICK_CATEGORIES.indexOf(c) : PICK_CATEGORIES.length);
+const rank = (c: PlaceCategory) =>
+  PICK_CATEGORIES.includes(c) ? PICK_CATEGORIES.indexOf(c) : PICK_CATEGORIES.length;
 
 export default function HomePage() {
   const [params, setParams] = useSearchParams();
   const rawSigun = params.get("sigun") ?? "";
   const sigun = isSigunCode(rawSigun) ? rawSigun : null;
-  const period = (["soon", "month", "next"] as const).find((p) => p === params.get("period")) ?? "soon";
+  const period =
+    (["soon", "month", "next"] as const).find((p) => p === params.get("period")) ?? "soon";
   const rawCat = params.get("category");
   const category = PICK_CATEGORIES.find((c) => c === rawCat) ?? null;
   const today = todayKst();
@@ -89,10 +95,17 @@ export default function HomePage() {
       <section className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
           <p className="text-muted-foreground text-sm">전남 축제와 가고 싶은 곳으로</p>
-          <h1 className="text-2xl font-bold tracking-tight text-balance md:text-3xl">어디로 떠날까요?</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-balance md:text-3xl">
+            어디로 떠날까요?
+          </h1>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <SigunPickerButton value={sigun} onChange={(v) => { setParam("sigun", v); }} />
+          <SigunPickerButton
+            value={sigun}
+            onChange={(v) => {
+              setParam("sigun", v);
+            }}
+          />
           <ToggleGroup
             type="single"
             variant="chip"
@@ -177,7 +190,7 @@ export default function HomePage() {
             if (v) setParam("category", v === "all" ? null : v);
           }}
           aria-label="장소 종류"
-          className="scrollbar-none -mx-4 w-auto flex-nowrap overflow-x-auto px-4 md:mx-0 md:px-0"
+          className="-mx-4 w-auto scrollbar-none flex-nowrap overflow-x-auto px-4 md:mx-0 md:px-0"
         >
           <ToggleGroupItem value="all">전체</ToggleGroupItem>
           {PICK_CATEGORIES.map((c) => (
@@ -196,7 +209,13 @@ export default function HomePage() {
             description="다른 지역을 골라 보세요."
             action={
               sigun ? (
-                <Button variant="outline" size="touch" onClick={() => { setParam("sigun", null); }}>
+                <Button
+                  variant="outline"
+                  size="touch"
+                  onClick={() => {
+                    setParam("sigun", null);
+                  }}
+                >
                   전남 전체 보기
                 </Button>
               ) : undefined
@@ -205,14 +224,22 @@ export default function HomePage() {
         ) : (
           <div className="grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-3 lg:grid-cols-6">
             {placeList.map((p) => (
-              <PlaceCard key={p.id} place={p} action={<SaveButton placeId={p.id} placeName={p.name} />} />
+              <PlaceCard
+                key={p.id}
+                place={p}
+                action={<SaveButton placeId={p.id} placeName={p.name} />}
+              />
             ))}
           </div>
         )}
       </section>
 
       <section className="flex flex-col gap-4" aria-labelledby="home-courses">
-        <SectionHeader title="크리에이터 코스" description="운영팀이 원문과 장소를 확인한 코스예요" to={paths.creators} />
+        <SectionHeader
+          title="크리에이터 코스"
+          description="운영팀이 원문과 장소를 확인한 코스예요"
+          to={paths.creators}
+        />
         {courses.isPending ? (
           <Rail label="코스 불러오는 중">
             {[0, 1].map((i) => (
@@ -224,7 +251,10 @@ export default function HomePage() {
         ) : courses.isError ? (
           <ErrorState error={courses.error} onRetry={() => void courses.refetch()} />
         ) : visibleCourses.length === 0 ? (
-          <EmptyState title={`${regionLabel} 크리에이터 코스가 아직 없어요`} className="border-border border py-8" />
+          <EmptyState
+            title={`${regionLabel} 크리에이터 코스가 아직 없어요`}
+            className="border-border border py-8"
+          />
         ) : (
           <Rail label="크리에이터 코스">
             {visibleCourses.map((c) => (

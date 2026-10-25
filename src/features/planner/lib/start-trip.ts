@@ -58,15 +58,23 @@ export function buildStartDraft(input: StartTripInput): TripDraft {
   const picked = input.picked.map(visitFromPlace);
 
   if (input.startMode === "recommend") {
-    const fixed = festivalItem?.fixedStart && input.festival ? [{ date: input.festival.date, item: festivalItem }] : [];
-    const dated = festivalItem && !festivalItem.fixedStart && input.festival ? [{ date: input.festival.date, item: festivalItem }] : [];
+    const fixed =
+      festivalItem?.fixedStart && input.festival
+        ? [{ date: input.festival.date, item: festivalItem }]
+        : [];
+    const dated =
+      festivalItem && !festivalItem.fixedStart && input.festival
+        ? [{ date: input.festival.date, item: festivalItem }]
+        : [];
     const r = recommendTrip({
       dates: draft.days.map((d) => d.date),
       dayStart: input.dayStart,
       dayEnd: input.dayEnd,
       pace: input.pace,
       picked,
-      suggestions: input.suggestions.filter((s) => !input.picked.some((p) => p.id === s.id)).map(visitFromPlace),
+      suggestions: input.suggestions
+        .filter((s) => !input.picked.some((p) => p.id === s.id))
+        .map(visitFromPlace),
       fixed,
       dated,
     });
@@ -77,7 +85,9 @@ export function buildStartDraft(input: StartTripInput): TripDraft {
 
   // 직접 만들기: 사용자의 순서를 그대로. 하루 여행이면 1일차에, 여러 날이면 넣을 일차를 직접 고르도록 미배치에 둔다
   if (festivalItem && festivalDay >= 0) {
-    draft.days = draft.days.map((d, i) => (i === festivalDay ? { ...d, items: [festivalItem] } : d));
+    draft.days = draft.days.map((d, i) =>
+      i === festivalDay ? { ...d, items: [festivalItem] } : d,
+    );
   }
   if (draft.days.length === 1) {
     draft.days = draft.days.map((d) => ({ ...d, items: [...d.items, ...picked] }));
@@ -98,7 +108,13 @@ function copyCourse(draft: TripDraft, course: CreatorCourse, places: Place[]): T
     });
     const target = days[cd.day - 1];
     if (target) target.items.push(...items);
-    else unplaced.push(...items.map((x) => ({ ...x, reason: `원본 ${String(cd.day)}일차예요. 여행 기간이 짧아 배치하지 않았어요.` })));
+    else
+      unplaced.push(
+        ...items.map((x) => ({
+          ...x,
+          reason: `원본 ${String(cd.day)}일차예요. 여행 기간이 짧아 배치하지 않았어요.`,
+        })),
+      );
   }
   return { ...draft, days, unplaced };
 }
@@ -110,5 +126,7 @@ function defaultTitle(input: StartTripInput): string {
   const [first, second, ...rest] = input.siguns.map(sigunName);
   if (!first) return "새 여행";
   if (!second) return `${first} 여행`;
-  return rest.length === 0 ? `${first}·${second} 여행` : `${first} 외 ${String(rest.length + 1)}곳 여행`;
+  return rest.length === 0
+    ? `${first}·${second} 여행`
+    : `${first} 외 ${String(rest.length + 1)}곳 여행`;
 }

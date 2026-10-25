@@ -52,7 +52,8 @@ export default function TripSharePage() {
   const content = buildShareContent(trip, schedules);
   const ex = excludedSummary(trip);
   const active = share.data?.active === true;
-  const url = active && share.data ? `${window.location.origin}${paths.sharedTrip(share.data.id)}` : null;
+  const url =
+    active && share.data ? `${window.location.origin}${paths.sharedTrip(share.data.id)}` : null;
   const busy = create.isPending || update.isPending || stop.isPending;
 
   async function copyLink() {
@@ -89,10 +90,19 @@ export default function TripSharePage() {
           {active && share.data ? (
             <>
               <p className="text-muted-foreground text-sm">
-                {formatDateDot(share.data.publishedAt)}에 공개한 내용이 보여요. 코스를 고쳐도 자동으로 바뀌지 않아요.
+                {formatDateDot(share.data.publishedAt)}에 공개한 내용이 보여요. 코스를 고쳐도
+                자동으로 바뀌지 않아요.
               </p>
               <div className="flex gap-2">
-                <Input readOnly value={url ?? ""} inputSize="touch" aria-label="공유 링크" onFocus={(e) => { e.currentTarget.select(); }} />
+                <Input
+                  readOnly
+                  value={url ?? ""}
+                  inputSize="touch"
+                  aria-label="공유 링크"
+                  onFocus={(e) => {
+                    e.currentTarget.select();
+                  }}
+                />
                 <Button size="touch" onClick={() => void copyLink()}>
                   <CopyIcon size="sm" />
                   복사
@@ -106,13 +116,23 @@ export default function TripSharePage() {
                   onClick={() => {
                     update.mutate(
                       { share: share.data, content },
-                      { onSuccess: () => toast.success("지금 코스로 공유 내용을 바꿨어요."), onError: (e) => toast.error(errorMessage(e)) },
+                      {
+                        onSuccess: () => toast.success("지금 코스로 공유 내용을 바꿨어요."),
+                        onError: (e) => toast.error(errorMessage(e)),
+                      },
                     );
                   }}
                 >
                   공유 내용 업데이트
                 </Button>
-                <Button variant="ghost" size="touch" disabled={busy} onClick={() => { setConfirmStop(true); }}>
+                <Button
+                  variant="ghost"
+                  size="touch"
+                  disabled={busy}
+                  onClick={() => {
+                    setConfirmStop(true);
+                  }}
+                >
                   공유 중지
                 </Button>
               </div>
@@ -121,14 +141,19 @@ export default function TripSharePage() {
             <ErrorState error={share.error} onRetry={() => void share.refetch()} className="py-4" />
           ) : (
             <>
-              <p className="text-muted-foreground text-sm">링크를 아는 사람은 로그인 없이 볼 수 있고, 로그인하면 자기 코스로 복사할 수 있어요.</p>
+              <p className="text-muted-foreground text-sm">
+                링크를 아는 사람은 로그인 없이 볼 수 있고, 로그인하면 자기 코스로 복사할 수 있어요.
+              </p>
               <Button
                 size="xl"
                 disabled={busy || dirty || isFetching}
                 onClick={() => {
                   create.mutate(
                     { trip, content },
-                    { onSuccess: () => toast.success("공유 링크를 만들었어요."), onError: (e) => toast.error(`링크를 만들지 못했어요. ${errorMessage(e)}`) },
+                    {
+                      onSuccess: () => toast.success("공유 링크를 만들었어요."),
+                      onError: (e) => toast.error(`링크를 만들지 못했어요. ${errorMessage(e)}`),
+                    },
                   );
                 }}
               >
@@ -142,11 +167,15 @@ export default function TripSharePage() {
         <Notice tone="info" title="공유에서 빠지는 정보">
           <ul className="list-disc pl-4">
             <li>개인 메모 {ex.memos}건</li>
-            <li>출발·종료 위치(숙소 등) {ex.points > 0 ? `${String(ex.points)}일차 분` : "없음"}</li>
+            <li>
+              출발·종료 위치(숙소 등) {ex.points > 0 ? `${String(ex.points)}일차 분` : "없음"}
+            </li>
             <li>미배치 후보 {ex.unplaced}곳</li>
             <li>보관함·SNS 링크 전체</li>
           </ul>
-          {ex.customs > 0 ? <p className="mt-2">직접 등록한 장소 {ex.customs}곳은 이름·위치가 공유에 들어가요.</p> : null}
+          {ex.customs > 0 ? (
+            <p className="mt-2">직접 등록한 장소 {ex.customs}곳은 이름·위치가 공유에 들어가요.</p>
+          ) : null}
         </Notice>
 
         <section className="flex flex-col gap-3">

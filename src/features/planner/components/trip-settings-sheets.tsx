@@ -16,7 +16,10 @@ const daySchema = z
     startTime: z.string().regex(HHMM, "09:00처럼 넣어 주세요."),
     endTime: z.string().regex(HHMM, "21:00처럼 넣어 주세요."),
   })
-  .refine((v) => v.endTime > v.startTime, { path: ["endTime"], message: "종료 시각이 시작 시각보다 늦어야 해요." });
+  .refine((v) => v.endTime > v.startTime, {
+    path: ["endTime"],
+    message: "종료 시각이 시작 시각보다 늦어야 해요.",
+  });
 
 export function DayTimesSheet({
   day,
@@ -61,11 +64,23 @@ export function DayTimesSheet({
       >
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="d-start">하루 시작</Label>
-          <Input id="d-start" type="time" inputSize="touch" aria-invalid={Boolean(e.startTime)} {...form.register("startTime")} />
+          <Input
+            id="d-start"
+            type="time"
+            inputSize="touch"
+            aria-invalid={Boolean(e.startTime)}
+            {...form.register("startTime")}
+          />
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="d-end">하루 종료</Label>
-          <Input id="d-end" type="time" inputSize="touch" aria-invalid={Boolean(e.endTime)} {...form.register("endTime")} />
+          <Input
+            id="d-end"
+            type="time"
+            inputSize="touch"
+            aria-invalid={Boolean(e.endTime)}
+            {...form.register("endTime")}
+          />
         </div>
         {e.startTime?.message || e.endTime?.message ? (
           <p className="text-destructive col-span-2 text-sm" role="alert">
@@ -83,7 +98,10 @@ const tripSchema = z
     startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "날짜를 골라 주세요."),
     endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "날짜를 골라 주세요."),
   })
-  .refine((v) => v.endDate >= v.startDate, { path: ["endDate"], message: "끝나는 날이 시작하는 날보다 빨라요." })
+  .refine((v) => v.endDate >= v.startDate, {
+    path: ["endDate"],
+    message: "끝나는 날이 시작하는 날보다 빨라요.",
+  })
   .refine((v) => diffDays(v.startDate, v.endDate) < MAX_TRIP_DAYS, {
     path: ["endDate"],
     message: `여행 기간은 최대 ${String(MAX_TRIP_DAYS)}일까지 만들 수 있어요.`,
@@ -134,7 +152,12 @@ export function TripSettingsSheet({
       >
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="t-title">제목</Label>
-          <Input id="t-title" inputSize="touch" aria-invalid={Boolean(e.title)} {...form.register("title")} />
+          <Input
+            id="t-title"
+            inputSize="touch"
+            aria-invalid={Boolean(e.title)}
+            {...form.register("title")}
+          />
           {e.title?.message ? <p className="text-destructive text-sm">{e.title.message}</p> : null}
         </div>
         <div className="grid grid-cols-2 gap-3">
@@ -144,7 +167,13 @@ export function TripSettingsSheet({
           </div>
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="t-end">종료일</Label>
-            <Input id="t-end" type="date" inputSize="touch" aria-invalid={Boolean(e.endDate)} {...form.register("endDate")} />
+            <Input
+              id="t-end"
+              type="date"
+              inputSize="touch"
+              aria-invalid={Boolean(e.endDate)}
+              {...form.register("endDate")}
+            />
           </div>
         </div>
         {e.startDate?.message || e.endDate?.message ? (

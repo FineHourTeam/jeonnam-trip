@@ -37,7 +37,13 @@ export function CategoryIcon({
 const VERIFY_LABEL = { verified: "확인됨", unverified: "미확인", conflict: "정보 상충" } as const;
 
 /** 항목별 확인 상태 — "확인됨"은 확인 당시 상태라 확인일을 함께 보여준다 */
-export function VerifyBadge({ check, className }: { check: FieldCheck | undefined; className?: string }) {
+export function VerifyBadge({
+  check,
+  className,
+}: {
+  check: FieldCheck | undefined;
+  className?: string;
+}) {
   const state = check?.state ?? "unverified";
   const Icon = state === "verified" ? CheckIcon : state === "conflict" ? WarningIcon : InfoIcon;
   return (
@@ -52,7 +58,9 @@ export function VerifyBadge({ check, className }: { check: FieldCheck | undefine
     >
       <Icon size="sm" />
       {VERIFY_LABEL[state]}
-      {state !== "unverified" && check?.checkedAt ? ` · ${formatDateDot(check.checkedAt)} 기준` : null}
+      {state !== "unverified" && check?.checkedAt
+        ? ` · ${formatDateDot(check.checkedAt)} 기준`
+        : null}
     </span>
   );
 }

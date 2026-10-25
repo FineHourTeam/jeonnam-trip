@@ -43,8 +43,12 @@ export async function signOutUser(): Promise<void> {
  */
 export async function deleteMyAccount(uid: string): Promise<void> {
   const refs = [
-    ...(await getDocs(query(collection(db, COL.trips), where("ownerUid", "==", uid)))).docs.map((d) => d.ref),
-    ...(await getDocs(query(collection(db, COL.shares), where("ownerUid", "==", uid)))).docs.map((d) => d.ref),
+    ...(await getDocs(query(collection(db, COL.trips), where("ownerUid", "==", uid)))).docs.map(
+      (d) => d.ref,
+    ),
+    ...(await getDocs(query(collection(db, COL.shares), where("ownerUid", "==", uid)))).docs.map(
+      (d) => d.ref,
+    ),
   ];
   for (const sub of [COL.savedPlaces, COL.customPlaces, COL.snsLinks]) {
     refs.push(...(await getDocs(collection(db, COL.users, uid, sub))).docs.map((d) => d.ref));
@@ -71,7 +75,10 @@ export async function deleteMyAccount(uid: string): Promise<void> {
 
 // ── 공유 ──
 
-export type ShareContent = Omit<SharedTrip, "id" | "ownerUid" | "tripId" | "active" | "publishedVersion" | "publishedAt">;
+export type ShareContent = Omit<
+  SharedTrip,
+  "id" | "ownerUid" | "tripId" | "active" | "publishedVersion" | "publishedAt"
+>;
 
 function shareFromDoc(id: string, data: Record<string, unknown>): SharedTrip {
   return { ...(data as unknown as Omit<SharedTrip, "id">), id };

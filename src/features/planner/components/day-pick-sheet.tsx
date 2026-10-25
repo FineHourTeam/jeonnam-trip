@@ -21,7 +21,12 @@ export function DayPickSheet({
   onPick: (dayIndex: number) => void;
 }) {
   return (
-    <BottomSheet open={open} onOpenChange={onOpenChange} title={title} description="그 일차의 끝에 넣고 시간을 다시 계산해요.">
+    <BottomSheet
+      open={open}
+      onOpenChange={onOpenChange}
+      title={title}
+      description="그 일차의 끝에 넣고 시간을 다시 계산해요."
+    >
       <div className="flex flex-col gap-2 pb-4">
         {days.map((d, i) => (
           <Button

@@ -69,10 +69,13 @@ export function AddToTripSheet({
             void navigate(paths.tripEdit(r.editId));
           };
           if (r.added.length === 0) {
-            toast.info("이미 이 일차에 담긴 장소예요.", { action: { label: "코스 보기", onClick: go } });
+            toast.info("이미 이 일차에 담긴 장소예요.", {
+              action: { label: "코스 보기", onClick: go },
+            });
             return;
           }
-          const dup = r.duplicates.length > 0 ? ` (이미 담긴 ${String(r.duplicates.length)}곳은 뺐어요)` : "";
+          const dup =
+            r.duplicates.length > 0 ? ` (이미 담긴 ${String(r.duplicates.length)}곳은 뺐어요)` : "";
           toast.success(`${String(day + 1)}일차에 ${String(r.added.length)}곳을 담았어요${dup}`, {
             action: { label: "코스 보기", onClick: go },
           });
@@ -123,7 +126,9 @@ export function AddToTripSheet({
             />
           ) : options.length === 0 && !uid ? (
             <div className="bg-background-subtle flex items-center justify-between gap-3 rounded-xl p-4 text-sm">
-              <span className="text-muted-foreground">로그인하면 저장한 여행에도 담을 수 있어요.</span>
+              <span className="text-muted-foreground">
+                로그인하면 저장한 여행에도 담을 수 있어요.
+              </span>
               <Button asChild variant="outline" size="sm" className="bg-background shrink-0">
                 <Link to={paths.login} state={{ from: location.pathname + location.search }}>
                   로그인하기
@@ -151,7 +156,8 @@ export function AddToTripSheet({
                     htmlFor={`target-${key}`}
                     className={cn(
                       "border-border flex cursor-pointer items-center gap-3 rounded-xl border p-3",
-                      key === selectedKey && "border-primary bg-primary-soft text-primary-soft-foreground",
+                      key === selectedKey &&
+                        "border-primary bg-primary-soft text-primary-soft-foreground",
                     )}
                   >
                     <RadioGroupItem id={`target-${key}`} value={key} />
@@ -159,7 +165,11 @@ export function AddToTripSheet({
                       <span className="truncate font-semibold">{o.title}</span>
                       <span className="text-muted-foreground text-sm">
                         {formatPeriodKo(o.startDate, o.endDate)}
-                        {o.target.kind === "draft" ? " · 저장 전" : o.unsaved ? " · 저장하지 않은 변경 있음" : ""}
+                        {o.target.kind === "draft"
+                          ? " · 저장 전"
+                          : o.unsaved
+                            ? " · 저장하지 않은 변경 있음"
+                            : ""}
                       </span>
                     </span>
                   </label>
@@ -174,7 +184,8 @@ export function AddToTripSheet({
             <h3 className="text-sm font-semibold">일차</h3>
             {noDateMatch && requiredDate ? (
               <p className="bg-warning-soft text-warning-soft-foreground rounded-xl p-3 text-sm">
-                이 여행 기간에는 {formatDateShort(requiredDate)} 일차가 없어요. 다른 여행을 고르거나 새 여행으로 시작해 주세요.
+                이 여행 기간에는 {formatDateShort(requiredDate)} 일차가 없어요. 다른 여행을 고르거나
+                새 여행으로 시작해 주세요.
               </p>
             ) : null}
             <ToggleGroup

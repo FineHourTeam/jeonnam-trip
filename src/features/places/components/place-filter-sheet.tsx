@@ -45,7 +45,13 @@ export function PlaceFilterSheet({
           >
             초기화
           </Button>
-          <Button size="xl" className="flex-[1.4]" onClick={() => { onOpenChange(false); }}>
+          <Button
+            size="xl"
+            className="flex-[1.4]"
+            onClick={() => {
+              onOpenChange(false);
+            }}
+          >
             {resultCount}곳 보기
           </Button>
         </div>
@@ -73,7 +79,9 @@ export function PlaceFilterSheet({
               ))}
             </ToggleGroup>
           ) : (
-            <p className="text-muted-foreground text-sm">종류(카페·식당 등)를 먼저 고르면 세부 종류를 고를 수 있어요.</p>
+            <p className="text-muted-foreground text-sm">
+              종류(카페·식당 등)를 먼저 고르면 세부 종류를 고를 수 있어요.
+            </p>
           )}
         </section>
         <section className="flex flex-col gap-2">

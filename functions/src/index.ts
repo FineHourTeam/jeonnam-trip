@@ -7,7 +7,13 @@ const NAVER_SECRET = defineSecret("NAVER_MAP_CLIENT_SECRET");
 const NAVER_ID = defineString("NAVER_MAP_CLIENT_ID");
 
 export const api = onRequest(
-  { region: "asia-northeast3", secrets: [NAVER_SECRET], maxInstances: 10, timeoutSeconds: 30, memory: "256MiB" },
+  {
+    region: "asia-northeast3",
+    secrets: [NAVER_SECRET],
+    maxInstances: 10,
+    timeoutSeconds: 30,
+    memory: "256MiB",
+  },
   async (req, res) => {
     // Hosting rewrite는 /api/directions, 에뮬레이터 직접 호출은 /directions로 들어온다
     if (req.path !== "/api/directions" && req.path !== "/directions") {

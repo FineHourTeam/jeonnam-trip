@@ -6,7 +6,9 @@ const FIRESTORE = "127.0.0.1:18080";
 const PROJECT = "jeonnam-trip";
 
 export default async function globalSetup() {
-  await fetch(`http://${FIRESTORE}/emulator/v1/projects/${PROJECT}/databases/(default)/documents`, { method: "DELETE" });
+  await fetch(`http://${FIRESTORE}/emulator/v1/projects/${PROJECT}/databases/(default)/documents`, {
+    method: "DELETE",
+  });
   await fetch(`http://${AUTH}/emulator/v1/projects/${PROJECT}/accounts`, { method: "DELETE" });
   const env = {
     ...process.env,

@@ -37,15 +37,24 @@ export default function CreatorListPage() {
 
   return (
     <PageBody width="xl" className="gap-5 pt-5 pb-8 md:pt-8">
-      <Seo title="크리에이터 코스" description="크리에이터가 다녀온 전남 코스를 내 여행으로 복사해 날짜에 맞게 고쳐 보세요." />
+      <Seo
+        title="크리에이터 코스"
+        description="크리에이터가 다녀온 전남 코스를 내 여행으로 복사해 날짜에 맞게 고쳐 보세요."
+      />
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-bold tracking-tight">크리에이터 코스</h1>
         <p className="text-muted-foreground text-sm text-pretty">
-          운영팀이 원문과 장소를 확인한 코스예요. 복사하면 내 날짜에 맞춰 영업시간·이동을 다시 검토해요.
+          운영팀이 원문과 장소를 확인한 코스예요. 복사하면 내 날짜에 맞춰 영업시간·이동을 다시
+          검토해요.
         </p>
       </div>
-      <div className="scrollbar-none -mx-4 flex items-center gap-2 overflow-x-auto px-4 md:mx-0 md:px-0">
-        <SigunPickerButton value={sigun} onChange={(v) => { patch("sigun", v); }} />
+      <div className="-mx-4 flex scrollbar-none items-center gap-2 overflow-x-auto px-4 md:mx-0 md:px-0">
+        <SigunPickerButton
+          value={sigun}
+          onChange={(v) => {
+            patch("sigun", v);
+          }}
+        />
         <ToggleGroup
           type="single"
           variant="chip"
@@ -75,7 +84,7 @@ export default function CreatorListPage() {
             patch("tag", v || null);
           }}
           aria-label="태그"
-          className="scrollbar-none -mx-4 w-auto flex-nowrap overflow-x-auto px-4 md:mx-0 md:px-0"
+          className="-mx-4 w-auto scrollbar-none flex-nowrap overflow-x-auto px-4 md:mx-0 md:px-0"
         >
           {tags.map((t) => (
             <ToggleGroupItem key={t} value={t}>
@@ -94,7 +103,13 @@ export default function CreatorListPage() {
           title={`${sigun ? sigunName(sigun) : "전남"}${days ? ` · ${tripLengthLabel(days)}` : ""} 코스가 아직 없어요`}
           action={
             sigun || days || tag ? (
-              <Button variant="outline" size="touch" onClick={() => { setParams(new URLSearchParams(), { replace: true }); }}>
+              <Button
+                variant="outline"
+                size="touch"
+                onClick={() => {
+                  setParams(new URLSearchParams(), { replace: true });
+                }}
+              >
                 조건 초기화
               </Button>
             ) : undefined

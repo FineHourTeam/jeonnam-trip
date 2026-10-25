@@ -34,7 +34,8 @@ export function SaveConflictDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>다른 기기에서 먼저 저장했어요</AlertDialogTitle>
           <AlertDialogDescription>
-            이 코스를 다른 곳에서 고쳐 저장했어요. 최신 코스를 불러오면 이 기기의 변경은 사라지고, 내 변경으로 저장하면 다른 곳의 변경이 사라져요.
+            이 코스를 다른 곳에서 고쳐 저장했어요. 최신 코스를 불러오면 이 기기의 변경은 사라지고,
+            내 변경으로 저장하면 다른 곳의 변경이 사라져요.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="flex-col gap-2 sm:flex-col">

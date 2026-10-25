@@ -12,7 +12,10 @@ describe("safeHref", () => {
 
 describe("validateSnsUrl", () => {
   test("스킴이 없으면 https로 보완하고, 형식·길이를 검사한다", () => {
-    expect(validateSnsUrl("instagram.com/p/abc")).toEqual({ ok: true, href: "https://instagram.com/p/abc" });
+    expect(validateSnsUrl("instagram.com/p/abc")).toEqual({
+      ok: true,
+      href: "https://instagram.com/p/abc",
+    });
     expect(validateSnsUrl("그냥 글자").ok).toBe(false);
     expect(validateSnsUrl(`https://a.com/${"x".repeat(2100)}`).ok).toBe(false);
     expect(validateSnsUrl("   ").ok).toBe(false);

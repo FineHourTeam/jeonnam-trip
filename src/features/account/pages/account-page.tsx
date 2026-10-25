@@ -38,12 +38,19 @@ export default function AccountPage() {
         </div>
       </div>
 
-      <nav className="border-border divide-border flex flex-col divide-y rounded-xl border" aria-label="내 정보">
+      <nav
+        className="border-border divide-border flex flex-col divide-y rounded-xl border"
+        aria-label="내 정보"
+      >
         {[
           { to: paths.myTrips, label: "내 여행", icon: TripIcon },
           { to: paths.library, label: "보관함", icon: BookmarkIcon },
         ].map(({ to, label, icon: Icon }) => (
-          <Link key={to} to={to} className="hover:bg-background-subtle flex h-14 items-center gap-3 px-4">
+          <Link
+            key={to}
+            to={to}
+            className="hover:bg-background-subtle flex h-14 items-center gap-3 px-4"
+          >
             <Icon size="sm" className="text-muted-foreground" />
             <span className="flex-1 font-medium">{label}</span>
             <ChevronRightIcon size="sm" className="text-muted-foreground" />
@@ -69,7 +76,14 @@ export default function AccountPage() {
           <LogoutIcon size="sm" />
           로그아웃
         </Button>
-        <Button variant="ghost" size="touch" className="text-muted-foreground self-center" onClick={() => { setConfirm(true); }}>
+        <Button
+          variant="ghost"
+          size="touch"
+          className="text-muted-foreground self-center"
+          onClick={() => {
+            setConfirm(true);
+          }}
+        >
           계정 삭제
         </Button>
       </div>

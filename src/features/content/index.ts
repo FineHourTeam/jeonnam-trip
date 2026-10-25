@@ -1,5 +1,10 @@
 // 운영 콘텐츠 읽기 공개 API — 탐색·축제·장소·크리에이터·보관함·코스 편집이 함께 쓴다.
-export { ContentNotFoundError, courseFromDoc, festivalFromDoc, placeFromDoc } from "./api/content-api";
+export {
+  ContentNotFoundError,
+  courseFromDoc,
+  festivalFromDoc,
+  placeFromDoc,
+} from "./api/content-api";
 export {
   contentKeys,
   useCreatorCourse,

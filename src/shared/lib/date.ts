@@ -69,7 +69,10 @@ export function monthRange(date: string): { from: string; to: string } {
   const [y = 0, m = 1] = date.split("-").map(Number);
   const from = `${String(y)}-${String(m).padStart(2, "0")}-01`;
   const last = new Date(Date.UTC(y, m, 0)).getUTCDate();
-  return { from, to: `${String(y)}-${String(m).padStart(2, "0")}-${String(last).padStart(2, "0")}` };
+  return {
+    from,
+    to: `${String(y)}-${String(m).padStart(2, "0")}-${String(last).padStart(2, "0")}`,
+  };
 }
 
 /** "10.23 (금)" — 탭·칩처럼 좁은 자리 */

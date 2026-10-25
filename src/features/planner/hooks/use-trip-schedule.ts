@@ -12,7 +12,10 @@ interface Slot {
   request: LegRequest | null;
 }
 
-function legRequest(from: LatLng | null | undefined, to: LatLng | null | undefined): LegRequest | null {
+function legRequest(
+  from: LatLng | null | undefined,
+  to: LatLng | null | undefined,
+): LegRequest | null {
   return from && to ? { from, to } : null;
 }
 
@@ -22,7 +25,11 @@ export function planLegs(days: TripDay[]): Slot[] {
     const n = d.items.length;
     if (n === 0) return;
     if (d.startPoint) {
-      slots.push({ day, into: 0, request: legRequest(d.startPoint.location, d.items[0]?.snapshot.location) });
+      slots.push({
+        day,
+        into: 0,
+        request: legRequest(d.startPoint.location, d.items[0]?.snapshot.location),
+      });
     }
     for (let i = 1; i < n; i++) {
       slots.push({
@@ -32,7 +39,11 @@ export function planLegs(days: TripDay[]): Slot[] {
       });
     }
     if (d.endPoint) {
-      slots.push({ day, into: n, request: legRequest(d.items[n - 1]?.snapshot.location, d.endPoint.location) });
+      slots.push({
+        day,
+        into: n,
+        request: legRequest(d.items[n - 1]?.snapshot.location, d.endPoint.location),
+      });
     }
   });
   return slots;
@@ -59,7 +70,12 @@ export function useTripSchedule(days: TripDay[]) {
       slots.forEach((s, k) => {
         if (s.day !== dayIndex) return;
         const state = legs[k] ?? { status: "pending" as const };
-        legViews[dayIndex]?.push({ into: s.into, state, from: s.request?.from ?? null, to: s.request?.to ?? null });
+        legViews[dayIndex]?.push({
+          into: s.into,
+          state,
+          from: s.request?.from ?? null,
+          to: s.request?.to ?? null,
+        });
         if (s.into >= d.items.length) legToEnd = state;
         else legsBefore[s.into] = state;
       });

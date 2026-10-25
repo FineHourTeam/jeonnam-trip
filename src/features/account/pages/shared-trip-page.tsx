@@ -75,7 +75,11 @@ export default function SharedTripPage() {
           <p>복사하면 내 코스로 따로 저장돼요. 원본이나 공유 중지와 상관없이 남아요.</p>
           <Button size="touch" className="mt-3" disabled={copy.isPending} onClick={onCopy}>
             <CopyIcon size="sm" />
-            {copy.isPending ? "복사하는 중..." : auth.status === "authed" ? "내 코스로 복사하기" : "로그인하고 복사하기"}
+            {copy.isPending
+              ? "복사하는 중..."
+              : auth.status === "authed"
+                ? "내 코스로 복사하기"
+                : "로그인하고 복사하기"}
           </Button>
         </Notice>
         <PublicTripView share={share} />

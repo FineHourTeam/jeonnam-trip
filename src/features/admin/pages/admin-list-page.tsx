@@ -28,7 +28,9 @@ export default function AdminListPage() {
   const [keyword, setKeyword] = useState("");
   const [status, setStatus] = useState<string>("all");
   const list = (q.data ?? []).filter(
-    (c) => (status === "all" || c.status === status) && titleOf(c).replace(/\s/g, "").includes(keyword.replace(/\s/g, "")),
+    (c) =>
+      (status === "all" || c.status === status) &&
+      titleOf(c).replace(/\s/g, "").includes(keyword.replace(/\s/g, "")),
   );
 
   return (
@@ -47,9 +49,25 @@ export default function AdminListPage() {
           <InputGroupAddon>
             <SearchIcon size="sm" />
           </InputGroupAddon>
-          <InputGroupInput placeholder="이름으로 찾기" aria-label="이름 검색" value={keyword} onChange={(e) => { setKeyword(e.target.value); }} />
+          <InputGroupInput
+            placeholder="이름으로 찾기"
+            aria-label="이름 검색"
+            value={keyword}
+            onChange={(e) => {
+              setKeyword(e.target.value);
+            }}
+          />
         </InputGroup>
-        <ToggleGroup type="single" variant="chip" size="chip" value={status} onValueChange={(v) => { if (v) setStatus(v); }} aria-label="공개 상태">
+        <ToggleGroup
+          type="single"
+          variant="chip"
+          size="chip"
+          value={status}
+          onValueChange={(v) => {
+            if (v) setStatus(v);
+          }}
+          aria-label="공개 상태"
+        >
           <ToggleGroupItem value="all">전체</ToggleGroupItem>
           {(Object.keys(STATUS_LABEL) as ContentStatus[]).map((s) => (
             <ToggleGroupItem key={s} value={s}>
@@ -68,14 +86,19 @@ export default function AdminListPage() {
         <ul className="border-border bg-background divide-border divide-y rounded-xl border">
           {list.map((c) => (
             <li key={c.id}>
-              <Link to={paths.adminEdit(k, c.id)} className="hover:bg-background-subtle flex items-center gap-3 px-4 py-3">
+              <Link
+                to={paths.adminEdit(k, c.id)}
+                className="hover:bg-background-subtle flex items-center gap-3 px-4 py-3"
+              >
                 <span className="flex min-w-0 flex-1 flex-col">
                   <span className="truncate font-medium">{titleOf(c)}</span>
                   <span className="text-muted-foreground text-xs">
                     {siguns(c).map(sigunName).join("·")} · {formatDateDot(c.updatedAt)} 수정
                   </span>
                 </span>
-                <Badge variant={c.status === "published" ? "default" : "outline"}>{STATUS_LABEL[c.status]}</Badge>
+                <Badge variant={c.status === "published" ? "default" : "outline"}>
+                  {STATUS_LABEL[c.status]}
+                </Badge>
               </Link>
             </li>
           ))}

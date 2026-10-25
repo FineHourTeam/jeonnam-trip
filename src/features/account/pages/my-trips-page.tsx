@@ -18,14 +18,27 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useCreateTrip, useCurrentUid, useMyTrips, useTripDraftStore, useTripWorkingStore } from "@/features/trips";
+import {
+  useCreateTrip,
+  useCurrentUid,
+  useMyTrips,
+  useTripDraftStore,
+  useTripWorkingStore,
+} from "@/features/trips";
 import { errorMessage } from "@/lib/errors";
 import { sigunName, type Trip } from "@/shared/domain";
 import { diffDays, formatPeriodKo } from "@/shared/lib/date";
 import { formatDateDot, tripLengthLabel } from "@/shared/lib/format";
 import { useDeleteTripAndShare } from "../hooks/use-account";
 
-function TripCardBody({ title, startDate, endDate, siguns, count, footer }: {
+function TripCardBody({
+  title,
+  startDate,
+  endDate,
+  siguns,
+  count,
+  footer,
+}: {
   title: string;
   startDate: string;
   endDate: string;
@@ -57,12 +70,27 @@ export default function MyTripsPage() {
 
   function duplicate(t: Trip) {
     if (!uid) return;
-    const { id: _id, ownerUid: _o, version: _v, createdAt: _c, updatedAt: _u, shareId: _s, ...rest } = copies[t.id]?.trip ?? t;
+    const {
+      id: _id,
+      ownerUid: _o,
+      version: _v,
+      createdAt: _c,
+      updatedAt: _u,
+      shareId: _s,
+      ...rest
+    } = copies[t.id]?.trip ?? t;
     create.mutate(
       { uid, draft: { ...rest, title: `${t.title} 사본` } },
       {
         onSuccess: (n) => {
-          toast.success("코스를 복사했어요.", { action: { label: "열기", onClick: () => { void navigate(paths.tripEdit(n.id)); } } });
+          toast.success("코스를 복사했어요.", {
+            action: {
+              label: "열기",
+              onClick: () => {
+                void navigate(paths.tripEdit(n.id));
+              },
+            },
+          });
         },
         onError: (e) => toast.error(errorMessage(e)),
       },
@@ -83,7 +111,10 @@ export default function MyTripsPage() {
       </div>
 
       {draft ? (
-        <Link to={paths.tripEdit("draft")} className="border-primary bg-primary-soft text-primary-soft-foreground flex items-center gap-3 rounded-xl border p-4">
+        <Link
+          to={paths.tripEdit("draft")}
+          className="border-primary bg-primary-soft text-primary-soft-foreground flex items-center gap-3 rounded-xl border p-4"
+        >
           <TripCardBody
             title={draft.title}
             startDate={draft.startDate}
@@ -123,7 +154,9 @@ export default function MyTripsPage() {
                   count={t.days.reduce((n, d) => n + d.items.length, 0)}
                   footer={
                     <>
-                      <span className="text-muted-foreground text-xs">{formatDateDot(t.updatedAt)} 수정</span>
+                      <span className="text-muted-foreground text-xs">
+                        {formatDateDot(t.updatedAt)} 수정
+                      </span>
                       {t.shareId ? <Badge variant="secondary">공유 중</Badge> : null}
                       {copies[t.id] ? <Badge variant="outline">저장하지 않은 변경</Badge> : null}
                     </>
@@ -132,16 +165,44 @@ export default function MyTripsPage() {
               </Link>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon-touch" aria-label={`${t.title} 더보기`} className="-mt-2 -mr-2">
+                  <Button
+                    variant="ghost"
+                    size="icon-touch"
+                    aria-label={`${t.title} 더보기`}
+                    className="-mt-2 -mr-2"
+                  >
                     <MoreIcon />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onSelect={() => { void navigate(paths.tripEdit(t.id)); }}>열기</DropdownMenuItem>
-                  <DropdownMenuItem onSelect={() => { duplicate(t); }}>복사</DropdownMenuItem>
-                  <DropdownMenuItem onSelect={() => { void navigate(paths.tripShare(t.id)); }}>공유 설정</DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={() => {
+                      void navigate(paths.tripEdit(t.id));
+                    }}
+                  >
+                    열기
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={() => {
+                      duplicate(t);
+                    }}
+                  >
+                    복사
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={() => {
+                      void navigate(paths.tripShare(t.id));
+                    }}
+                  >
+                    공유 설정
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem variant="destructive" onSelect={() => { setDeleting(t); }}>
+                  <DropdownMenuItem
+                    variant="destructive"
+                    onSelect={() => {
+                      setDeleting(t);
+                    }}
+                  >
                     삭제
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -153,7 +214,9 @@ export default function MyTripsPage() {
 
       <ConfirmDialog
         open={deleting !== null}
-        onOpenChange={(v) => { if (!v) setDeleting(null); }}
+        onOpenChange={(v) => {
+          if (!v) setDeleting(null);
+        }}
         title="여행을 삭제할까요?"
         description={
           deleting?.shareId
