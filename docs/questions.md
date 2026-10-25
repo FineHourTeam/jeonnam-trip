@@ -93,3 +93,10 @@
 - 결과: 완료 (추적 파일 109개 형식 정리, lint·typecheck·단위 92·build·스모크 7·E2E 12 통과)
 - 재작업: ✓
 - 일반화 후보: playwright.e2e.config.ts의 에뮬레이터 webServer는 Firestore 포트(18080)만 기다려서, 에뮬레이터가 꺼진 상태로 npm run e2e를 돌리면 global-setup이 인증 에뮬레이터(19099) 연결 거부로 실패한다 — 인증 포트까지 기다리게 한다
+
+### 요청 10
+- 내용: PR #1 Auto-fix — build-and-deploy 실패(GITHUB_TOKEN 체크 생성 403) 수정
+- 카테고리: 배포
+- 결과: 완료 (배포 작업에 checks·pull-requests 쓰기 권한 명시)
+- 재작업: ✓
+- 일반화 후보: 키트의 firebase-hosting-deploy.yml.example에 permissions(contents read, checks·pull-requests write)를 기본으로 넣는다 — 저장소 기본 토큰이 읽기 전용이면 PR preview가 403으로 실패
