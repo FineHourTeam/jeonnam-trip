@@ -86,3 +86,10 @@
 - 재작업: ✓
 - 일반화 후보: 가로 스크롤 칩 줄의 단독 Toggle(size="chip")은 min-w-9 때문에 줄어든다 — shrink-0을 붙인다
 - 일반화 후보: eslint ignores에 .claude/worktrees를 넣는다 (다른 세션 작업 트리까지 검사해 lint가 실패하고 10분 넘게 걸림)
+
+### 요청 9
+- 내용: PR #1 CI Format check 통과를 위해 추적 파일 전체에 prettier --write 적용 (형식만 바꾸는 커밋)
+- 카테고리: 배포/리팩터
+- 결과: 완료 (추적 파일 109개 형식 정리, lint·typecheck·단위 92·build·스모크 7·E2E 12 통과)
+- 재작업: ✓
+- 일반화 후보: playwright.e2e.config.ts의 에뮬레이터 webServer는 Firestore 포트(18080)만 기다려서, 에뮬레이터가 꺼진 상태로 npm run e2e를 돌리면 global-setup이 인증 에뮬레이터(19099) 연결 거부로 실패한다 — 인증 포트까지 기다리게 한다
