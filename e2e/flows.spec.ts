@@ -301,6 +301,37 @@ test("코스 편집: 이미 넣은 곳은 담음으로 보이고, 순서 바꾸�
   await expect(page.getByText("미배치 후보 1곳")).toBeVisible();
 });
 
+test("출발 · 종료 위치를 정하면 첫 이동과 마지막 이동까지 계산하고, 뺄 수 있다", async ({
+  page,
+}) => {
+  await prepare(page);
+  await startDirect(page, "2026. 10. 24.");
+  const sheet = page.getByRole("dialog");
+  await page.getByRole("button", { name: "장소 넣기" }).click();
+  await sheet.getByRole("button", { name: "순천만습지 담기" }).click();
+
+  await page.getByRole("button", { name: /출발 · 종료 위치/ }).click();
+  await sheet.getByRole("button", { name: "출발 위치 고르기" }).click();
+  await sheet.getByRole("searchbox", { name: "출발·종료 위치 검색" }).fill("한옥 숙소");
+  await sheet.getByRole("button", { name: "[샘플] 강변 한옥 숙소 고르기" }).click();
+  await sheet.getByRole("button", { name: "종료 위치를 출발 위치와 같게" }).click();
+  await sheet.getByRole("button", { name: "적용하기" }).click();
+
+  const stay = "[샘플] 강변 한옥 숙소";
+  await expect(page.getByText(`출발 ${stay} · 종료 ${stay}`)).toBeVisible();
+  await expect(page.getByText("09:00 출발")).toBeVisible();
+  const legs = page.locator('[aria-label="이동 구간"]');
+  await expect(legs.filter({ hasText: `${stay}에서` })).toContainText("20분");
+  await expect(legs.filter({ hasText: `${stay}까지` })).toContainText("20분");
+
+  await page.getByRole("button", { name: /종료 \[샘플\] 강변 한옥 숙소 바꾸기/ }).click();
+  await sheet.getByRole("button", { name: "출발 위치 빼기" }).click();
+  await sheet.getByRole("button", { name: "적용하기" }).click();
+  await expect(page.getByText(`출발 없음 · 종료 ${stay}`)).toBeVisible();
+  await expect(legs.filter({ hasText: `${stay}에서` })).toHaveCount(0);
+  await expect(page.getByText("09:00 시작")).toBeVisible();
+});
+
 test("내 여행: 수정일은 한국 날짜로 보이고, 복사·삭제가 목록에 바로 반영된다", async ({ page }) => {
   await prepare(page);
   // 한국 0시 30분 = UTC로는 전날 — 수정일이 하루 밀리지 않아야 한다
