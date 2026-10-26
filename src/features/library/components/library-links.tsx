@@ -94,13 +94,18 @@ export function LibraryLinks() {
                     </span>
                   </div>
                 </div>
-                {names.length > 0 ? (
+                {/* 연결 여부는 저장된 연결로 판단한다 — 장소 이름을 불러오는 동안 "연결 전"으로 보이지 않게 */}
+                {l.linked.length > 0 ? (
                   <div className="flex flex-wrap gap-1.5">
-                    {names.map((n) => (
-                      <Badge key={n} variant="secondary">
-                        {n}
-                      </Badge>
-                    ))}
+                    {names.length > 0 ? (
+                      names.map((n) => (
+                        <Badge key={n} variant="secondary">
+                          {n}
+                        </Badge>
+                      ))
+                    ) : (
+                      <Badge variant="secondary">장소 {l.linked.length}곳</Badge>
+                    )}
                   </div>
                 ) : (
                   <p className="bg-warning-soft text-warning-soft-foreground rounded-lg px-3 py-2 text-sm">
