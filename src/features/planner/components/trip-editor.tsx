@@ -23,6 +23,7 @@ import {
   removeItem,
   removeUnplaced,
   replaceItem,
+  setDayPoints,
   setDayTimes,
   unplaceItem,
   updateItem,
@@ -35,6 +36,7 @@ import {
   useContentChanges,
 } from "./content-changes";
 import { DayPickSheet } from "./day-pick-sheet";
+import { DayPointsSheet } from "./day-points-sheet";
 import { DayTimeline } from "./day-timeline";
 import { PlacePickerSheet } from "./place-picker-sheet";
 import { DayTimesSheet, TripSettingsSheet } from "./trip-settings-sheets";
@@ -67,6 +69,7 @@ export function TripEditor({
   const [placePick, setPlacePick] = useState<number | null>(null);
   const [picker, setPicker] = useState<Picker | null>(null);
   const [dayTimesOpen, setDayTimesOpen] = useState(false);
+  const [pointsOpen, setPointsOpen] = useState(false);
   const [tripOpen, setTripOpen] = useState(false);
   const { schedules, legViews, retryFailed } = useTripSchedule(trip.days);
   const changes = useContentChanges(trip);
@@ -145,12 +148,35 @@ export function TripEditor({
     };
   };
 
-  const located = current.items.map((it, i) => ({
-    id: it.id,
-    label: String(i + 1),
-    name: it.snapshot.name,
-    location: it.snapshot.location,
-  }));
+  // 출발·종료 위치도 지도에 표시한다 (번호 대신 "출"·"끝")
+  const located = [
+    ...(current.startPoint
+      ? [
+          {
+            id: "start",
+            label: "출",
+            name: current.startPoint.label,
+            location: current.startPoint.location,
+          },
+        ]
+      : []),
+    ...current.items.map((it, i) => ({
+      id: it.id,
+      label: String(i + 1),
+      name: it.snapshot.name,
+      location: it.snapshot.location,
+    })),
+    ...(current.endPoint
+      ? [
+          {
+            id: "end",
+            label: "끝",
+            name: current.endPoint.label,
+            location: current.endPoint.location,
+          },
+        ]
+      : []),
+  ];
   const mapLegs: CourseMapLeg[] = (legViews[day] ?? []).flatMap((lv) =>
     lv.from && lv.to
       ? [{ from: lv.from, to: lv.to, path: lv.state.status === "ok" ? lv.state.path : null }]
@@ -232,6 +258,9 @@ export function TripEditor({
             onRetryRoutes={retryFailed}
             onEditTimes={() => {
               setDayTimesOpen(true);
+            }}
+            onEditPoints={() => {
+              setPointsOpen(true);
             }}
             onAddPlace={() => {
               setPicker({ mode: "add", day, tab: "search" });
@@ -398,6 +427,21 @@ export function TripEditor({
           apply((t) => setDayTimes(t, day, s, e));
         }}
       />
+      {pointsOpen ? (
+        <DayPointsSheet
+          day={current}
+          dayIndex={day}
+          siguns={trip.siguns}
+          open
+          onOpenChange={(v) => {
+            if (!v) setPointsOpen(false);
+          }}
+          onSave={(start, end) => {
+            if (apply((t) => setDayPoints(t, day, start, end)))
+              toast.success("출발 · 종료 위치를 바꿨어요. 시간을 다시 계산해요.");
+          }}
+        />
+      ) : null}
       <TripSettingsSheet
         title={trip.title}
         startDate={trip.startDate}

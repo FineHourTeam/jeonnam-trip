@@ -6,6 +6,7 @@ import {
   moveItem,
   moveItemToDay,
   placeUnplaced,
+  setDayPoints,
   unplaceItem,
   updateItem,
 } from "./edit-ops";
@@ -73,5 +74,17 @@ describe("edit ops", () => {
     expect(fixed.days[0]?.items[0]?.fixedStart).toBe("10:00");
     const cleared = updateItem(fixed, 0, "a", { fixedStart: undefined });
     expect("fixedStart" in (cleared.days[0]?.items[0] ?? {})).toBe(false);
+  });
+
+  test("출발·종료 위치는 고른 일차에만 넣고, null이면 뺀다", () => {
+    const stay = { label: "숙소", location: { lat: 34.74, lng: 127.75 } };
+    const set = setDayPoints(trip(), 1, stay, stay);
+    expect(set.days[1]?.startPoint).toEqual(stay);
+    expect(set.days[1]?.endPoint).toEqual(stay);
+    expect(set.days[0]?.startPoint).toBeUndefined();
+    expect(set.days[1]?.items.map((x) => x.id)).toEqual(trip().days[1]?.items.map((x) => x.id));
+    const cleared = setDayPoints(set, 1, null, stay);
+    expect(cleared.days[1]?.startPoint).toBeNull();
+    expect(cleared.days[1]?.endPoint).toEqual(stay);
   });
 });

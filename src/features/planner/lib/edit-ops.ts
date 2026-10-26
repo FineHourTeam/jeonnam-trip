@@ -1,7 +1,13 @@
 // 코스 편집 연산 — 순수 함수. 사용자의 순서·고정 시각은 이 연산이 요청받은 것만 바꾼다 (자동 재배치 없음).
 // 방문 항목 id는 순서·일차가 바뀌어도 유지하고, 장소 교체·삭제 후 재추가는 새 항목이다 (기능명세 §10 식별자 원칙).
 import { dateRange, diffDays } from "@/shared/lib/date";
-import { MAX_TRIP_DAYS, type TripDraft, type VisitItem, type VisitSnapshot } from "@/shared/domain";
+import {
+  MAX_TRIP_DAYS,
+  type TripDraft,
+  type TripPoint,
+  type VisitItem,
+  type VisitSnapshot,
+} from "@/shared/domain";
 
 export type EditableTrip = Pick<
   TripDraft,
@@ -121,6 +127,19 @@ export function setDayTimes<T extends EditableTrip>(
   return {
     ...trip,
     days: trip.days.map((d, i) => (i === dayIndex ? { ...d, startTime, endTime } : d)),
+  };
+}
+
+/** 일차 출발·종료 위치(숙소·역 등) — null이면 뺀다. 다른 일차는 그대로 */
+export function setDayPoints<T extends EditableTrip>(
+  trip: T,
+  dayIndex: number,
+  startPoint: TripPoint | null,
+  endPoint: TripPoint | null,
+): T {
+  return {
+    ...trip,
+    days: trip.days.map((d, i) => (i === dayIndex ? { ...d, startPoint, endPoint } : d)),
   };
 }
 

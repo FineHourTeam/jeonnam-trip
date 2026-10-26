@@ -48,7 +48,7 @@ export function DayTimesSheet({
       open={open}
       onOpenChange={onOpenChange}
       title={`${String(dayIndex + 1)}일차 시간`}
-      description={`${formatDateShort(day.date)} · 첫 장소 도착과 마지막 장소 출발 기준이에요.`}
+      description={`${formatDateShort(day.date)} · ${day.startPoint || day.endPoint ? "출발 위치를 떠나고 종료 위치에 닿는 시각이에요." : "첫 장소 도착과 마지막 장소 출발 기준이에요."}`}
       footer={
         <Button size="xl" onClick={() => void submit()}>
           적용하기

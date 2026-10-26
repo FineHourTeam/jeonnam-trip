@@ -1,5 +1,5 @@
 // 일차 타임라인 — 요약(장소 수·이동 합계·계산 상태·충돌 N건) → 레일 + 구간 행 + 일정 카드 → 장소 넣기 (S10, PLN-09, MAP-04).
-import { AddIcon, BookmarkIcon, SettingsIcon } from "@/components/icons";
+import { AddIcon, BookmarkIcon, PinIcon, SettingsIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { TripDay } from "@/shared/domain";
@@ -80,6 +80,7 @@ export function DayTimeline({
   actionsFor,
   onRetryRoutes,
   onEditTimes,
+  onEditPoints,
   onAddPlace,
   onAddFromLibrary,
 }: {
@@ -91,6 +92,7 @@ export function DayTimeline({
   actionsFor: (itemIndex: number) => VisitActions;
   onRetryRoutes: () => void;
   onEditTimes: () => void;
+  onEditPoints: () => void;
   onAddPlace: () => void;
   onAddFromLibrary: () => void;
 }) {
@@ -99,13 +101,35 @@ export function DayTimeline({
       <DaySummary schedule={schedule} dayCount={day.items.length} />
       <div className="flex items-center justify-between gap-2">
         <p className="text-muted-foreground text-sm">
-          {day.startTime} 시작 · {day.endTime}까지
+          {day.startTime} {day.startPoint ? "출발" : "시작"} · {day.endTime}까지
         </p>
         <Button variant="ghost" size="touch" onClick={onEditTimes}>
           <SettingsIcon size="sm" />
           시간 설정
         </Button>
       </div>
+      <button
+        type="button"
+        onClick={onEditPoints}
+        className="border-border flex items-center gap-3 rounded-xl border border-dashed px-4 py-3 text-left"
+      >
+        <PinIcon size="sm" className="text-muted-foreground shrink-0" />
+        {day.startPoint || day.endPoint ? (
+          <span className="min-w-0 flex-1 truncate text-sm font-medium">
+            출발 {day.startPoint?.label ?? "없음"} · 종료 {day.endPoint?.label ?? "없음"}
+          </span>
+        ) : (
+          <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+            <span className="text-sm font-medium">출발 · 종료 위치</span>
+            <span className="text-muted-foreground text-xs">
+              숙소나 출발역을 넣으면 첫 이동부터 시간을 계산해요
+            </span>
+          </span>
+        )}
+        <span className="text-primary shrink-0 text-sm font-medium">
+          {day.startPoint || day.endPoint ? "바꾸기" : "정하기"}
+        </span>
+      </button>
 
       {day.items.length === 0 ? (
         <div className="bg-background-subtle flex flex-col items-center gap-3 rounded-xl px-4 py-8 text-center">
@@ -128,7 +152,7 @@ export function DayTimeline({
                       leg={leg}
                       bufferMin={s?.bufferBeforeMin ?? 0}
                       onRetry={onRetryRoutes}
-                      label={i === 0 ? "출발 위치에서" : undefined}
+                      label={i === 0 ? `${day.startPoint?.label ?? "출발 위치"}에서` : undefined}
                     />
                   </div>
                 ) : i > 0 ? (
@@ -153,7 +177,7 @@ export function DayTimeline({
                 leg={schedule.legToEnd}
                 bufferMin={0}
                 onRetry={onRetryRoutes}
-                label="종료 위치까지"
+                label={`${day.endPoint?.label ?? "종료 위치"}까지`}
               />
             </div>
           ) : null}
