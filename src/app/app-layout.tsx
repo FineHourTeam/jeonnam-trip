@@ -1,4 +1,4 @@
-// 사용자 앱 셸 — 모바일: 하단 탭(탐색·보관함·내 여행) + "여행 만들기" 주 버튼 / PC: 상단 내비게이션.
+// 사용자 앱 셸 — 모바일: 목록 화면에만 하단 탭(탐색·보관함·내 여행) + "여행 만들기" 주 버튼 / PC: 상단 내비게이션.
 // 서비스기획서 §5 "모바일 기본 메뉴: 탐색·보관함·내 여행, 여행 만들기를 주요 버튼으로".
 // 탐색 홈 맨 위에서는 헤더를 투명하게 두고 사진(HomeHero) 위에 흰 글자로 얹는다 — 스크롤하면 흰 헤더로 돌아온다.
 import { useSyncExternalStore } from "react";
@@ -14,6 +14,17 @@ const NAV = [
   { to: paths.library, label: "보관함", end: false },
   { to: paths.myTrips, label: "내 여행", end: false },
 ] as const;
+
+/** 하단 탭은 목록 화면에만 — 상세·편집·로그인처럼 한 가지 일을 하는 화면에서는 숨긴다 */
+const TAB_PATHS: readonly string[] = [
+  paths.home,
+  paths.festivals,
+  paths.places,
+  paths.creators,
+  paths.library,
+  paths.myTrips,
+  paths.account,
+];
 
 function subscribeScroll(onChange: () => void) {
   window.addEventListener("scroll", onChange, { passive: true });
@@ -36,6 +47,7 @@ export function AppLayout() {
   const location = useLocation();
   const scrolled = useScrolled();
   const overHero = location.pathname === paths.home && !scrolled;
+  const showTabs = TAB_PATHS.includes(location.pathname);
   return (
     <div className="bg-background text-foreground flex min-h-dvh flex-col">
       <header
@@ -105,37 +117,39 @@ export function AppLayout() {
         </div>
       </header>
 
-      <main className="flex-1 pb-20 md:pb-0">
+      <main className={cn("flex-1 md:pb-0", showTabs && "pb-20")}>
         <Outlet />
       </main>
 
-      <nav
-        aria-label="하단 메뉴"
-        className="border-border bg-background pb-safe fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t md:hidden"
-      >
-        {NAV.map((item) => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            end={item.end}
-            className={({ isActive }) =>
-              cn(
-                "flex h-14 items-center justify-center text-sm font-medium",
-                isActive ? "text-primary" : "text-muted-foreground",
-              )
-            }
-          >
-            {item.label}
-          </NavLink>
-        ))}
-        <Link
-          to={paths.tripNew}
-          className="text-primary flex h-14 items-center justify-center gap-1 text-sm font-semibold"
+      {showTabs && (
+        <nav
+          aria-label="하단 메뉴"
+          className="border-border bg-background pb-safe fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t md:hidden"
         >
-          <AddIcon size="sm" />
-          여행 만들기
-        </Link>
-      </nav>
+          {NAV.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.end}
+              className={({ isActive }) =>
+                cn(
+                  "flex h-14 items-center justify-center text-sm font-medium",
+                  isActive ? "text-primary" : "text-muted-foreground",
+                )
+              }
+            >
+              {item.label}
+            </NavLink>
+          ))}
+          <Link
+            to={paths.tripNew}
+            className="text-primary flex h-14 items-center justify-center gap-1 text-sm font-semibold"
+          >
+            <AddIcon size="sm" />
+            여행 만들기
+          </Link>
+        </nav>
+      )}
     </div>
   );
 }
