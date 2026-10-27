@@ -116,11 +116,6 @@ export default function LoginPage() {
           로그인 없이 돌아가기
         </Button>
       </div>
-
-      <p className="text-muted-foreground text-xs">
-        카카오는 닉네임, Google은 이름과 이메일 주소로 로그인해요. 저장한 코스는
-        공유하기 전까지 나만 볼 수 있어요. 로그아웃하면 이 기기에 남은 작성 중 코스도 함께 지워져요.
-      </p>
     </section>
   );
 }
