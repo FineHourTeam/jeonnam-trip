@@ -1,6 +1,7 @@
 // S01 첫 화면 — 전남 명소 사진을 화면 가득 깔고 그 위에 제목·조건 카드를 올린다 (남도여행길잡이 첫 화면 참고).
 // 사진은 6초마다 넘어가고, 점 버튼으로 고르거나 멈춤 버튼으로 세울 수 있다. 움직임 줄이기 설정이면 자동으로 넘기지 않는다.
 // 사진을 불러오는 중이거나 못 불러오면 브랜드색 바탕에 같은 내용을 보여 준다 — 제목·조건은 사진과 상관없이 바로 쓸 수 있다.
+// 홈 맨 위에서는 투명해진 헤더(AppLayout)가 이 구역 위에 겹친다 — 막(scrim)을 늘 깔아 헤더의 흰 글자도 읽히게 한다.
 import { useReducedMotion } from "motion/react";
 import { useEffect, useId, useState, type ReactNode } from "react";
 import { Link } from "react-router";
@@ -44,13 +45,12 @@ export function HomeHero({ labelledBy, children }: HomeHeroProps) {
       className="h-hero bg-primary text-primary-foreground relative flex flex-col overflow-hidden"
     >
       {hasPhotos && <HeroPhotos slides={slides} />}
-      {/* 가운데 글·카드 밖에서는 사진을 밀어 넘길 수 있게 바깥 틀은 포인터를 통과시킨다 */}
       <div
-        className={cn(
-          "pointer-events-none relative mx-auto flex w-full max-w-screen-md flex-1 flex-col justify-center px-4 py-8",
-          hasPhotos && "text-scrim-foreground",
-        )}
-      >
+        aria-hidden
+        className="bg-scrim text-scrim-foreground pointer-events-none absolute inset-0"
+      />
+      {/* 가운데 글·카드 밖에서는 사진을 밀어 넘길 수 있게 바깥 틀은 포인터를 통과시킨다. 위 여백 pt-20 = 겹친 헤더(h-14) + 6 */}
+      <div className="text-scrim-foreground pointer-events-none relative mx-auto flex w-full max-w-screen-md flex-1 flex-col justify-center px-4 pt-20 pb-8">
         <div className="pointer-events-auto flex flex-col gap-6">{children}</div>
       </div>
     </section>
@@ -114,11 +114,6 @@ function HeroPhotos({ slides }: { slides: HeroSlide[] }) {
           ))}
         </CarouselContent>
       </Carousel>
-      <div
-        aria-hidden
-        className="bg-scrim text-scrim-foreground pointer-events-none absolute inset-0"
-      />
-
       <div className="text-scrim-foreground relative order-last mx-auto flex w-full max-w-screen-md flex-col items-start gap-2 px-4 pb-6 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
         {slide && (
           <div

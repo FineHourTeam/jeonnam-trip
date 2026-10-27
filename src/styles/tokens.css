@@ -231,12 +231,12 @@
   padding-bottom: env(safe-area-inset-bottom);
 }
 
-/* 탐색 홈 첫 화면 히어로 높이 — 화면 높이에서 상단 헤더(h-14)를 뺀다. 모바일은 하단 탭(h-14)과 홈 인디케이터도 뺀다.
+/* 탐색 홈 첫 화면 히어로 높이 — 투명 헤더가 위에 겹치므로 화면 높이 전체를 쓴다. 모바일은 하단 탭(h-14)과 홈 인디케이터만 뺀다.
  * 제목·조건 카드가 잘리지 않게 최소 높이를 둔다 (가로로 눕힌 휴대전화 등) */
 @utility h-hero {
   min-height: --spacing(120);
-  height: calc(100svh - --spacing(28) - env(safe-area-inset-bottom));
+  height: calc(100svh - --spacing(14) - env(safe-area-inset-bottom));
   @variant md {
-    height: calc(100svh - --spacing(14));
+    height: 100svh;
   }
 }

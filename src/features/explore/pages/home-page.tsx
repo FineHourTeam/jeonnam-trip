@@ -56,7 +56,7 @@ export default function HomePage() {
   const placesTo = withQuery(paths.places, { sigun });
 
   return (
-    <div className="flex flex-col">
+    <div className="-mt-14 flex flex-col">
       <Seo
         title="전남 여행지 둘러보기"
         description="날짜와 지역을 고르면 그날 열리는 전남 축제와 그 지역 장소·크리에이터 코스를 함께 볼 수 있어요."
