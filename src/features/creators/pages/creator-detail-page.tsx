@@ -1,4 +1,4 @@
-// S08 크리에이터 코스 상세 — 원문 출처·순서 기준·일차별 장소. 복사는 여행 시작(S09)에서 날짜를 받아 개인 초안으로 만든다.
+// S08 크리에이터 코스 상세 — 원문 출처(유튜브면 영상)·순서 기준·일차별 장소. 복사는 여행 시작(S09)에서 날짜를 받아 개인 초안으로 만든다.
 // 순서 기준이 편집자 구성·영상 등장이면 실제 방문 순서로 표현하지 않는다 (기능명세 §5).
 // 코스 지도는 일차 하나씩 번호 마커와 실제 자동차 경로로 보여 준다 (CourseDayMap).
 import { useState } from "react";
@@ -30,6 +30,7 @@ import {
   hoursUnknown,
   sortedDays,
 } from "../lib/course";
+import { youtubeEmbedUrl, youtubeVideoId } from "../lib/youtube";
 
 const ORDER_BASIS_TEXT: Record<CourseOrderBasis, string> = {
   editor_suggested: "편집자가 구성한 순서예요. 실제로 이 순서대로 다녀온 기록은 아니에요.",
@@ -88,6 +89,7 @@ function CourseDetail({ course }: { course: CreatorCourse }) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const channelUrl = safeHttpUrl(course.creator.channelUrl);
   const sourceUrl = safeHttpUrl(course.sourceUrl);
+  const videoId = youtubeVideoId(course.sourceUrl);
 
   return (
     <>
@@ -108,40 +110,55 @@ function CourseDetail({ course }: { course: CreatorCourse }) {
         <p className="text-muted-foreground text-sm">{course.siguns.map(sigunName).join(" · ")}</p>
       </header>
 
-      <div className="bg-background-subtle text-foreground flex flex-col gap-1 rounded-lg p-4 text-sm">
-        <p>
-          출처{" "}
-          {channelUrl ? (
-            <a
-              href={channelUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium underline underline-offset-4"
-            >
-              {course.creator.name}
-            </a>
-          ) : (
-            <span className="font-medium">{course.creator.name}</span>
-          )}
-          {sourceUrl && (
-            <>
-              {" "}
-              ·{" "}
+      <div className="bg-background-subtle text-foreground flex flex-col gap-3 rounded-lg p-4 text-sm">
+        {videoId && (
+          <iframe
+            src={youtubeEmbedUrl(videoId)}
+            title={`${course.creator.name} 영상: ${course.title}`}
+            loading="lazy"
+            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            referrerPolicy="strict-origin-when-cross-origin"
+            className="aspect-video w-full rounded-md"
+          />
+        )}
+        <div className="flex flex-col gap-1">
+          <p>
+            출처{" "}
+            {channelUrl ? (
               <a
-                href={sourceUrl}
+                href={channelUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline underline-offset-4"
+                className="font-medium underline underline-offset-4"
               >
-                원문 보기
+                {course.creator.name}
               </a>
-            </>
+            ) : (
+              <span className="font-medium">{course.creator.name}</span>
+            )}
+            {sourceUrl && (
+              <>
+                {" "}
+                ·{" "}
+                <a
+                  href={sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-4"
+                >
+                  원문 보기
+                </a>
+              </>
+            )}
+          </p>
+          <p className="text-muted-foreground">{ORDER_BASIS_TEXT[course.orderBasis]}</p>
+          {course.reviewedAt && (
+            <p className="text-muted-foreground">
+              운영팀 확인일 {formatDotDate(course.reviewedAt)}
+            </p>
           )}
-        </p>
-        <p className="text-muted-foreground">{ORDER_BASIS_TEXT[course.orderBasis]}</p>
-        {course.reviewedAt && (
-          <p className="text-muted-foreground">운영팀 확인일 {formatDotDate(course.reviewedAt)}</p>
-        )}
+        </div>
       </div>
 
       {course.summary && <p className="leading-relaxed text-pretty">{course.summary}</p>}
