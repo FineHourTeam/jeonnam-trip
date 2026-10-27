@@ -14,7 +14,7 @@
 
 | 항목 | 값 |
 |---|---|
-| 주조색 | `--primary` 황토 갈색(#805117 시드). 주요 버튼·선택 상태·현재 일차에만 쓴다 |
+| 주조색 | `--primary` 목포 색(#00648f). 주요 버튼·선택 상태·현재 일차에만 쓴다 |
 | 배경 | 흰색 `bg-background` 기본, 구역 구분은 `bg-background-subtle`만 |
 | 상태색 | 충돌 = destructive, 확인 필요 = warning, 확정 = success. 색만으로 전달하지 않고 항상 문구를 붙인다 |
 | 서체 | Pretendard(`--font-sans`). 제목 text-lg~xl semibold, 본문 text-sm~base, 보조 text-xs 이상 |
