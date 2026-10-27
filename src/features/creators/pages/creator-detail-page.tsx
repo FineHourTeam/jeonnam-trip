@@ -86,7 +86,6 @@ function LoadError({ notFound, onRetry }: { notFound: boolean; onRetry: () => vo
 function CourseDetail({ course }: { course: CreatorCourse }) {
   const places = useCoursePlaces(course);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const unknownCount = places.data ? Object.values(places.data).filter(hoursUnknown).length : 0;
   const channelUrl = safeHttpUrl(course.creator.channelUrl);
   const sourceUrl = safeHttpUrl(course.sourceUrl);
 
@@ -158,16 +157,6 @@ function CourseDetail({ course }: { course: CreatorCourse }) {
           </Link>
         </Button>
       </div>
-
-      {unknownCount > 0 && (
-        <Alert>
-          <AlertTitle>영업시간이 확인되지 않은 장소가 {unknownCount}곳 있어요</AlertTitle>
-          <AlertDescription>
-            가져가면 코스에서 “영업시간 확인이 필요해요”로 표시돼요. 방문 전에 휴무일과 운영시간을
-            확인해 주세요.
-          </AlertDescription>
-        </Alert>
-      )}
 
       {places.isError ? (
         <div className="flex flex-col items-start gap-3">
