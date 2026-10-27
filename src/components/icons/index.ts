@@ -18,3 +18,5 @@ export { SearchIcon } from "./search-icon";
 export { ChevronLeftIcon } from "./chevron-left-icon";
 export { ChevronUpIcon } from "./chevron-up-icon";
 export { MoreIcon } from "./more-icon";
+export { PauseIcon } from "./pause-icon";
+export { PlayIcon } from "./play-icon";

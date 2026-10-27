@@ -5,7 +5,7 @@
  * 색상 위계 (shadcn/ui 관례, OKLCH):
  *   background/foreground · background-subtle · card · popover · primary · secondary · muted · accent ·
  *   destructive · success · warning · border · input · ring (+ chart-1~5 · sidebar-*: shadcn chart·sidebar용)
- *   용도 토큰: kakao · google(소셜 로그인 버튼 — 각 브랜드 가이드 고정값)
+ *   용도 토큰: kakao · google(소셜 로그인 버튼 — 각 브랜드 가이드 고정값) · scrim(사진 위 글자 막)
  * 새 색: 맞는 위계가 있으면 값 조정, 없으면 용도 토큰(--cta + --cta-foreground) 추가 — 화면에서 hex·arbitrary value 금지 (훅 차단).
  * 모든 색은 :root(라이트)와 .dark(다크) 쌍으로 정의 필수.
  */
@@ -84,6 +84,12 @@
   --google-foreground: #1f1f1f;
   --google-border: #747775;
 
+  /* ── 사진 위 글자 (탐색 홈 히어로) ──
+   * 사진 위에 깔아 흰 글자를 읽히게 하는 반투명 막. 그라디언트 대신 단색 막 하나만 쓴다 (rules.md § 금지 비주얼).
+   * 사진은 테마와 무관하게 같으므로 다크도 같은 값 */
+  --scrim: oklch(0 0 0 / 50%);
+  --scrim-foreground: oklch(0.985 0 0);
+
   /* ── 형태 ── */
   --radius: 0.625rem;
   /* 소셜 로그인 버튼 모서리 — 카카오 가이드 12px 고정(--radius 파생 아님). 두 버튼이 같은 모양을 쓴다 */
@@ -132,6 +138,9 @@
   --google: #131314;
   --google-foreground: #e3e3e3;
   --google-border: #8e918f;
+
+  --scrim: oklch(0 0 0 / 50%);
+  --scrim-foreground: oklch(0.985 0 0);
 }
 
 @theme inline {
@@ -177,6 +186,8 @@
   --color-google: var(--google);
   --color-google-foreground: var(--google-foreground);
   --color-google-border: var(--google-border);
+  --color-scrim: var(--scrim);
+  --color-scrim-foreground: var(--scrim-foreground);
 
   /* 폰트 — 교체는 이 변수 하나. Pretendard Variable은 index.html에서 프리로드 */
   --font-sans:
@@ -218,4 +229,14 @@
 /* iOS 홈 인디케이터 영역 — 하단 고정 내비게이션용 */
 @utility pb-safe {
   padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 탐색 홈 첫 화면 히어로 높이 — 화면 높이에서 상단 헤더(h-14)를 뺀다. 모바일은 하단 탭(h-14)과 홈 인디케이터도 뺀다.
+ * 제목·조건 카드가 잘리지 않게 최소 높이를 둔다 (가로로 눕힌 휴대전화 등) */
+@utility h-hero {
+  min-height: --spacing(120);
+  height: calc(100svh - --spacing(28) - env(safe-area-inset-bottom));
+  @variant md {
+    height: calc(100svh - --spacing(14));
+  }
 }

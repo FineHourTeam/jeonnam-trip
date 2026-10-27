@@ -75,3 +75,5 @@ import { DeleteIcon } from "@/components/icons";
 | `ChevronLeftIcon` | 이전·뒤로 (달력 등) | 2026-10-16 |
 | `ChevronUpIcon` | 접기·위로 (셀렉트 스크롤) | 2026-10-16 |
 | `MoreIcon` | 더보기 메뉴 (카드별 동작) | 2026-10-19 |
+| `PauseIcon` | 자동 넘김 멈춤 (탐색 홈 사진 슬라이드) | 2026-10-27 |
+| `PlayIcon` | 자동 넘김 다시 시작 (탐색 홈 사진 슬라이드) | 2026-10-27 |
