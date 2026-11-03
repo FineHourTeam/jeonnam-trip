@@ -1,1 +1,71 @@
-{}
+{
+  "duration": {
+    "dayTrip": "당일",
+    "nights": "{{count}}박 {{days}}일"
+  },
+  "closedOn": "{{days}} 휴무",
+  "weekdaySeparator": "·",
+  "regionSeparator": " · ",
+  "unplacedReason": "원본 코스 {{day}}일차 장소예요.",
+  "dayLabel": "{{day}}일차",
+  "error": {
+    "notFound": "코스를 찾을 수 없어요."
+  },
+  "card": {
+    "meta": "{{regions}} · 장소 {{count}}곳",
+    "source": "출처 {{name}}"
+  },
+  "filters": {
+    "region": "지역",
+    "allRegions": "전체 지역",
+    "days": "일수",
+    "allDays": "전체 일수",
+    "tags": "태그",
+    "allTags": "전체",
+    "reset": "조건 초기화"
+  },
+  "map": {
+    "title": "코스 지도",
+    "dayPicker": "지도에 볼 일차",
+    "unavailablePlace": "볼 수 없는 장소",
+    "legend": "번호는 목록 순서이고, 선은 그 순서로 이은 자동차 경로예요.",
+    "loadingRoutes": "경로를 불러오고 있어요",
+    "failedLegs": "경로를 불러오지 못한 구간 {{count}}개는 지도에 그리지 않았어요.",
+    "unlocated": "위치를 확인하지 못한 장소 {{count}}곳은 지도에서 빠졌어요."
+  },
+  "list": {
+    "seoTitle": "크리에이터 코스",
+    "seoDescription": "여행 편집자가 구성한 전남 여행 코스를 지역·일수·테마로 찾아보고 내 일정으로 가져오세요.",
+    "title": "크리에이터 코스",
+    "intro": "다른 사람이 구성한 코스를 내 여행 날짜에 맞춰 가져와 고칠 수 있어요.",
+    "count": "코스 {{count}}개",
+    "loadError": "코스 목록을 불러오지 못했어요",
+    "networkHint": "네트워크 연결을 확인한 뒤 다시 시도해 주세요.",
+    "emptyFiltered": "조건에 맞는 코스가 없어요",
+    "empty": "공개된 코스가 아직 없어요",
+    "emptyFilteredHint": "지역이나 일수를 바꿔 다시 찾아보세요."
+  },
+  "detail": {
+    "backToList": "코스 목록",
+    "notFoundTitle": "코스를 찾을 수 없어요",
+    "loadErrorTitle": "코스를 불러오지 못했어요",
+    "notFoundBody": "공개가 끝났거나 주소가 잘못된 코스예요.",
+    "networkHint": "네트워크 연결을 확인한 뒤 다시 시도해 주세요.",
+    "seoDescription": "{{name}}님이 구성한 {{regions}} 여행 코스",
+    "videoTitle": "{{name}} 영상: {{title}}",
+    "source": "출처",
+    "viewOriginal": "원문 보기",
+    "reviewedAt": "운영팀 확인일 {{date}}",
+    "orderBasis": {
+      "editor_suggested": "편집자가 구성한 순서예요. 실제로 이 순서대로 다녀온 기록은 아니에요.",
+      "video_order": "영상에 나온 순서예요. 실제 방문 순서와 다를 수 있어요.",
+      "verified_trip": "크리에이터가 실제로 다녀온 순서예요."
+    },
+    "importHint": "여행 날짜를 고르면 이 코스의 장소와 순서를 내 코스로 가져와요. 가져온 코스는 내 개인 코스라 고쳐도 원본은 바뀌지 않아요.",
+    "import": "내 일정으로 가져오기",
+    "placesError": "장소 정보를 불러오지 못했어요",
+    "unavailablePlace": "지금은 볼 수 없는 장소예요. 가져올 때 빠져요.",
+    "noPhoto": "사진 없음",
+    "hoursUnknown": "영업시간 미확인"
+  }
+}

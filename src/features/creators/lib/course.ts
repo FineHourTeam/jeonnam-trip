@@ -1,5 +1,6 @@
 // 크리에이터 코스 순수 함수 — 목록 필터와 개인 초안 복사(기능명세 §5).
 import { addItemsToDay, visitFromPlace } from "@/features/trips";
+import i18n from "@/lib/i18n";
 import type {
   CreatorCourse,
   LatLng,
@@ -58,7 +59,9 @@ export function courseDayLegs(points: { location: LatLng | null }[]): LegRequest
 }
 
 export function formatDays(n: number): string {
-  return n === 1 ? "당일" : `${String(n - 1)}박 ${String(n)}일`;
+  return n === 1
+    ? i18n.t("duration.dayTrip", { ns: "creators" })
+    : i18n.t("duration.nights", { ns: "creators", count: n - 1, days: n });
 }
 
 export interface CourseFilter {
@@ -85,14 +88,16 @@ export function hoursUnknown(place: Pick<Place, "hours">): boolean {
   return Object.values(place.hours.weekly).every((r) => r === null);
 }
 
-const WEEKDAY_LABEL = ["일", "월", "화", "수", "목", "금", "토"] as const;
-
 /** 정기 휴무 요일 표기 ("월·화 휴무"). 휴무 요일이 없으면 null — 미확인(null)은 휴무로 치지 않는다 */
 export function closedWeekdaysLabel(place: Pick<Place, "hours">): string | null {
-  const closed = WEEKDAY_LABEL.filter(
-    (_, d) => place.hours.weekly[d as keyof Place["hours"]["weekly"]]?.length === 0,
-  );
-  return closed.length > 0 ? `${closed.join("·")} 휴무` : null;
+  // 2023-01-01은 일요일 — 요일 번호 d(0=일)를 지금 언어의 짧은 요일 이름으로
+  const weekday = new Intl.DateTimeFormat(i18n.language, { weekday: "short", timeZone: "UTC" });
+  const closed = [0, 1, 2, 3, 4, 5, 6]
+    .filter((d) => place.hours.weekly[d as keyof Place["hours"]["weekly"]]?.length === 0)
+    .map((d) => weekday.format(Date.UTC(2023, 0, 1 + d)));
+  if (closed.length === 0) return null;
+  const days = closed.join(i18n.t("weekdaySeparator", { ns: "creators" }));
+  return i18n.t("closedOn", { ns: "creators", days });
 }
 
 /**
@@ -127,7 +132,7 @@ export function copyCourseIntoDraft(
     if (dayIndex < trip.days.length) {
       trip = addItemsToDay(trip, dayIndex, items).trip;
     } else {
-      const reason = `원본 코스 ${String(day.day)}일차 장소예요.`;
+      const reason = i18n.t("unplacedReason", { ns: "creators", day: day.day });
       trip = { ...trip, unplaced: [...trip.unplaced, ...items.map((i) => ({ ...i, reason }))] };
     }
   }

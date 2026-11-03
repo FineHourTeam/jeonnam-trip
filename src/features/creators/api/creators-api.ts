@@ -4,11 +4,12 @@
 import { FirebaseError } from "firebase/app";
 import { collection, doc, getDoc, getDocs, limit, orderBy, query, where } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import i18n from "@/lib/i18n";
 import { COL, type CreatorCourse, type Place } from "@/shared/domain";
 
 export class CourseNotFoundError extends Error {
   constructor() {
-    super("코스를 찾을 수 없어요.");
+    super(i18n.t("error.notFound", { ns: "creators" }));
     this.name = "CourseNotFoundError";
   }
 }

@@ -1,4 +1,5 @@
 // S08 크리에이터 코스 목록 — 공개 코스를 한 번 받아 지역·일수·태그로 거른다. 조건은 URL 검색 파라미터에 둔다.
+import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router";
 import { Seo } from "@/components/Seo";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -22,6 +23,7 @@ function readFilter(params: URLSearchParams): CourseFilter {
 }
 
 export default function CreatorListPage() {
+  const { t } = useTranslation("creators");
   const [params, setParams] = useSearchParams();
   const filter = readFilter(params);
   const courses = useCreatorCourses();
@@ -49,21 +51,16 @@ export default function CreatorListPage() {
 
   return (
     <section className="mx-auto flex max-w-screen-md flex-col gap-6 px-4 py-8">
-      <Seo
-        title="크리에이터 코스"
-        description="여행 편집자가 구성한 전남 여행 코스를 지역·일수·테마로 찾아보고 내 일정으로 가져오세요."
-      />
+      <Seo title={t("list.seoTitle")} description={t("list.seoDescription")} />
       <div className="flex flex-col gap-1">
-        <h1 className="text-xl font-semibold text-balance">크리에이터 코스</h1>
-        <p className="text-muted-foreground text-sm">
-          다른 사람이 구성한 코스를 내 여행 날짜에 맞춰 가져와 고칠 수 있어요.
-        </p>
+        <h1 className="text-xl font-semibold text-balance">{t("list.title")}</h1>
+        <p className="text-muted-foreground text-sm">{t("list.intro")}</p>
       </div>
 
       <CourseFilters values={filter} tags={courseTags(all)} onChange={update} onReset={reset} />
 
       <p className="text-sm font-medium" aria-live="polite">
-        {courses.isSuccess && `코스 ${String(results.length)}개`}
+        {courses.isSuccess && t("list.count", { count: results.length })}
       </p>
 
       <ResultList
@@ -98,6 +95,7 @@ function ResultList({
   filtered,
   onReset,
 }: ResultListProps) {
+  const { t } = useTranslation("creators");
   if (isPending) {
     return (
       <div className="grid gap-3 sm:grid-cols-2" aria-busy="true">
@@ -111,24 +109,22 @@ function ResultList({
     return (
       <div className="flex flex-col items-start gap-3">
         <Alert variant="destructive">
-          <AlertTitle>코스 목록을 불러오지 못했어요</AlertTitle>
-          <AlertDescription>네트워크 연결을 확인한 뒤 다시 시도해 주세요.</AlertDescription>
+          <AlertTitle>{t("list.loadError")}</AlertTitle>
+          <AlertDescription>{t("list.networkHint")}</AlertDescription>
         </Alert>
-        <Button onClick={onRetry}>다시 시도</Button>
+        <Button onClick={onRetry}>{t("retry", { ns: "common" })}</Button>
       </div>
     );
   }
   if (results.length === 0) {
     return (
       <div className="bg-background-subtle text-foreground flex flex-col items-center gap-3 rounded-lg px-4 py-10 text-center">
-        <p className="font-medium">
-          {filtered ? "조건에 맞는 코스가 없어요" : "공개된 코스가 아직 없어요"}
-        </p>
+        <p className="font-medium">{filtered ? t("list.emptyFiltered") : t("list.empty")}</p>
         {filtered && (
           <>
-            <p className="text-muted-foreground text-sm">지역이나 일수를 바꿔 다시 찾아보세요.</p>
+            <p className="text-muted-foreground text-sm">{t("list.emptyFilteredHint")}</p>
             <Button variant="outline" onClick={onReset}>
-              조건 초기화
+              {t("filters.reset")}
             </Button>
           </>
         )}

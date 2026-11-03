@@ -2,6 +2,7 @@
 // 순서 기준이 편집자 구성·영상 등장이면 실제 방문 순서로 표현하지 않는다 (기능명세 §5).
 // 코스 지도는 일차 하나씩 번호 마커와 실제 자동차 경로로 보여 준다 (CourseDayMap).
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router";
 import { paths } from "@/app/paths";
 import { ChevronLeftIcon } from "@/components/icons";
@@ -10,13 +11,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  PLACE_CATEGORY_LABEL,
-  sigunName,
-  type CourseOrderBasis,
-  type CreatorCourse,
-  type Place,
-} from "@/shared/domain";
+import type { CreatorCourse, Place } from "@/shared/domain";
 import { cn } from "@/lib/utils";
 import { formatDotDate, safeHttpUrl } from "@/shared/lib/format";
 import { CourseNotFoundError } from "../api/creators-api";
@@ -32,14 +27,9 @@ import {
 } from "../lib/course";
 import { youtubeEmbedUrl, youtubeVideoId } from "../lib/youtube";
 
-const ORDER_BASIS_TEXT: Record<CourseOrderBasis, string> = {
-  editor_suggested: "편집자가 구성한 순서예요. 실제로 이 순서대로 다녀온 기록은 아니에요.",
-  video_order: "영상에 나온 순서예요. 실제 방문 순서와 다를 수 있어요.",
-  verified_trip: "크리에이터가 실제로 다녀온 순서예요.",
-};
-
 export default function CreatorDetailPage() {
   const { courseId } = useParams();
+  const { t } = useTranslation("creators");
   const query = useCreatorCourse(courseId);
 
   return (
@@ -47,7 +37,7 @@ export default function CreatorDetailPage() {
       <Button variant="ghost" size="sm" asChild className="self-start">
         <Link to={paths.creators}>
           <ChevronLeftIcon size="sm" />
-          코스 목록
+          {t("detail.backToList")}
         </Link>
       </Button>
       {query.isPending ? (
@@ -69,33 +59,37 @@ export default function CreatorDetailPage() {
 }
 
 function LoadError({ notFound, onRetry }: { notFound: boolean; onRetry: () => void }) {
+  const { t } = useTranslation("creators");
   return (
     <div className="flex flex-col items-start gap-3">
       <Alert variant="destructive">
-        <AlertTitle>{notFound ? "코스를 찾을 수 없어요" : "코스를 불러오지 못했어요"}</AlertTitle>
+        <AlertTitle>{notFound ? t("detail.notFoundTitle") : t("detail.loadErrorTitle")}</AlertTitle>
         <AlertDescription>
-          {notFound
-            ? "공개가 끝났거나 주소가 잘못된 코스예요."
-            : "네트워크 연결을 확인한 뒤 다시 시도해 주세요."}
+          {notFound ? t("detail.notFoundBody") : t("detail.networkHint")}
         </AlertDescription>
       </Alert>
-      {!notFound && <Button onClick={onRetry}>다시 시도</Button>}
+      {!notFound && <Button onClick={onRetry}>{t("retry", { ns: "common" })}</Button>}
     </div>
   );
 }
 
 function CourseDetail({ course }: { course: CreatorCourse }) {
+  const { t, i18n } = useTranslation("creators");
   const places = useCoursePlaces(course);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const channelUrl = safeHttpUrl(course.creator.channelUrl);
   const sourceUrl = safeHttpUrl(course.sourceUrl);
   const videoId = youtubeVideoId(course.sourceUrl);
+  const sigunNames = course.siguns.map((s) => t(`sigun.${s}`, { ns: "common" }));
 
   return (
     <>
       <Seo
         title={course.title}
-        description={`${course.creator.name}이(가) 구성한 ${course.siguns.map(sigunName).join("·")} 여행 코스`}
+        description={t("detail.seoDescription", {
+          name: course.creator.name,
+          regions: sigunNames.join(t("weekdaySeparator")),
+        })}
       />
       <header className="flex flex-col gap-2">
         <div className="flex flex-wrap gap-1.5">
@@ -107,14 +101,14 @@ function CourseDetail({ course }: { course: CreatorCourse }) {
           ))}
         </div>
         <h1 className="text-xl font-semibold text-balance">{course.title}</h1>
-        <p className="text-muted-foreground text-sm">{course.siguns.map(sigunName).join(" · ")}</p>
+        <p className="text-muted-foreground text-sm">{sigunNames.join(t("regionSeparator"))}</p>
       </header>
 
       <div className="bg-background-subtle text-foreground flex flex-col gap-3 rounded-lg p-4 text-sm">
         {videoId && (
           <iframe
             src={youtubeEmbedUrl(videoId)}
-            title={`${course.creator.name} 영상: ${course.title}`}
+            title={t("detail.videoTitle", { name: course.creator.name, title: course.title })}
             loading="lazy"
             allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
@@ -124,7 +118,7 @@ function CourseDetail({ course }: { course: CreatorCourse }) {
         )}
         <div className="flex flex-col gap-1">
           <p>
-            출처{" "}
+            {t("detail.source")}{" "}
             {channelUrl ? (
               <a
                 href={channelUrl}
@@ -147,15 +141,15 @@ function CourseDetail({ course }: { course: CreatorCourse }) {
                   rel="noopener noreferrer"
                   className="underline underline-offset-4"
                 >
-                  원문 보기
+                  {t("detail.viewOriginal")}
                 </a>
               </>
             )}
           </p>
-          <p className="text-muted-foreground">{ORDER_BASIS_TEXT[course.orderBasis]}</p>
+          <p className="text-muted-foreground">{t(`detail.orderBasis.${course.orderBasis}`)}</p>
           {course.reviewedAt && (
             <p className="text-muted-foreground">
-              운영팀 확인일 {formatDotDate(course.reviewedAt)}
+              {t("detail.reviewedAt", { date: formatDotDate(course.reviewedAt, i18n.language) })}
             </p>
           )}
         </div>
@@ -164,13 +158,10 @@ function CourseDetail({ course }: { course: CreatorCourse }) {
       {course.summary && <p className="leading-relaxed text-pretty">{course.summary}</p>}
 
       <div className="border-border flex flex-col gap-3 rounded-lg border p-4">
-        <p className="text-sm">
-          여행 날짜를 고르면 이 코스의 장소와 순서를 내 코스로 가져와요. 가져온 코스는 내 개인
-          코스라 고쳐도 원본은 바뀌지 않아요.
-        </p>
+        <p className="text-sm">{t("detail.importHint")}</p>
         <Button asChild className="self-start">
           <Link to={`${paths.tripNew}?${new URLSearchParams({ creator: course.id }).toString()}`}>
-            내 일정으로 가져오기
+            {t("detail.import")}
           </Link>
         </Button>
       </div>
@@ -178,10 +169,10 @@ function CourseDetail({ course }: { course: CreatorCourse }) {
       {places.isError ? (
         <div className="flex flex-col items-start gap-3">
           <Alert variant="destructive">
-            <AlertTitle>장소 정보를 불러오지 못했어요</AlertTitle>
-            <AlertDescription>네트워크 연결을 확인한 뒤 다시 시도해 주세요.</AlertDescription>
+            <AlertTitle>{t("detail.placesError")}</AlertTitle>
+            <AlertDescription>{t("detail.networkHint")}</AlertDescription>
           </Alert>
-          <Button onClick={() => void places.refetch()}>다시 시도</Button>
+          <Button onClick={() => void places.refetch()}>{t("retry", { ns: "common" })}</Button>
         </div>
       ) : (
         <>
@@ -197,7 +188,7 @@ function CourseDetail({ course }: { course: CreatorCourse }) {
           )}
           {sortedDays(course.days).map((day) => (
             <section key={day.day} className="flex flex-col gap-3">
-              <h2 className="text-base font-semibold">{day.day}일차</h2>
+              <h2 className="text-base font-semibold">{t("dayLabel", { day: day.day })}</h2>
               <ol className="flex flex-col gap-2">
                 {day.items.map((item, i) => (
                   <li key={courseItemId(day.day, i)}>
@@ -231,11 +222,12 @@ interface PlaceRowProps {
 }
 
 function PlaceRow({ index, place, note, selected }: PlaceRowProps) {
+  const { t } = useTranslation("creators");
   if (!place) {
     return (
       <div className="bg-background-subtle text-muted-foreground flex items-center gap-3 rounded-lg p-3 text-sm">
         <span className="w-5 shrink-0 text-center font-medium">{index}</span>
-        지금은 볼 수 없는 장소예요. 가져올 때 빠져요.
+        {t("detail.unavailablePlace")}
       </div>
     );
   }
@@ -259,17 +251,18 @@ function PlaceRow({ index, place, note, selected }: PlaceRowProps) {
         />
       ) : (
         <div className="bg-background-subtle text-muted-foreground flex size-14 shrink-0 items-center justify-center rounded-md text-xs">
-          사진 없음
+          {t("detail.noPhoto")}
         </div>
       )}
       <div className="flex min-w-0 flex-col gap-1">
         <p className="truncate font-medium">{place.name}</p>
         <p className="text-muted-foreground text-sm">
-          {sigunName(place.sigun)} · {PLACE_CATEGORY_LABEL[place.category]}
+          {t(`sigun.${place.sigun}`, { ns: "common" })} ·{" "}
+          {t(`placeCategory.${place.category}`, { ns: "common" })}
         </p>
         {(hoursUnknown(place) || closed) && (
           <div className="flex flex-wrap gap-1.5">
-            {hoursUnknown(place) && <Badge variant="warning">영업시간 미확인</Badge>}
+            {hoursUnknown(place) && <Badge variant="warning">{t("detail.hoursUnknown")}</Badge>}
             {closed && <Badge variant="outline">{closed}</Badge>}
           </div>
         )}

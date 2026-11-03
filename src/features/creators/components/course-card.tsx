@@ -1,8 +1,9 @@
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { paths } from "@/app/paths";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { sigunName, type CreatorCourse } from "@/shared/domain";
+import type { CreatorCourse } from "@/shared/domain";
 import { courseDayCount, formatDays } from "../lib/course";
 
 interface CourseCardProps {
@@ -13,7 +14,10 @@ interface CourseCardProps {
 
 export function CourseCard({ course, cover }: CourseCardProps) {
   const placeCount = course.days.reduce((n, d) => n + d.items.length, 0);
-  const regions = course.siguns.map(sigunName).join(" · ");
+  const { t } = useTranslation("creators");
+  const regions = course.siguns
+    .map((s) => t(`sigun.${s}`, { ns: "common" }))
+    .join(t("regionSeparator"));
   return (
     <Link
       to={paths.creatorDetail(course.id)}
@@ -46,9 +50,11 @@ export function CourseCard({ course, cover }: CourseCardProps) {
         </div>
         <p className="line-clamp-2 font-medium text-pretty">{course.title}</p>
         <p className="text-muted-foreground text-sm">
-          {regions} · 장소 {placeCount}곳
+          {t("card.meta", { regions, count: placeCount })}
         </p>
-        <p className="text-muted-foreground text-xs">출처 {course.creator.name}</p>
+        <p className="text-muted-foreground text-xs">
+          {t("card.source", { name: course.creator.name })}
+        </p>
       </div>
     </Link>
   );

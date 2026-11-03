@@ -1,1 +1,71 @@
-{}
+{
+  "duration": {
+    "dayTrip": "日帰り",
+    "nights": "{{count}}泊{{days}}日"
+  },
+  "closedOn": "{{days}}定休",
+  "weekdaySeparator": "・",
+  "regionSeparator": "・",
+  "unplacedReason": "元のコースの{{day}}日目の場所です。",
+  "dayLabel": "{{day}}日目",
+  "error": {
+    "notFound": "コースが見つかりません。"
+  },
+  "card": {
+    "meta": "{{regions}}・{{count}}か所",
+    "source": "出典 {{name}}"
+  },
+  "filters": {
+    "region": "地域",
+    "allRegions": "すべての地域",
+    "days": "日数",
+    "allDays": "すべての日数",
+    "tags": "タグ",
+    "allTags": "すべて",
+    "reset": "条件をリセット"
+  },
+  "map": {
+    "title": "コースマップ",
+    "dayPicker": "地図に表示する日",
+    "unavailablePlace": "表示できない場所",
+    "legend": "番号はリストの順番で、線はその順番でつないだ車のルートです。",
+    "loadingRoutes": "ルートを読み込んでいます",
+    "failedLegs": "ルートを読み込めなかった{{count}}区間は地図に表示していません。",
+    "unlocated": "位置を確認できなかった{{count}}か所は地図に表示していません。"
+  },
+  "list": {
+    "seoTitle": "クリエイターコース",
+    "seoDescription": "旅行編集者がまとめた全羅南道の旅行コースを地域・日数・テーマで探して、自分の旅程に取り込めます。",
+    "title": "クリエイターコース",
+    "intro": "ほかの人がまとめたコースを自分の旅行日程に合わせて取り込み、自由に編集できます。",
+    "count": "{{count}}件のコース",
+    "loadError": "コース一覧を読み込めませんでした",
+    "networkHint": "ネットワーク接続を確認して、もう一度お試しください。",
+    "emptyFiltered": "条件に合うコースがありません",
+    "empty": "公開されているコースはまだありません",
+    "emptyFilteredHint": "地域や日数を変えて、もう一度探してみてください。"
+  },
+  "detail": {
+    "backToList": "コース一覧",
+    "notFoundTitle": "コースが見つかりません",
+    "loadErrorTitle": "コースを読み込めませんでした",
+    "notFoundBody": "公開が終了したか、URLが間違っている可能性があります。",
+    "networkHint": "ネットワーク接続を確認して、もう一度お試しください。",
+    "seoDescription": "{{name}}さんがまとめた{{regions}}の旅行コース",
+    "videoTitle": "{{name}}の動画: {{title}}",
+    "source": "出典",
+    "viewOriginal": "元のページを見る",
+    "reviewedAt": "運営チーム確認日 {{date}}",
+    "orderBasis": {
+      "editor_suggested": "編集者が組んだ順番です。実際にこの順番で回った記録ではありません。",
+      "video_order": "動画に登場した順番です。実際の訪問順とは異なる場合があります。",
+      "verified_trip": "クリエイターが実際に回った順番です。"
+    },
+    "importHint": "旅行の日程を選ぶと、このコースの場所と順番を自分のコースに取り込みます。取り込んだコースは自分専用なので、編集しても元のコースは変わりません。",
+    "import": "自分の旅程に取り込む",
+    "placesError": "場所の情報を読み込めませんでした",
+    "unavailablePlace": "現在表示できない場所です。取り込むときは除かれます。",
+    "noPhoto": "写真なし",
+    "hoursUnknown": "営業時間未確認"
+  }
+}
