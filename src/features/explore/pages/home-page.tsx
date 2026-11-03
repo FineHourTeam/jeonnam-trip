@@ -14,6 +14,7 @@ import { formatDateKo, todayKst } from "@/shared/lib/date";
 import { HomeFilters } from "../components/home-filters";
 import { HomeHero } from "../components/home-hero";
 import { HomeSection } from "../components/home-section";
+import { ScheduleDemo } from "../components/schedule-demo";
 import { readHomeFilter, withQuery } from "../lib/home-filter";
 
 /** 구역마다 보여 줄 카드 수 — 나머지는 "전체 보기"에서 */
@@ -61,13 +62,15 @@ export default function HomePage() {
         title="전남 여행지 둘러보기"
         description="날짜와 지역을 고르면 그날 열리는 전남 축제와 그 지역 장소·크리에이터 코스를 함께 볼 수 있어요."
       />
-      <HomeHero labelledBy={titleId}>
+      <HomeHero labelledBy={titleId} aside={<ScheduleDemo />}>
         <div className="flex flex-col gap-2">
           <h1 id={titleId} className="text-3xl font-bold text-balance md:text-5xl">
-            전남 여행지 둘러보기
+            가고 싶은 곳만 골라요.
+            <br />
+            시간은 저희가 맞춰요.
           </h1>
           <p className="text-base text-pretty md:text-lg">
-            지역과 날짜를 고르면 그날 열리는 축제와 그 지역 장소·코스를 모아 보여 줘요.
+            영업시간·휴무·이동시간까지 맞춰 헛걸음 없는 전남 일정을 만들어 드려요.
           </p>
         </div>
         <div className="bg-card text-card-foreground rounded-xl p-4 shadow-lg">
@@ -81,6 +84,7 @@ export default function HomePage() {
       </HomeHero>
 
       <div className="mx-auto flex w-full max-w-screen-md flex-col gap-8 px-4 py-8">
+        <ScheduleDemo className="lg:hidden" />
         <HomeSection
           title={`${dateLabel} 열리는 축제`}
           moreTo={withQuery(paths.festivals, { sigun, date })}
