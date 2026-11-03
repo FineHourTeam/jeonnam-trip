@@ -19,7 +19,7 @@ interface RemoveSavedDialogProps {
 }
 
 export function RemoveSavedDialog({ entry, onClose }: RemoveSavedDialogProps) {
-  const { t } = useTranslation("library");
+  const { t, i18n } = useTranslation("library");
   const { unsave } = useUnsavePlace();
 
   const confirm = () => {
@@ -44,7 +44,7 @@ export function RemoveSavedDialog({ entry, onClose }: RemoveSavedDialogProps) {
                 ? "remove.descriptionCustom"
                 : "remove.description",
               {
-                name: entry ? entryName(entry) : "",
+                name: entry ? entryName(entry, i18n.language) : "",
               },
             )}
           </AlertDialogDescription>

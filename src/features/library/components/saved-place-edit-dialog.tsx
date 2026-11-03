@@ -53,7 +53,7 @@ export function SavedPlaceEditDialog({ entry, onClose }: SavedPlaceEditDialogPro
 }
 
 function EditForm({ entry, onDone }: { entry: LibraryEntry; onDone: () => void }) {
-  const { t } = useTranslation("library");
+  const { t, i18n } = useTranslation("library");
   const update = useUpdateSavedPlace();
   const form = useForm<Values>({
     resolver: zodResolver(schema),
@@ -78,7 +78,9 @@ function EditForm({ entry, onDone }: { entry: LibraryEntry; onDone: () => void }
     <form onSubmit={(e) => void submit(e)} className="flex flex-col gap-4" noValidate>
       <DialogHeader>
         <DialogTitle>{t("edit.title")}</DialogTitle>
-        <DialogDescription>{t("edit.description", { name: entryName(entry) })}</DialogDescription>
+        <DialogDescription>
+          {t("edit.description", { name: entryName(entry, i18n.language) })}
+        </DialogDescription>
       </DialogHeader>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="saved-tags">{t("edit.tags")}</Label>

@@ -4,6 +4,7 @@ import { paths } from "@/app/paths";
 import { Checkbox } from "@/components/ui/checkbox";
 import { subcategoryLabel } from "../lib/place-filter";
 import type { Place } from "@/shared/domain";
+import { placeText } from "@/shared/lib/place-text";
 
 interface PlaceCardProps {
   place: Place;
@@ -15,6 +16,7 @@ interface PlaceCardProps {
 export function PlaceCard({ place, selected = false, onToggle }: PlaceCardProps) {
   const { t, i18n } = useTranslation("places");
   const photo = place.photos[0];
+  const { name } = placeText(place, i18n.language);
   return (
     <div className="border-border bg-card text-card-foreground has-[a:hover]:bg-background-subtle flex items-center gap-3 rounded-lg border p-3">
       <Link
@@ -38,7 +40,7 @@ export function PlaceCard({ place, selected = false, onToggle }: PlaceCardProps)
             {t(`placeCategory.${place.category}`, { ns: "common" })}
             {place.subcategory ? ` · ${subcategoryLabel(place.subcategory, i18n.language)}` : ""}
           </p>
-          <p className="line-clamp-2 font-medium text-pretty">{place.name}</p>
+          <p className="line-clamp-2 font-medium text-pretty">{name}</p>
           <p className="text-muted-foreground text-sm">
             {t(`sigun.${place.sigun}`, { ns: "common" })}
           </p>
@@ -48,7 +50,7 @@ export function PlaceCard({ place, selected = false, onToggle }: PlaceCardProps)
         <Checkbox
           checked={selected}
           onCheckedChange={onToggle}
-          aria-label={t("card.select", { name: place.name })}
+          aria-label={t("card.select", { name })}
           className="size-5"
         />
       )}

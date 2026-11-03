@@ -31,10 +31,10 @@ export function SavedPlaceCard({
   onEdit,
   onRemove,
 }: SavedPlaceCardProps) {
-  const { t } = useTranslation("library");
+  const { t, i18n } = useTranslation("library");
   const { place, custom, saved } = entry;
   const missing = !place && !custom;
-  const name = entryName(entry);
+  const name = entryName(entry, i18n.language);
   const location = place?.location ?? custom?.location ?? null;
   const noHours = place ? hoursUnknown(place.hours) : true;
 

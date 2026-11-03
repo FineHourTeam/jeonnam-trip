@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import type { FieldCheck, Place } from "@/shared/domain";
 import { formatDay } from "@/shared/lib/date";
 import { formatDotDate, safeHttpUrl, telHref } from "@/shared/lib/format";
+import { placeText } from "@/shared/lib/place-text";
 import { formatPlaceRanges, hoursUnknown, weeklyRows } from "../lib/hours";
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
@@ -48,14 +49,15 @@ export function PlaceHours({ place }: { place: Place }) {
 }
 
 export function PlaceBasics({ place }: { place: Place }) {
-  const { t } = useTranslation("places");
+  const { t, i18n } = useTranslation("places");
+  const { address } = placeText(place, i18n.language);
   const factText = (v: boolean | null, yes: string, no: string): string => {
     if (v === null) return t("needsCheck");
     return v ? yes : no;
   };
   const tel = place.phone ? telHref(place.phone) : null;
   const rows: [string, ReactNode][] = [];
-  if (place.address) rows.push([t("info.address"), place.address]);
+  if (address) rows.push([t("info.address"), address]);
   if (place.phone) {
     rows.push([
       t("info.phone"),

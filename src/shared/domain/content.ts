@@ -110,8 +110,22 @@ export interface Place {
     hours: FieldCheck;
     info: FieldCheck;
   };
+  /** 영어·일본어 번역 (scripts/apply-place-translations.mjs가 쓴다) — ko는 번역 당시 원문 */
+  i18n?: PlaceTranslations;
   status: ContentStatus;
   updatedAt: string;
+}
+
+export interface PlaceText {
+  name?: string;
+  summary?: string;
+  address?: string;
+}
+
+export interface PlaceTranslations {
+  ko: PlaceText;
+  en?: PlaceText;
+  ja?: PlaceText;
 }
 
 export interface FestivalProgram {

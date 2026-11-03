@@ -16,6 +16,7 @@ import { PlaceAddToTrip } from "../components/place-add-to-trip";
 import { PlaceBasics, PlaceChecks, PlaceHours } from "../components/place-info";
 import { usePlace } from "../hooks/use-places";
 import { hoursUnknown } from "../lib/hours";
+import { placeText } from "@/shared/lib/place-text";
 import { subcategoryLabel } from "../lib/place-filter";
 
 export default function PlaceDetailPage() {
@@ -71,14 +72,15 @@ function PlaceDetail({ place }: { place: Place }) {
   const category = t(`placeCategory.${place.category}`, { ns: "common" });
   const unverified = Object.values(place.checks).some((c) => c.state !== "verified");
   const noHours = hoursUnknown(place.hours);
+  const { name, summary } = placeText(place, i18n.language);
   return (
     <>
       <Seo
-        title={place.name}
-        description={place.summary?.slice(0, 120) ?? t("detail.seoFallback", { sigun, category })}
+        title={name}
+        description={summary?.slice(0, 120) ?? t("detail.seoFallback", { sigun, category })}
         image={place.photos[0]}
       />
-      <Photos place={place} />
+      <Photos place={place} name={name} />
 
       <header className="flex flex-col gap-2">
         <div className="flex flex-wrap gap-2">
@@ -88,7 +90,7 @@ function PlaceDetail({ place }: { place: Place }) {
           )}
           {unverified && <Badge variant="outline">{t("detail.unverified")}</Badge>}
         </div>
-        <h1 className="text-xl font-semibold text-balance">{place.name}</h1>
+        <h1 className="text-xl font-semibold text-balance">{name}</h1>
         <p className="text-muted-foreground text-sm">
           {sigun}
           {place.area ? ` · ${place.area}` : ""}
@@ -96,9 +98,7 @@ function PlaceDetail({ place }: { place: Place }) {
         <PlaceSaveAction placeId={place.id} />
       </header>
 
-      {place.summary && (
-        <p className="leading-relaxed text-pretty whitespace-pre-line">{place.summary}</p>
-      )}
+      {summary && <p className="leading-relaxed text-pretty whitespace-pre-line">{summary}</p>}
 
       <div className="border-border flex flex-col gap-3 rounded-lg border p-4">
         <PlaceAddToTrip places={[place]} />
@@ -116,7 +116,7 @@ function PlaceDetail({ place }: { place: Place }) {
         {place.location ? (
           <CourseMap
             className="aspect-video w-full"
-            points={[{ id: place.id, label: place.name, order: 1, location: place.location }]}
+            points={[{ id: place.id, label: name, order: 1, location: place.location }]}
             paths={[]}
           />
         ) : (
@@ -129,7 +129,7 @@ function PlaceDetail({ place }: { place: Place }) {
   );
 }
 
-function Photos({ place }: { place: Place }) {
+function Photos({ place, name }: { place: Place; name: string }) {
   const { t } = useTranslation("places");
   if (place.photos.length === 0) {
     return (
@@ -144,7 +144,7 @@ function Photos({ place }: { place: Place }) {
         <img
           key={src}
           src={src}
-          alt={t("detail.photoAlt", { name: place.name, n: i + 1 })}
+          alt={t("detail.photoAlt", { name, n: i + 1 })}
           loading={i === 0 ? "eager" : "lazy"}
           className="aspect-video w-full shrink-0 snap-start rounded-lg object-cover"
         />

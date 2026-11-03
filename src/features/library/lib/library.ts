@@ -2,6 +2,7 @@
 // 필터는 지역·종류·분위기 서로 AND, 같은 묶음 안 복수 선택은 OR (기능명세 §3).
 import i18n from "@/lib/i18n";
 import { safeHttpUrl } from "@/shared/lib/format";
+import { placeText } from "@/shared/lib/place-text";
 import type {
   CustomPlace,
   LatLng,
@@ -133,8 +134,13 @@ export function linksWithoutSavedPlace(links: SnsLink[], saved: SavedPlace[]): S
   return links.filter((l) => !l.linked.some((r) => savedKeys.has(refKey(r))));
 }
 
-export function entryName(entry: LibraryEntry): string {
-  return entry.place?.name ?? entry.custom?.name ?? i18n.t("unknownPlace", { ns: "library" });
+/** 보관한 장소 이름 — 공통 장소는 화면 언어 번역(있으면), 개인 장소는 입력한 그대로 */
+export function entryName(entry: LibraryEntry, lng: string): string {
+  return (
+    (entry.place && placeText(entry.place, lng).name) ??
+    entry.custom?.name ??
+    i18n.t("unknownPlace", { ns: "library" })
+  );
 }
 
 export interface LibraryFilter {
