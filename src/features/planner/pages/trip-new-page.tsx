@@ -143,7 +143,8 @@ export default function TripNewPage() {
           skipped.length > 0 ? `가져오지 못한 장소가 있어요 (${skipped.join(", ")}).` : undefined,
       };
     }
-    if (creatorId) return { draft: blankDraft(), notice: "찾을 수 없는 코스라 빈 코스로 시작해요." };
+    if (creatorId)
+      return { draft: blankDraft(), notice: "찾을 수 없는 코스라 빈 코스로 시작해요." };
     if (pickedPlaces.data && pickedPlaces.data.length > 0) {
       return { draft: addItemsToDay(blankDraft(), 0, pickedPlaces.data.map(visitFromPlace)).trip };
     }
