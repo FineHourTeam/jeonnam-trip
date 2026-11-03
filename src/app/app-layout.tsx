@@ -61,9 +61,15 @@ export function AppLayout() {
         <div className="mx-auto flex h-full max-w-screen-xl items-center gap-6 px-4">
           <Link
             to={paths.home}
-            className={cn("text-lg font-bold", overHero ? "text-scrim-foreground" : "text-primary")}
+            className={cn(
+              "flex items-center gap-2 text-lg font-bold",
+              overHero ? "text-scrim-foreground" : "text-foreground",
+            )}
           >
-            머물전남.
+            <img src="/logo-mark.png" alt="" className="size-8" />
+            <span>
+              머물전남<span className="text-point">.</span>
+            </span>
           </Link>
           <nav aria-label="주 메뉴" className="hidden gap-1 md:flex">
             {NAV.map((item) => (

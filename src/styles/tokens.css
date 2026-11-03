@@ -24,8 +24,12 @@
    * 기본값은 의도적 무채색 플레이스홀더 — 설치 H단계에서 반드시 브랜드색으로 치환한다
    * (소스 "없음"이어도 브랜드색 질문 필수). 보라·인디고·기본 블루를 기본값으로 두면
    * 모든 프로젝트가 "AI가 만든 티"가 나는 색으로 시작한다 (rules.md § 팔레트 정량 상한). */
-  --primary: oklch(0.477 0.104 236.7); /* #00648f 목포 색 — 브랜드색 (2026-10-27 확정) */
+  /* 로고(머물전남.png) 파랑 #306ff5에서 명도만 낮춘 #2a64e0 — 흰 글자 대비 5.25:1로 AA를 맞춘다 (2026-11-03) */
+  --primary: oklch(0.541 0.199 262.8);
   --primary-foreground: oklch(0.985 0 0);
+  /* 로고의 주황 반짝임 #ef9d49 — 워드마크 마침표 등 작은 포인트만. 흰 글자와 대비가 낮아 글자 배경으로 쓰지 않는다 */
+  --point: oklch(0.763 0.139 63.5);
+  --point-foreground: oklch(0.205 0 0);
 
   /* ── 표면 ──
    * 페이지·섹션 배경은 흰색이 기본. 회색 배경이 필요하면 background-subtle(#f9f9f9)만 쓴다 —
@@ -97,8 +101,10 @@
 }
 
 .dark {
-  --primary: oklch(0.74 0.1 236.7);
+  --primary: oklch(0.72 0.14 262.8);
   --primary-foreground: oklch(0.205 0 0);
+  --point: oklch(0.8 0.13 63.5);
+  --point-foreground: oklch(0.205 0 0);
 
   --background: oklch(0.145 0 0);
   --background-subtle: oklch(0.18 0 0);
@@ -153,6 +159,8 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-point: var(--point);
+  --color-point-foreground: var(--point-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
