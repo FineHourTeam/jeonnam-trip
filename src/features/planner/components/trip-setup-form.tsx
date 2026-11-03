@@ -3,29 +3,36 @@
 import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import i18n from "@/lib/i18n";
 import { MAX_TRIP_DAYS, SIGUNS, isSigunCode, type SigunCode, type TripPace } from "@/shared/domain";
 import { addDays, diffDays, todayKst } from "@/shared/lib/date";
 
+// 검증 메시지는 검사하는 순간의 언어로 (error 콜백)
+const msg = (key: "errorTitleMax" | "errorStart" | "errorEnd" | "errorOrder") => ({
+  error: () => i18n.t(`setup.${key}`, { ns: "planner" }),
+});
+
 const schema = z
   .object({
-    title: z.string().trim().max(40, "제목은 40자까지 쓸 수 있어요."),
-    startDate: z.string().min(1, "시작일을 골라 주세요."),
-    endDate: z.string().min(1, "종료일을 골라 주세요."),
+    title: z.string().trim().max(40, msg("errorTitleMax")),
+    startDate: z.string().min(1, msg("errorStart")),
+    endDate: z.string().min(1, msg("errorEnd")),
     siguns: z.array(z.string()),
     pace: z.enum(["relaxed", "packed", "none"]),
   })
   .refine((v) => v.endDate >= v.startDate, {
     path: ["endDate"],
-    message: "종료일은 시작일과 같거나 그 뒤여야 해요.",
+    ...msg("errorOrder"),
   })
   .refine((v) => diffDays(v.startDate, v.endDate) < MAX_TRIP_DAYS, {
     path: ["endDate"],
-    message: `여행 기간은 최대 ${String(MAX_TRIP_DAYS)}일까지 만들 수 있어요.`,
+    error: () => i18n.t("setup.errorMaxDays", { ns: "planner", max: MAX_TRIP_DAYS }),
   });
 
 type FormValues = z.infer<typeof schema>;
@@ -49,6 +56,7 @@ export function TripSetupForm({
   /** 크리에이터 코스에서 왔을 때 코스 일수 — 종료일을 아직 고치지 않았으면 이 일수에 맞춘다 */
   defaultDays?: number;
 }) {
+  const { t } = useTranslation("planner");
   const today = todayKst();
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -71,7 +79,7 @@ export function TripSetupForm({
 
   const submit = form.handleSubmit((v) => {
     onSubmit({
-      title: v.title || "새 여행",
+      title: v.title || t("setup.defaultTitle"),
       startDate: v.startDate,
       endDate: v.endDate,
       siguns: v.siguns.filter(isSigunCode),
@@ -82,27 +90,29 @@ export function TripSetupForm({
   return (
     <form onSubmit={(e) => void submit(e)} className="flex flex-col gap-8" noValidate>
       <div className="flex flex-col gap-2">
-        <Label htmlFor="trip-title">여행 제목 (선택)</Label>
-        <Input id="trip-title" placeholder="새 여행" {...form.register("title")} />
+        <Label htmlFor="trip-title">{t("setup.titleLabel")}</Label>
+        <Input id="trip-title" placeholder={t("setup.defaultTitle")} {...form.register("title")} />
         {errors.title && <p className="text-destructive text-sm">{errors.title.message}</p>}
       </div>
 
       <fieldset className="flex flex-col gap-2">
-        <legend className="mb-2 text-sm font-medium">여행 날짜</legend>
+        <legend className="mb-2 text-sm font-medium">{t("setup.dates")}</legend>
         <div className="flex flex-wrap items-center gap-2">
           <Label htmlFor="trip-start" className="sr-only">
-            시작일
+            {t("setup.startDate")}
           </Label>
           <Input id="trip-start" type="date" className="w-auto" {...form.register("startDate")} />
-          <span className="text-muted-foreground text-sm">부터</span>
+          <span className="text-muted-foreground text-sm">{t("setup.from")}</span>
           <Label htmlFor="trip-end" className="sr-only">
-            종료일
+            {t("setup.endDate")}
           </Label>
           <Input id="trip-end" type="date" className="w-auto" {...form.register("endDate")} />
-          <span className="text-muted-foreground text-sm">까지</span>
+          {t("setup.until") && (
+            <span className="text-muted-foreground text-sm">{t("setup.until")}</span>
+          )}
         </div>
         <p className="text-muted-foreground text-sm">
-          당일부터 최대 {MAX_TRIP_DAYS}일까지 만들 수 있어요.
+          {t("setup.datesHelp", { max: MAX_TRIP_DAYS })}
         </p>
         {(errors.startDate ?? errors.endDate) && (
           <p className="text-destructive text-sm">
@@ -112,7 +122,7 @@ export function TripSetupForm({
       </fieldset>
 
       <fieldset className="flex flex-col gap-2">
-        <legend className="mb-2 text-sm font-medium">지역 (선택, 여러 곳 가능)</legend>
+        <legend className="mb-2 text-sm font-medium">{t("setup.regions")}</legend>
         <Controller
           control={form.control}
           name="siguns"
@@ -123,11 +133,11 @@ export function TripSetupForm({
               value={field.value}
               onValueChange={field.onChange}
               className="flex flex-wrap justify-start gap-2"
-              aria-label="여행 지역"
+              aria-label={t("setup.regionsLabel")}
             >
               {SIGUNS.map((s) => (
                 <ToggleGroupItem key={s.code} value={s.code}>
-                  {s.name}
+                  {t(`sigun.${s.code}`, { ns: "common" })}
                 </ToggleGroupItem>
               ))}
             </ToggleGroup>
@@ -136,7 +146,7 @@ export function TripSetupForm({
       </fieldset>
 
       <fieldset className="flex flex-col gap-2">
-        <legend className="mb-2 text-sm font-medium">여행 속도</legend>
+        <legend className="mb-2 text-sm font-medium">{t("setup.pace")}</legend>
         <Controller
           control={form.control}
           name="pace"
@@ -149,25 +159,23 @@ export function TripSetupForm({
                 if (v) field.onChange(v);
               }}
               className="justify-start"
-              aria-label="여행 속도"
+              aria-label={t("setup.pace")}
             >
-              <ToggleGroupItem value="relaxed">여유롭게</ToggleGroupItem>
-              <ToggleGroupItem value="packed">알차게</ToggleGroupItem>
-              <ToggleGroupItem value="none">정하지 않음</ToggleGroupItem>
+              <ToggleGroupItem value="relaxed">{t("setup.paceRelaxed")}</ToggleGroupItem>
+              <ToggleGroupItem value="packed">{t("setup.pacePacked")}</ToggleGroupItem>
+              <ToggleGroupItem value="none">{t("setup.paceNone")}</ToggleGroupItem>
             </ToggleGroup>
           )}
         />
       </fieldset>
 
       <div className="flex flex-col gap-1">
-        <p className="text-sm font-medium">이동수단</p>
-        <p className="text-muted-foreground text-sm">
-          자동차 기준으로 실제 경로의 예상 이동시간을 계산해요.
-        </p>
+        <p className="text-sm font-medium">{t("setup.transport")}</p>
+        <p className="text-muted-foreground text-sm">{t("setup.transportHelp")}</p>
       </div>
 
       <Button type="submit" size="lg" disabled={form.formState.isSubmitting}>
-        코스 만들기
+        {t("setup.submit")}
       </Button>
     </form>
   );

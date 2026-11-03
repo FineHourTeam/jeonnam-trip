@@ -1,4 +1,5 @@
 // 미배치 후보 — 일정에 넣지 못한 장소와 이유. 사용자가 고른 일차에만 넣는다.
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -7,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { TripDraft } from "@/shared/domain";
-import { formatDateKo } from "@/shared/lib/date";
+import { formatDay } from "@/shared/lib/date";
 
 interface UnplacedListProps {
   trip: TripDraft;
@@ -15,11 +16,12 @@ interface UnplacedListProps {
 }
 
 export function UnplacedList({ trip, onPlace }: UnplacedListProps) {
+  const { t, i18n } = useTranslation("planner");
   if (trip.unplaced.length === 0) return null;
   return (
     <section className="flex flex-col gap-3" aria-labelledby="unplaced-title">
       <h2 id="unplaced-title" className="font-semibold">
-        미배치 후보 {trip.unplaced.length}곳
+        {t("unplaced.title", { count: trip.unplaced.length })}
       </h2>
       <ul className="flex flex-col gap-2">
         {trip.unplaced.map((item) => (
@@ -34,7 +36,7 @@ export function UnplacedList({ trip, onPlace }: UnplacedListProps) {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm">
-                  일차에 넣기
+                  {t("unplaced.place")}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -45,7 +47,7 @@ export function UnplacedList({ trip, onPlace }: UnplacedListProps) {
                       onPlace(item.id, i);
                     }}
                   >
-                    {i + 1}일차 · {formatDateKo(d.date)}
+                    {t("dayWithDate", { day: i + 1, date: formatDay(d.date, i18n.language) })}
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>

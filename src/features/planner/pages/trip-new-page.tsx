@@ -5,6 +5,7 @@
 // ?places=id1,id2로 오면 장소 목록·상세에서 고른 장소를 첫째 날에 담아 시작한다 (기능명세 §3).
 // 여러 개가 함께 오면 축제 → 크리에이터 코스 → 고른 장소 순으로 하나만 쓴다.
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useNavigate, useSearchParams } from "react-router";
 import { toast } from "sonner";
 import { paths } from "@/app/paths";
@@ -37,8 +38,9 @@ import {
   visitFromFestival,
   visitFromPlace,
 } from "@/features/trips";
+import i18n from "@/lib/i18n";
 import { MAX_TRIP_DAYS, type CreatorCourse, type Festival, type TripDraft } from "@/shared/domain";
-import { formatDateKo } from "@/shared/lib/date";
+import { formatDay } from "@/shared/lib/date";
 import { TripSetupForm, type TripSetupValues } from "../components/trip-setup-form";
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
@@ -50,11 +52,13 @@ function withFestival(draft: TripDraft, festival: Festival, date: string, progra
   if (dayIndex >= 0) return addItemsToDay(draft, dayIndex, [item]).trip;
   return {
     ...draft,
-    unplaced: [...draft.unplaced, { ...item, reason: "방문일이 여행 기간 밖이에요." }],
+    // 이유 문구는 초안에 저장되므로 만든 시점의 언어로 남는다
+    unplaced: [...draft.unplaced, { ...item, reason: i18n.t("new.outOfRange", { ns: "planner" }) }],
   };
 }
 
 export default function TripNewPage() {
+  const { t } = useTranslation("planner");
   const navigate = useNavigate();
   const existing = useTripDraftStore((s) => s.draft);
   const setDraft = useTripDraftStore((s) => s.setDraft);
@@ -86,7 +90,7 @@ export default function TripNewPage() {
     let notice: string | undefined;
     if (festivalId) {
       if (!festival.data) {
-        toast("축제 정보를 불러온 뒤 다시 눌러 주세요.");
+        toast(t("new.waitFestival"));
         return;
       }
       draft = newTripDraft({ ...v, origin: { kind: "festival", festivalId } });
@@ -96,7 +100,7 @@ export default function TripNewPage() {
       }
     } else if (creatorId && !courseNotFound) {
       if (!course.data || !coursePlaces.data) {
-        toast("코스 정보를 불러온 뒤 다시 눌러 주세요.");
+        toast(t("new.waitCourse"));
         return;
       }
       const base = newTripDraft({
@@ -110,14 +114,16 @@ export default function TripNewPage() {
         coursePlaces.data,
       );
       const skipped = [
-        missing > 0 && `지금은 볼 수 없는 장소 ${String(missing)}곳`,
-        duplicates > 0 && `같은 일차에 겹친 장소 ${String(duplicates)}곳`,
+        missing > 0 && t("new.skippedMissing", { count: missing }),
+        duplicates > 0 && t("new.skippedDuplicates", { count: duplicates }),
       ].filter(Boolean);
-      if (skipped.length > 0) notice = `가져오지 못한 장소가 있어요 (${skipped.join(", ")}).`;
+      if (skipped.length > 0) {
+        notice = t("new.skippedNotice", { list: skipped.join(t("listSeparator")) });
+      }
       draft = trip;
     } else if (placeIds.length > 0) {
       if (!pickedPlaces.data) {
-        toast("장소 정보를 불러온 뒤 다시 눌러 주세요.");
+        toast(t("new.waitPlaces"));
         return;
       }
       const blank = newTripDraft({ ...v, origin: { kind: "blank" } });
@@ -133,10 +139,8 @@ export default function TripNewPage() {
   return (
     <section className="mx-auto flex max-w-screen-md flex-col gap-6 px-4 py-8">
       <div className="flex flex-col gap-1">
-        <h1 className="text-xl font-semibold text-balance">여행 만들기</h1>
-        <p className="text-muted-foreground text-sm">
-          날짜를 정하고 코스에 장소를 담으면 이동시간과 영업시간을 함께 계산해요.
-        </p>
+        <h1 className="text-xl font-semibold text-balance">{t("new.title")}</h1>
+        <p className="text-muted-foreground text-sm">{t("new.intro")}</p>
       </div>
 
       {festivalId && (
@@ -165,16 +169,16 @@ export default function TripNewPage() {
             <Skeleton className="h-5 w-2/3" />
           ) : pickedPlaces.isError ? (
             <>
-              <p>고른 장소를 불러오지 못했어요.</p>
+              <p>{t("new.pickedError")}</p>
               <Button variant="outline" size="sm" onClick={() => void pickedPlaces.refetch()}>
-                다시 시도
+                {t("retry", { ns: "common" })}
               </Button>
             </>
           ) : (
             <p>
               {pickedPlaces.data.length > 0
-                ? `고른 장소 ${String(pickedPlaces.data.length)}곳을 첫째 날에 담아 시작해요.`
-                : "고른 장소가 공개가 끝나 담을 수 없어요."}
+                ? t("new.pickedReady", { count: pickedPlaces.data.length })
+                : t("new.pickedNone")}
             </p>
           )}
         </div>
@@ -190,10 +194,9 @@ export default function TripNewPage() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>저장하지 않은 코스가 있어요</AlertDialogTitle>
+            <AlertDialogTitle>{t("new.overwriteTitle")}</AlertDialogTitle>
             <AlertDialogDescription>
-              「{existing?.title}」 코스를 아직 저장하지 않았어요. 새로 만들면 작성 중이던 내용은
-              사라져요.
+              {t("new.overwriteBody", { title: existing?.title ?? "" })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -202,14 +205,14 @@ export default function TripNewPage() {
                 void navigate(paths.tripDraft);
               }}
             >
-              작성 중인 코스 열기
+              {t("new.openDraft")}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 if (pending) start(pending.draft, pending.notice);
               }}
             >
-              새로 만들기
+              {t("new.startNew")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -227,13 +230,14 @@ interface FestivalBannerProps {
 }
 
 function FestivalBanner({ festival, isPending, isError, onRetry, visitDate }: FestivalBannerProps) {
+  const { t, i18n } = useTranslation("planner");
   if (isPending) return <Skeleton className="h-16 w-full rounded-lg" />;
   if (isError || !festival) {
     return (
       <div className="bg-background-subtle text-foreground flex flex-wrap items-center justify-between gap-3 rounded-lg p-4 text-sm">
-        <p>축제 정보를 불러오지 못했어요.</p>
+        <p>{t("new.festivalError")}</p>
         <Button variant="outline" size="sm" onClick={onRetry}>
-          다시 시도
+          {t("retry", { ns: "common" })}
         </Button>
       </div>
     );
@@ -243,10 +247,10 @@ function FestivalBanner({ festival, isPending, isError, onRetry, visitDate }: Fe
       <p className="font-medium">{festival.name}</p>
       <p className="text-muted-foreground">
         {festival.state === "cancelled"
-          ? "취소된 축제라 코스에 담지 않아요."
+          ? t("new.festivalCancelled")
           : visitDate
-            ? `${formatDateKo(visitDate)} 방문을 그날 일차에 담아요. 방문일이 여행 기간 밖이면 미배치 후보로 들어가요.`
-            : "방문일이 정해지지 않아 축제를 담지 않아요. 축제 상세에서 방문일을 골라 주세요."}
+            ? t("new.festivalWithDate", { date: formatDay(visitDate, i18n.language) })
+            : t("new.festivalNoDate")}
       </p>
     </div>
   );
@@ -261,17 +265,16 @@ interface CreatorBannerProps {
 }
 
 function CreatorBanner({ course, isPending, isError, notFound, onRetry }: CreatorBannerProps) {
+  const { t } = useTranslation("planner");
   if (notFound) {
     return (
       <div className="bg-background-subtle text-foreground flex flex-wrap items-center justify-between gap-3 rounded-lg p-4 text-sm">
         <div className="flex flex-col gap-1">
-          <p className="font-medium">찾을 수 없는 코스예요</p>
-          <p className="text-muted-foreground">
-            공개가 끝났거나 주소가 잘못됐어요. 아래에서 빈 코스로 시작할 수 있어요.
-          </p>
+          <p className="font-medium">{t("new.courseNotFoundTitle")}</p>
+          <p className="text-muted-foreground">{t("new.courseNotFoundBody")}</p>
         </div>
         <Button variant="outline" size="sm" asChild>
-          <Link to={paths.creators}>추천 코스 보기</Link>
+          <Link to={paths.creators}>{t("new.browseCourses")}</Link>
         </Button>
       </div>
     );
@@ -279,9 +282,9 @@ function CreatorBanner({ course, isPending, isError, notFound, onRetry }: Creato
   if (isError) {
     return (
       <div className="bg-background-subtle text-foreground flex flex-wrap items-center justify-between gap-3 rounded-lg p-4 text-sm">
-        <p>코스 정보를 불러오지 못했어요.</p>
+        <p>{t("new.courseError")}</p>
         <Button variant="outline" size="sm" onClick={onRetry}>
-          다시 시도
+          {t("retry", { ns: "common" })}
         </Button>
       </div>
     );
@@ -291,7 +294,7 @@ function CreatorBanner({ course, isPending, isError, notFound, onRetry }: Creato
     <div className="bg-background-subtle text-foreground flex flex-col gap-1 rounded-lg p-4 text-sm">
       <p className="font-medium">{course.title}</p>
       <p className="text-muted-foreground">
-        {`${course.creator.name}의 ${String(courseDayCount(course))}일 코스를 내 코스로 가져와요. 여행 기간이 더 짧으면 넘치는 일차의 장소는 미배치 후보로 들어가요.`}
+        {t("new.courseIntro", { name: course.creator.name, days: courseDayCount(course) })}
       </p>
     </div>
   );
