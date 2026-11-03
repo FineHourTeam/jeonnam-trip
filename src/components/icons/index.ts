@@ -12,6 +12,7 @@ export { CheckIcon } from "./check-icon";
 export { ChevronDownIcon } from "./chevron-down-icon";
 export { ChevronRightIcon } from "./chevron-right-icon";
 export { AddIcon } from "./add-icon";
+export { DecreaseIcon } from "./decrease-icon";
 export { DeleteIcon } from "./delete-icon";
 export { EditIcon } from "./edit-icon";
 export { SearchIcon } from "./search-icon";
