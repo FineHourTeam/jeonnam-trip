@@ -103,7 +103,7 @@ export function currentLanguage(): Language {
 }
 
 i18n.on("languageChanged", (lng) => {
-  document.documentElement.lang = lng;
+  if (typeof document !== "undefined") document.documentElement.lang = lng; // node 환경 테스트 대비
   try {
     localStorage.setItem(STORAGE_KEY, lng);
   } catch {
