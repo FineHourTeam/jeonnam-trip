@@ -2,17 +2,26 @@
 // 서비스기획서 §5 "모바일 기본 메뉴: 탐색·보관함·내 여행, 여행 만들기를 주요 버튼으로".
 // 탐색 홈 맨 위에서는 헤더를 투명하게 두고 사진(HomeHero) 위에 흰 글자로 얹는다 — 스크롤하면 흰 헤더로 돌아온다.
 import { useSyncExternalStore } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, NavLink, Outlet, useLocation } from "react-router";
 import { AddIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { LANGUAGES } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { paths } from "./paths";
 import { useAuthState } from "./use-auth-state";
 
 const NAV = [
-  { to: paths.home, label: "탐색", end: true },
-  { to: paths.library, label: "보관함", end: false },
-  { to: paths.myTrips, label: "내 여행", end: false },
+  { to: paths.home, label: "nav.explore", end: true },
+  { to: paths.library, label: "nav.library", end: false },
+  { to: paths.myTrips, label: "nav.myTrips", end: false },
 ] as const;
 
 /** 하단 탭은 목록 화면에만 — 상세·편집·로그인처럼 한 가지 일을 하는 화면에서는 숨긴다 */
@@ -42,7 +51,37 @@ function useScrolled() {
   );
 }
 
+/** 헤더 언어 선택 — 고른 언어는 i18n.ts가 localStorage에 남긴다 */
+function LanguageMenu({ className }: { className?: string }) {
+  const { t, i18n } = useTranslation();
+  const current = LANGUAGES.find((l) => l.code === i18n.language) ?? LANGUAGES[0];
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="sm" className={className} aria-label={t("language.label")}>
+          {current.label}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuRadioGroup
+          value={current.code}
+          onValueChange={(lng) => {
+            void i18n.changeLanguage(lng);
+          }}
+        >
+          {LANGUAGES.map((l) => (
+            <DropdownMenuRadioItem key={l.code} value={l.code} lang={l.code}>
+              {l.label}
+            </DropdownMenuRadioItem>
+          ))}
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
 export function AppLayout() {
+  const { t } = useTranslation();
   const authState = useAuthState();
   const location = useLocation();
   const scrolled = useScrolled();
@@ -65,7 +104,7 @@ export function AppLayout() {
           >
             머물전남.
           </Link>
-          <nav aria-label="주 메뉴" className="hidden gap-1 md:flex">
+          <nav aria-label={t("nav.main")} className="hidden gap-1 md:flex">
             {NAV.map((item) => (
               <NavLink
                 key={item.to}
@@ -84,16 +123,22 @@ export function AppLayout() {
                   )
                 }
               >
-                {item.label}
+                {t(item.label)}
               </NavLink>
             ))}
           </nav>
           <Button asChild size="sm" className="ml-auto hidden md:inline-flex">
             <Link to={paths.tripNew}>
               <AddIcon size="sm" />
-              여행 만들기
+              {t("nav.newTrip")}
             </Link>
           </Button>
+          <LanguageMenu
+            className={cn(
+              "ml-auto md:ml-0",
+              overHero && "text-scrim-foreground hover:bg-scrim hover:text-scrim-foreground",
+            )}
+          />
           {/* 로그인 화면에서는 숨긴다 — 로그인 후 지금 보던 화면으로 돌아오게 from을 넘긴다 */}
           {authState.status !== "loading" && location.pathname !== paths.login && (
             <Button
@@ -101,15 +146,14 @@ export function AppLayout() {
               variant="ghost"
               size="sm"
               className={cn(
-                "ml-auto md:ml-0",
                 overHero && "text-scrim-foreground hover:bg-scrim hover:text-scrim-foreground",
               )}
             >
               {authState.status === "authed" ? (
-                <Link to={paths.account}>내 계정</Link>
+                <Link to={paths.account}>{t("nav.account")}</Link>
               ) : (
                 <Link to={paths.login} state={{ from: location.pathname + location.search }}>
-                  로그인
+                  {t("nav.login")}
                 </Link>
               )}
             </Button>
@@ -123,7 +167,7 @@ export function AppLayout() {
 
       {showTabs && (
         <nav
-          aria-label="하단 메뉴"
+          aria-label={t("nav.bottom")}
           className="border-border bg-background pb-safe fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t md:hidden"
         >
           {NAV.map((item) => (
@@ -138,7 +182,7 @@ export function AppLayout() {
                 )
               }
             >
-              {item.label}
+              {t(item.label)}
             </NavLink>
           ))}
           <Link
@@ -146,7 +190,7 @@ export function AppLayout() {
             className="text-primary flex h-14 items-center justify-center gap-1 text-sm font-semibold"
           >
             <AddIcon size="sm" />
-            여행 만들기
+            {t("nav.newTrip")}
           </Link>
         </nav>
       )}

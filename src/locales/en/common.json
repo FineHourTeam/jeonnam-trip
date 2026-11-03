@@ -1,0 +1,71 @@
+{
+  "save": "Save",
+  "delete": "Delete",
+  "edit": "Edit",
+  "close": "Close",
+  "back": "Back",
+  "next": "Next",
+  "loading": "Loading...",
+  "retry": "Try again",
+  "error": {
+    "unknown": "Something went wrong. Please try again in a moment.",
+    "network": "Please check your network connection.",
+    "permission": "You don't have access to this.",
+    "notFound": "We couldn't find this page."
+  },
+  "nav": {
+    "explore": "Explore",
+    "library": "Saved",
+    "myTrips": "My trips",
+    "newTrip": "Plan a trip",
+    "account": "My account",
+    "login": "Log in",
+    "main": "Main menu",
+    "bottom": "Bottom menu"
+  },
+  "language": {
+    "label": "Choose language"
+  },
+  "page": {
+    "notFoundBody": "The address may have changed, or the page was removed.",
+    "goExplore": "Go to Explore",
+    "errorTitle": "Something went wrong",
+    "errorBody": "Please try again in a moment.",
+    "placeholder": "This screen is coming soon."
+  },
+  "carousel": {
+    "prev": "Previous slide",
+    "next": "Next slide"
+  },
+  "placeCategory": {
+    "cafe": "Cafe",
+    "restaurant": "Restaurant",
+    "shop": "Shop",
+    "attraction": "Attraction",
+    "lodging": "Stay"
+  },
+  "sigun": {
+    "mokpo": "Mokpo",
+    "yeosu": "Yeosu",
+    "suncheon": "Suncheon",
+    "naju": "Naju",
+    "gwangyang": "Gwangyang",
+    "damyang": "Damyang",
+    "gokseong": "Gokseong",
+    "gurye": "Gurye",
+    "goheung": "Goheung",
+    "boseong": "Boseong",
+    "hwasun": "Hwasun",
+    "jangheung": "Jangheung",
+    "gangjin": "Gangjin",
+    "haenam": "Haenam",
+    "yeongam": "Yeongam",
+    "muan": "Muan",
+    "hampyeong": "Hampyeong",
+    "yeonggwang": "Yeonggwang",
+    "jangseong": "Jangseong",
+    "wando": "Wando",
+    "jindo": "Jindo",
+    "sinan": "Sinan"
+  }
+}

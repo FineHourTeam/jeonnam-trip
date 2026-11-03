@@ -3,7 +3,7 @@ import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { AddIcon, DeleteIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { SIGUNS, sigunName, type Festival, type SigunCode } from "@/shared/domain";
-import { dateRange, formatDateKo } from "@/shared/lib/date";
+import { dateRange, formatDay } from "@/shared/lib/date";
 import {
   MAX_DAY_ROWS,
   festivalDraftSchema,
@@ -96,7 +96,7 @@ export function FestivalForm(props: ContentFormProps<Festival, FestivalValues>) 
             )}
             <div className="flex flex-col gap-3">
               {days.slice(0, MAX_DAY_ROWS).map((d) => (
-                <DayHoursEditor key={d} name={`days.${d}`} label={formatDateKo(d)} />
+                <DayHoursEditor key={d} name={`days.${d}`} label={formatDay(d, "ko")} />
               ))}
             </div>
           </Section>
@@ -184,7 +184,7 @@ export function FestivalForm(props: ContentFormProps<Festival, FestivalValues>) 
             lines={[
               v.sigun ? sigunName(v.sigun as SigunCode) : undefined,
               v.startDate && v.endDate
-                ? `${formatDateKo(v.startDate)} ~ ${formatDateKo(v.endDate)}`
+                ? `${formatDay(v.startDate, "ko")} ~ ${formatDay(v.endDate, "ko")}`
                 : undefined,
               v.state === "cancelled"
                 ? `취소된 축제예요. ${v.stateNote}`
