@@ -2,7 +2,7 @@
 // 필터는 지역·종류·분위기 서로 AND, 같은 묶음 안 복수 선택은 OR (기능명세 §3).
 import i18n from "@/lib/i18n";
 import { safeHttpUrl } from "@/shared/lib/format";
-import { placeText } from "@/shared/lib/place-text";
+import { placeText } from "@/shared/lib/content-text";
 import type {
   CustomPlace,
   LatLng,

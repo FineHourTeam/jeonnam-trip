@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { CreatorCourse, Place } from "@/shared/domain";
 import { cn } from "@/lib/utils";
+import { courseText, placeText } from "@/shared/lib/content-text";
 import { formatDotDate, safeHttpUrl } from "@/shared/lib/format";
 import { CourseNotFoundError } from "../api/creators-api";
 import { CourseDayMap } from "../components/course-day-map";
@@ -24,6 +25,7 @@ import {
   formatDays,
   hoursUnknown,
   sortedDays,
+  tagLabel,
 } from "../lib/course";
 import { youtubeEmbedUrl, youtubeVideoId } from "../lib/youtube";
 
@@ -80,12 +82,13 @@ function CourseDetail({ course }: { course: CreatorCourse }) {
   const channelUrl = safeHttpUrl(course.creator.channelUrl);
   const sourceUrl = safeHttpUrl(course.sourceUrl);
   const videoId = youtubeVideoId(course.sourceUrl);
+  const text = courseText(course, i18n.language);
   const sigunNames = course.siguns.map((s) => t(`sigun.${s}`, { ns: "common" }));
 
   return (
     <>
       <Seo
-        title={course.title}
+        title={text.title}
         description={t("detail.seoDescription", {
           name: course.creator.name,
           regions: sigunNames.join(t("weekdaySeparator")),
@@ -94,13 +97,13 @@ function CourseDetail({ course }: { course: CreatorCourse }) {
       <header className="flex flex-col gap-2">
         <div className="flex flex-wrap gap-1.5">
           <Badge variant="secondary">{formatDays(courseDayCount(course))}</Badge>
-          {course.tags.map((t) => (
-            <Badge key={t} variant="outline">
-              {t}
+          {course.tags.map((tag) => (
+            <Badge key={tag} variant="outline">
+              {tagLabel(tag, i18n.language)}
             </Badge>
           ))}
         </div>
-        <h1 className="text-xl font-semibold text-balance">{course.title}</h1>
+        <h1 className="text-xl font-semibold text-balance">{text.title}</h1>
         <p className="text-muted-foreground text-sm">{sigunNames.join(t("regionSeparator"))}</p>
       </header>
 
@@ -108,7 +111,7 @@ function CourseDetail({ course }: { course: CreatorCourse }) {
         {videoId && (
           <iframe
             src={youtubeEmbedUrl(videoId)}
-            title={t("detail.videoTitle", { name: course.creator.name, title: course.title })}
+            title={t("detail.videoTitle", { name: course.creator.name, title: text.title })}
             loading="lazy"
             allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
@@ -155,7 +158,7 @@ function CourseDetail({ course }: { course: CreatorCourse }) {
         </div>
       </div>
 
-      {course.summary && <p className="leading-relaxed text-pretty">{course.summary}</p>}
+      {text.summary && <p className="leading-relaxed text-pretty">{text.summary}</p>}
 
       <div className="border-border flex flex-col gap-3 rounded-lg border p-4">
         <p className="text-sm">{t("detail.importHint")}</p>
@@ -198,7 +201,7 @@ function CourseDetail({ course }: { course: CreatorCourse }) {
                       <PlaceRow
                         index={i + 1}
                         place={places.data[item.placeId]}
-                        note={item.note}
+                        note={text.note(day.day, i)}
                         selected={selectedId === courseItemId(day.day, i)}
                       />
                     )}
@@ -222,7 +225,7 @@ interface PlaceRowProps {
 }
 
 function PlaceRow({ index, place, note, selected }: PlaceRowProps) {
-  const { t } = useTranslation("creators");
+  const { t, i18n } = useTranslation("creators");
   if (!place) {
     return (
       <div className="bg-background-subtle text-muted-foreground flex items-center gap-3 rounded-lg p-3 text-sm">
@@ -255,7 +258,7 @@ function PlaceRow({ index, place, note, selected }: PlaceRowProps) {
         </div>
       )}
       <div className="flex min-w-0 flex-col gap-1">
-        <p className="truncate font-medium">{place.name}</p>
+        <p className="truncate font-medium">{placeText(place, i18n.language).name}</p>
         <p className="text-muted-foreground text-sm">
           {t(`sigun.${place.sigun}`, { ns: "common" })} ·{" "}
           {t(`placeCategory.${place.category}`, { ns: "common" })}

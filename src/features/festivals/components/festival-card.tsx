@@ -2,12 +2,14 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { paths } from "@/app/paths";
 import type { Festival } from "@/shared/domain";
+import { placeText } from "@/shared/lib/content-text";
 import { formatPeriod } from "../lib/format";
 import { FestivalStateBadge } from "./festival-state-badge";
 
 export function FestivalCard({ festival, today }: { festival: Festival; today: string }) {
   const { t, i18n } = useTranslation("festivals");
   const photo = festival.photos[0];
+  const { name } = placeText(festival, i18n.language);
   return (
     <Link
       to={paths.festivalDetail(festival.id)}
@@ -27,7 +29,7 @@ export function FestivalCard({ festival, today }: { festival: Festival; today: s
       )}
       <div className="flex min-w-0 flex-col gap-1">
         <FestivalStateBadge festival={festival} today={today} />
-        <p className="line-clamp-2 font-medium text-pretty">{festival.name}</p>
+        <p className="line-clamp-2 font-medium text-pretty">{name}</p>
         <p className="text-muted-foreground text-sm">
           {t(`sigun.${festival.sigun}`, { ns: "common" })} ·{" "}
           {formatPeriod(festival.startDate, festival.endDate, i18n.language)}

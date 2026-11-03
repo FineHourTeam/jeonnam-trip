@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { placeText } from "./place-text";
+import { courseText, placeText } from "./content-text";
 
 const place = {
   name: "순천만습지",
@@ -40,5 +40,34 @@ describe("placeText", () => {
       summary: undefined,
       address: undefined,
     });
+  });
+});
+
+describe("courseText", () => {
+  const course = {
+    title: "목포 1박2일",
+    summary: "바다 보며 걸어요",
+    days: [{ day: 1, items: [{ placeId: "a", note: "아침 (영상 0:27)" }, { placeId: "b" }] }],
+    i18n: {
+      ko: {
+        title: "목포 1박2일",
+        summary: "바다 보며 걸어요",
+        notes: { "d1-0": "아침 (영상 0:27)" },
+      },
+      en: { title: "Mokpo, 2 Days, 1 Night", notes: { "d1-0": "Breakfast (video 0:27)" } },
+    },
+  };
+
+  it("제목·메모는 번역을, 번역이 없는 필드·메모는 원문을 쓴다", () => {
+    const c = courseText(course, "en");
+    expect(c.title).toBe("Mokpo, 2 Days, 1 Night");
+    expect(c.summary).toBe("바다 보며 걸어요");
+    expect(c.note(1, 0)).toBe("Breakfast (video 0:27)");
+    expect(c.note(1, 1)).toBeUndefined();
+  });
+
+  it("메모 원문이 바뀌면 원문을 쓴다", () => {
+    const edited = { ...course, days: [{ day: 1, items: [{ placeId: "a", note: "점심" }] }] };
+    expect(courseText(edited, "en").note(1, 0)).toBe("점심");
   });
 });

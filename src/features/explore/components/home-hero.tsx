@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/carousel";
 import { usePlacesByIds } from "@/features/places";
 import { cn } from "@/lib/utils";
+import { placeText } from "@/shared/lib/content-text";
 import { HERO_SLIDES, buildHeroSlides, type HeroSlide } from "../lib/hero-slides";
 
 const AUTOPLAY_MS = 6000;
@@ -30,8 +31,11 @@ interface HomeHeroProps {
 }
 
 export function HomeHero({ labelledBy, children }: HomeHeroProps) {
+  const { i18n } = useTranslation("explore");
   const places = usePlacesByIds(HERO_PLACE_IDS);
-  const slides = buildHeroSlides(places.data ?? []);
+  const slides = buildHeroSlides(
+    (places.data ?? []).map((p) => ({ ...p, name: placeText(p, i18n.language).name })),
+  );
   const hasPhotos = slides.length > 0;
 
   return (

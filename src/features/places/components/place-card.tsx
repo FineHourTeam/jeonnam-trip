@@ -4,7 +4,7 @@ import { paths } from "@/app/paths";
 import { Checkbox } from "@/components/ui/checkbox";
 import { subcategoryLabel } from "../lib/place-filter";
 import type { Place } from "@/shared/domain";
-import { placeText } from "@/shared/lib/place-text";
+import { placeText } from "@/shared/lib/content-text";
 
 interface PlaceCardProps {
   place: Place;

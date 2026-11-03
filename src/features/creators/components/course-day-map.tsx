@@ -8,6 +8,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { CourseMap, useDrivingLegs, type CourseMapPoint } from "@/features/map";
 import type { CreatorCourse, LatLng, Place } from "@/shared/domain";
 import { courseDayLegs, courseItemId, sortedDays } from "../lib/course";
+import { placeText } from "@/shared/lib/content-text";
 
 interface CourseDayMapProps {
   course: CreatorCourse;
@@ -17,7 +18,7 @@ interface CourseDayMapProps {
 }
 
 export function CourseDayMap({ course, places, selectedId, onSelect }: CourseDayMapProps) {
-  const { t } = useTranslation("creators");
+  const { t, i18n } = useTranslation("creators");
   const days = useMemo(() => sortedDays(course.days), [course.days]);
   const [dayNo, setDayNo] = useState(days[0]?.day ?? 1);
 
@@ -29,12 +30,12 @@ export function CourseDayMap({ course, places, selectedId, onSelect }: CourseDay
       const place = places[item.placeId];
       return {
         id: courseItemId(day.day, i),
-        label: place?.name ?? t("map.unavailablePlace"),
+        label: place ? placeText(place, i18n.language).name : t("map.unavailablePlace"),
         order: i + 1,
         location: place?.location ?? null,
       };
     });
-  }, [days, dayNo, places, t]);
+  }, [days, dayNo, places, t, i18n.language]);
   const requests = useMemo(() => courseDayLegs(points), [points]);
   const { legs, retryFailed } = useDrivingLegs(requests);
   const paths = useMemo<LatLng[][]>(

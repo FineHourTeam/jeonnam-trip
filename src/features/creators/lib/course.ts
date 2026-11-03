@@ -79,6 +79,23 @@ export function filterCourses(list: CreatorCourse[], f: CourseFilter): CreatorCo
   );
 }
 
+/** 태그 표시명 — 저장값(한국어)은 그대로 두고 en·ja 화면에서만 바꿔 보인다. 목록에 없는 태그는 원문 그대로 */
+const TAG_LABEL: Record<string, { en: string; ja: string }> = {
+  맛집: { en: "Food spots", ja: "グルメ" },
+  카페: { en: "Cafes", ja: "カフェ" },
+  "1박2일": { en: "2 days, 1 night", ja: "1泊2日" },
+  사찰: { en: "Temples", ja: "寺院" },
+  정원: { en: "Gardens", ja: "庭園" },
+  야경: { en: "Night views", ja: "夜景" },
+  계절: { en: "Seasonal", ja: "季節" },
+  뚜벅이: { en: "No car needed", ja: "車なし旅" },
+  수학여행: { en: "School trips", ja: "修学旅行" },
+};
+
+export function tagLabel(tag: string, lng: string): string {
+  return lng === "en" || lng === "ja" ? (TAG_LABEL[tag]?.[lng] ?? tag) : tag;
+}
+
 export function courseTags(list: CreatorCourse[]): string[] {
   return [...new Set(list.flatMap((c) => c.tags))].sort((a, b) => a.localeCompare(b, "ko"));
 }

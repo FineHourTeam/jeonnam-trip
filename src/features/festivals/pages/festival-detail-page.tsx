@@ -11,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { CourseMap } from "@/features/map";
 import type { Festival } from "@/shared/domain";
 import { todayKst } from "@/shared/lib/date";
+import { placeText } from "@/shared/lib/content-text";
 import { FestivalNotFoundError } from "../api/festivals-api";
 import {
   FestivalBasics,
@@ -75,21 +76,22 @@ function FestivalDetail({ festival }: { festival: Festival }) {
   const sigun = t(`sigun.${festival.sigun}`, { ns: "common" });
   const today = todayKst();
   const unverified = festival.checks.schedule.state !== "verified";
+  const { name, summary } = placeText(festival, i18n.language);
   return (
     <>
       <Seo
-        title={festival.name}
-        description={festival.summary ?? t("detail.seoDescription", { sigun })}
+        title={name}
+        description={summary ?? t("detail.seoDescription", { sigun })}
         image={festival.photos[0]}
       />
-      <Photos festival={festival} />
+      <Photos festival={festival} name={name} />
 
       <header className="flex flex-col gap-2">
         <div className="flex flex-wrap gap-2">
           <FestivalStateBadge festival={festival} today={today} />
           {unverified && <Badge variant="outline">{t("detail.unverified")}</Badge>}
         </div>
-        <h1 className="text-xl font-semibold text-balance">{festival.name}</h1>
+        <h1 className="text-xl font-semibold text-balance">{name}</h1>
         <p className="text-muted-foreground text-sm">
           {sigun} · {formatPeriod(festival.startDate, festival.endDate, i18n.language)}
         </p>
@@ -109,7 +111,7 @@ function FestivalDetail({ festival }: { festival: Festival }) {
         </Alert>
       )}
 
-      {festival.summary && <p className="leading-relaxed text-pretty">{festival.summary}</p>}
+      {summary && <p className="leading-relaxed text-pretty">{summary}</p>}
 
       <FestivalPlanActions festival={festival} today={today} />
       <FestivalHours festival={festival} />
@@ -121,9 +123,7 @@ function FestivalDetail({ festival }: { festival: Festival }) {
         {festival.location ? (
           <CourseMap
             className="aspect-video w-full"
-            points={[
-              { id: festival.id, label: festival.name, order: 1, location: festival.location },
-            ]}
+            points={[{ id: festival.id, label: name, order: 1, location: festival.location }]}
             paths={[]}
           />
         ) : (
@@ -136,7 +136,7 @@ function FestivalDetail({ festival }: { festival: Festival }) {
   );
 }
 
-function Photos({ festival }: { festival: Festival }) {
+function Photos({ festival, name }: { festival: Festival; name: string }) {
   const { t } = useTranslation("festivals");
   if (festival.photos.length === 0) {
     return (
@@ -152,7 +152,7 @@ function Photos({ festival }: { festival: Festival }) {
           <img
             key={src}
             src={src}
-            alt={t("detail.photoAlt", { name: festival.name, n: i + 1 })}
+            alt={t("detail.photoAlt", { name, n: i + 1 })}
             loading={i === 0 ? "eager" : "lazy"}
             className="aspect-video w-full shrink-0 snap-start rounded-lg object-cover"
           />

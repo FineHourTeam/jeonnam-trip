@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import type { FieldCheck, Place } from "@/shared/domain";
 import { formatDay } from "@/shared/lib/date";
 import { formatDotDate, safeHttpUrl, telHref } from "@/shared/lib/format";
-import { placeText } from "@/shared/lib/place-text";
+import { placeText } from "@/shared/lib/content-text";
 import { formatPlaceRanges, hoursUnknown, weeklyRows } from "../lib/hours";
 
 function Section({ title, children }: { title: string; children: ReactNode }) {

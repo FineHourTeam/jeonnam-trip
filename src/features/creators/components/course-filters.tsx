@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { MAX_TRIP_DAYS, SIGUNS, isSigunCode } from "@/shared/domain";
-import { formatDays, type CourseFilter } from "../lib/course";
+import { formatDays, tagLabel, type CourseFilter } from "../lib/course";
 
 const ALL = "all";
 const DAY_OPTIONS = Array.from({ length: MAX_TRIP_DAYS }, (_, i) => i + 1);
@@ -24,7 +24,7 @@ interface CourseFiltersProps {
 }
 
 export function CourseFilters({ values, tags, onChange, onReset }: CourseFiltersProps) {
-  const { t } = useTranslation("creators");
+  const { t, i18n } = useTranslation("creators");
   const dirty = values.sigun !== null || values.days !== null || values.tag !== null;
   return (
     <div className="flex flex-col gap-3">
@@ -86,9 +86,9 @@ export function CourseFilters({ values, tags, onChange, onReset }: CourseFilters
             aria-label={t("filters.tags")}
           >
             <ToggleGroupItem value={ALL}>{t("filters.allTags")}</ToggleGroupItem>
-            {tags.map((t) => (
-              <ToggleGroupItem key={t} value={t}>
-                {t}
+            {tags.map((tag) => (
+              <ToggleGroupItem key={tag} value={tag}>
+                {tagLabel(tag, i18n.language)}
               </ToggleGroupItem>
             ))}
           </ToggleGroup>

@@ -16,7 +16,7 @@ import { PlaceAddToTrip } from "../components/place-add-to-trip";
 import { PlaceBasics, PlaceChecks, PlaceHours } from "../components/place-info";
 import { usePlace } from "../hooks/use-places";
 import { hoursUnknown } from "../lib/hours";
-import { placeText } from "@/shared/lib/place-text";
+import { placeText } from "@/shared/lib/content-text";
 import { subcategoryLabel } from "../lib/place-filter";
 
 export default function PlaceDetailPage() {

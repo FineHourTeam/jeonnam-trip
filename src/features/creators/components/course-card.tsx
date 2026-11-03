@@ -4,7 +4,8 @@ import { paths } from "@/app/paths";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { CreatorCourse } from "@/shared/domain";
-import { courseDayCount, formatDays } from "../lib/course";
+import { courseText } from "@/shared/lib/content-text";
+import { courseDayCount, formatDays, tagLabel } from "../lib/course";
 
 interface CourseCardProps {
   course: CreatorCourse;
@@ -14,7 +15,8 @@ interface CourseCardProps {
 
 export function CourseCard({ course, cover }: CourseCardProps) {
   const placeCount = course.days.reduce((n, d) => n + d.items.length, 0);
-  const { t } = useTranslation("creators");
+  const { t, i18n } = useTranslation("creators");
+  const { title } = courseText(course, i18n.language);
   const regions = course.siguns
     .map((s) => t(`sigun.${s}`, { ns: "common" }))
     .join(t("regionSeparator"));
@@ -42,13 +44,13 @@ export function CourseCard({ course, cover }: CourseCardProps) {
       <div className="flex flex-col gap-2 p-4">
         <div className="flex flex-wrap gap-1.5">
           <Badge variant="secondary">{formatDays(courseDayCount(course))}</Badge>
-          {course.tags.map((t) => (
-            <Badge key={t} variant="outline">
-              {t}
+          {course.tags.map((tag) => (
+            <Badge key={tag} variant="outline">
+              {tagLabel(tag, i18n.language)}
             </Badge>
           ))}
         </div>
-        <p className="line-clamp-2 font-medium text-pretty">{course.title}</p>
+        <p className="line-clamp-2 font-medium text-pretty">{title}</p>
         <p className="text-muted-foreground text-sm">
           {t("card.meta", { regions, count: placeCount })}
         </p>

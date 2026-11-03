@@ -41,6 +41,7 @@ import {
 import i18n from "@/lib/i18n";
 import { MAX_TRIP_DAYS, type CreatorCourse, type Festival, type TripDraft } from "@/shared/domain";
 import { formatDay } from "@/shared/lib/date";
+import { courseText, placeText } from "@/shared/lib/content-text";
 import { TripSetupForm, type TripSetupValues } from "../components/trip-setup-form";
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
@@ -244,7 +245,7 @@ function FestivalBanner({ festival, isPending, isError, onRetry, visitDate }: Fe
   }
   return (
     <div className="bg-background-subtle text-foreground flex flex-col gap-1 rounded-lg p-4 text-sm">
-      <p className="font-medium">{festival.name}</p>
+      <p className="font-medium">{placeText(festival, i18n.language).name}</p>
       <p className="text-muted-foreground">
         {festival.state === "cancelled"
           ? t("new.festivalCancelled")
@@ -265,7 +266,7 @@ interface CreatorBannerProps {
 }
 
 function CreatorBanner({ course, isPending, isError, notFound, onRetry }: CreatorBannerProps) {
-  const { t } = useTranslation("planner");
+  const { t, i18n } = useTranslation("planner");
   if (notFound) {
     return (
       <div className="bg-background-subtle text-foreground flex flex-wrap items-center justify-between gap-3 rounded-lg p-4 text-sm">
@@ -292,7 +293,7 @@ function CreatorBanner({ course, isPending, isError, notFound, onRetry }: Creato
   if (isPending || !course) return <Skeleton className="h-16 w-full rounded-lg" />;
   return (
     <div className="bg-background-subtle text-foreground flex flex-col gap-1 rounded-lg p-4 text-sm">
-      <p className="font-medium">{course.title}</p>
+      <p className="font-medium">{courseText(course, i18n.language).title}</p>
       <p className="text-muted-foreground">
         {t("new.courseIntro", { name: course.creator.name, days: courseDayCount(course) })}
       </p>

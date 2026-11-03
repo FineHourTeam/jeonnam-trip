@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import type { Festival, FieldCheck } from "@/shared/domain";
 import { formatDay } from "@/shared/lib/date";
 import { formatDotDate, safeHttpUrl, telHref } from "@/shared/lib/format";
+import { placeText } from "@/shared/lib/content-text";
 import { formatRanges } from "../lib/format";
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
@@ -61,11 +62,12 @@ export function FestivalPrograms({ festival }: { festival: Festival }) {
 }
 
 export function FestivalBasics({ festival }: { festival: Festival }) {
-  const { t } = useTranslation("festivals");
+  const { t, i18n } = useTranslation("festivals");
+  const { address } = placeText(festival, i18n.language);
   const official = safeHttpUrl(festival.officialUrl);
   const tel = festival.contact ? telHref(festival.contact) : null;
   const rows: [string, ReactNode][] = [];
-  if (festival.address) rows.push([t("info.address"), festival.address]);
+  if (address) rows.push([t("info.address"), address]);
   if (festival.parking) rows.push([t("info.parking"), festival.parking]);
   if (festival.contact) {
     rows.push([
