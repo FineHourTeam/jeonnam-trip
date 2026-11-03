@@ -32,14 +32,11 @@ export function SavedPlacesTab({ entries }: { entries: LibraryEntry[] }) {
       <div className="bg-background-subtle text-foreground flex flex-col items-center gap-3 rounded-lg px-4 py-10 text-center">
         <p className="font-medium">아직 저장한 장소가 없어요</p>
         <p className="text-muted-foreground text-sm text-pretty">
-          장소 상세에서 “보관함에 저장”을 누르거나, SNS에서 본 장소를 링크와 함께 보관해 보세요.
+          장소 상세에서 “보관함에 저장”을 누르면 여기에 모여요.
         </p>
         <div className="flex flex-wrap justify-center gap-2">
           <Button asChild>
             <Link to={paths.places}>장소 둘러보기</Link>
-          </Button>
-          <Button asChild variant="outline">
-            <Link to={paths.snsNew}>SNS 링크 저장</Link>
           </Button>
         </div>
       </div>

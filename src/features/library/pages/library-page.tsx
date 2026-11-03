@@ -4,7 +4,6 @@ import { useMemo } from "react";
 import { Link } from "react-router";
 import { paths } from "@/app/paths";
 import { useAuthState } from "@/app/use-auth-state";
-import { AddIcon } from "@/components/icons";
 import { Seo } from "@/components/Seo";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -36,12 +35,6 @@ export default function LibraryPage() {
             저장한 장소와 SNS에서 본 링크를 모아 두고, 골라서 일정에 담아요.
           </p>
         </div>
-        <Button asChild size="sm">
-          <Link to={paths.snsNew}>
-            <AddIcon size="sm" />
-            SNS 링크 저장
-          </Link>
-        </Button>
       </div>
 
       {authState.status === "loading" ? (
