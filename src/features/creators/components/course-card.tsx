@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { sigunName, type CreatorCourse } from "@/shared/domain";
 import { courseDayCount, formatDays } from "../lib/course";
+import { CreatorAvatar } from "./creator-avatar";
 
 interface CourseCardProps {
   course: CreatorCourse;
@@ -48,7 +49,10 @@ export function CourseCard({ course, cover }: CourseCardProps) {
         <p className="text-muted-foreground text-sm">
           {regions} · 장소 {placeCount}곳
         </p>
-        <p className="text-muted-foreground text-xs">출처 {course.creator.name}</p>
+        <div className="mt-1 flex items-center gap-2">
+          <CreatorAvatar creator={course.creator} size="sm" />
+          <p className="min-w-0 truncate text-sm font-medium">{course.creator.name}</p>
+        </div>
       </div>
     </Link>
   );

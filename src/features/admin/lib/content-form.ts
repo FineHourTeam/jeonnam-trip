@@ -435,6 +435,7 @@ function makeCourseSchema(mode: SaveMode) {
       ? z.string().trim().min(1, "크리에이터 이름을 입력해 주세요.")
       : z.string().trim(),
     channelUrl: optionalUrl,
+    avatarUrl: optionalUrl,
     sourceUrl: strict ? requiredUrl : optionalUrl,
     siguns: strict ? z.array(sigun).min(1, "지역을 하나 이상 골라 주세요.") : z.array(sigun),
     tags: z.string(),
@@ -461,6 +462,7 @@ export function courseToValues(c: CreatorCourse): CourseValues {
     title: c.title,
     creatorName: c.creator.name,
     channelUrl: c.creator.channelUrl ?? "",
+    avatarUrl: c.creator.avatarUrl ?? "",
     sourceUrl: c.sourceUrl,
     siguns: c.siguns,
     tags: joinTags(c.tags),
@@ -480,6 +482,7 @@ export function valuesToCourse(id: string, v: CourseValues, base?: CreatorCourse
     creator: {
       name: v.creatorName.trim(),
       ...(opt(v.channelUrl) ? { channelUrl: opt(v.channelUrl) } : {}),
+      ...(opt(v.avatarUrl) ? { avatarUrl: opt(v.avatarUrl) } : {}),
     },
     sourceUrl: v.sourceUrl.trim(),
     siguns: v.siguns as SigunCode[],
@@ -554,6 +557,7 @@ export function emptyCourseValues(): CourseValues {
     title: "",
     creatorName: "",
     channelUrl: "",
+    avatarUrl: "",
     sourceUrl: "",
     siguns: [],
     tags: "",

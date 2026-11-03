@@ -68,6 +68,11 @@ export function CourseForm(
               <TextField name="creatorName" label="크리에이터" />
               <TextField name="channelUrl" label="채널 주소" placeholder="https://" />
             </div>
+            <TextField
+              name="avatarUrl"
+              label="채널 프로필 사진 주소"
+              placeholder="https://yt3.ggpht.com/..."
+            />
             <TextField name="sourceUrl" label="원문 주소" placeholder="https://" />
             <div className="grid gap-3 sm:grid-cols-2">
               <SelectField name="orderBasis" label="순서 확인 기준" options={ORDER_OPTIONS} />

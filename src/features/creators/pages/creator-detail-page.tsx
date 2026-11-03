@@ -31,6 +31,7 @@ import {
   sortedDays,
 } from "../lib/course";
 import { youtubeEmbedUrl, youtubeVideoId } from "../lib/youtube";
+import { CreatorAvatar } from "../components/creator-avatar";
 
 const ORDER_BASIS_TEXT: Record<CourseOrderBasis, string> = {
   editor_suggested: "편집자가 구성한 순서예요. 실제로 이 순서대로 다녀온 기록은 아니에요.",
@@ -123,8 +124,8 @@ function CourseDetail({ course }: { course: CreatorCourse }) {
           />
         )}
         <div className="flex flex-col gap-1">
-          <p>
-            출처{" "}
+          <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <CreatorAvatar creator={course.creator} />
             {channelUrl ? (
               <a
                 href={channelUrl}
