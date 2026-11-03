@@ -1,11 +1,13 @@
 import { describe, expect, it } from "vitest";
 import type { TripDraft, VisitItem } from "@/shared/domain";
 import {
+  addDay,
   insertItem,
   moveItem,
   moveItemToDay,
   placeUnplaced,
   removeItem,
+  shiftStartDate,
   updateItem,
 } from "./trip-edits";
 
@@ -67,5 +69,28 @@ describe("trip-edits", () => {
     expect(t.unplaced).toEqual([]);
     expect(t.days[1]?.items[0]).not.toHaveProperty("reason");
     expect(ids(t, 1)).toEqual(["u"]);
+  });
+});
+
+describe("일차 늘리기·시작일 옮기기", () => {
+  const dated = () => ({ ...trip(), startDate: "2026-10-17", endDate: "2026-10-18" });
+
+  it("마지막 날 다음 날을 빈 일차로 붙이고 종료일을 늘린다", () => {
+    const t = addDay(dated());
+    expect(t.endDate).toBe("2026-10-19");
+    expect(t.days.map((d) => d.date)).toEqual(["2026-10-17", "2026-10-18", "2026-10-19"]);
+    expect(t.days[2]?.items).toEqual([]);
+  });
+
+  it("최대 일수(4일)면 더 늘리지 않는다", () => {
+    const t = addDay(addDay(addDay(dated())));
+    expect(t.days).toHaveLength(4);
+  });
+
+  it("시작일을 옮기면 일차 날짜가 함께 옮겨지고 담은 장소는 그대로다", () => {
+    const t = shiftStartDate(dated(), "2026-10-20");
+    expect([t.startDate, t.endDate]).toEqual(["2026-10-20", "2026-10-21"]);
+    expect(t.days.map((d) => d.date)).toEqual(["2026-10-20", "2026-10-21"]);
+    expect(t.days[0]?.items.map((x) => x.id)).toEqual(["a", "b", "c"]);
   });
 });

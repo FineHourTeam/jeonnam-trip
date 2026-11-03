@@ -1,6 +1,8 @@
 // 코스 편집 순수 함수 — 사용자가 고른 동작만 반영한다. 순서·시각을 자동으로 바꾸지 않는다 (기능명세 §7).
 // Trip·TripDraft 모두 받도록 days·unplaced만 요구한다.
-import type { TripDraft, VisitItem } from "@/shared/domain";
+import { emptyDay } from "@/features/trips";
+import { MAX_TRIP_DAYS, type TripDraft, type VisitItem } from "@/shared/domain";
+import { addDays, diffDays } from "@/shared/lib/date";
 
 type Editable = Pick<TripDraft, "days" | "unplaced">;
 
@@ -86,4 +88,25 @@ export function setDayTimes<T extends Editable>(
   times: { startTime: string; endTime: string },
 ): T {
   return { ...trip, days: trip.days.map((d, i) => (i === dayIndex ? { ...d, ...times } : d)) };
+}
+
+type Dated = Editable & Pick<TripDraft, "startDate" | "endDate">;
+
+/** 마지막 날 다음 날을 빈 일차로 붙인다. 최대 일수면 그대로 */
+export function addDay<T extends Dated>(trip: T): T {
+  if (trip.days.length >= MAX_TRIP_DAYS) return trip;
+  const date = addDays(trip.endDate, 1);
+  return { ...trip, endDate: date, days: [...trip.days, emptyDay(date)] };
+}
+
+/** 시작일을 옮기면 일수·담은 장소는 그대로 두고 모든 일차 날짜를 함께 옮긴다 */
+export function shiftStartDate<T extends Dated>(trip: T, startDate: string): T {
+  const offset = diffDays(trip.startDate, startDate);
+  if (offset === 0) return trip;
+  return {
+    ...trip,
+    startDate,
+    endDate: addDays(trip.endDate, offset),
+    days: trip.days.map((d) => ({ ...d, date: addDays(d.date, offset) })),
+  };
 }

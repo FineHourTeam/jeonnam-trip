@@ -1,8 +1,8 @@
 // S10 코스 편집 — /trips/draft(로그인 전 초안) 또는 /trips/:tripId(저장된 코스).
 import { useState } from "react";
-import { Link, useParams } from "react-router";
+import { Link, useParams, useSearchParams } from "react-router";
 import { paths } from "@/app/paths";
-import { ChevronLeftIcon } from "@/components/icons";
+import { AddIcon, ChevronLeftIcon } from "@/components/icons";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   AlertDialog,
@@ -19,16 +19,19 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TripNotFoundError } from "@/features/trips";
+import { MAX_TRIP_DAYS } from "@/shared/domain";
 import { formatDateKo } from "@/shared/lib/date";
 import { DayPanel } from "../components/day-panel";
 import { UnplacedList } from "../components/unplaced-list";
 import { useTripEditor } from "../hooks/use-trip-editor";
-import { placeUnplaced } from "../lib/trip-edits";
+import { addDay, placeUnplaced, shiftStartDate } from "../lib/trip-edits";
 
 export default function TripEditPage() {
   const { tripId = "draft" } = useParams();
   const editor = useTripEditor(tripId);
-  const [dayTab, setDayTab] = useState("0");
+  const [params] = useSearchParams();
+  // 장소 추가 창(?add=일차)을 연 채 장소 상세에 다녀오면 그 일차 탭으로 돌아온다
+  const [dayTab, setDayTab] = useState(() => params.get("add") ?? "0");
   const { trip } = editor;
 
   if (editor.isLoading) {
@@ -111,13 +114,31 @@ export default function TripEditPage() {
         )}
       </header>
 
-      <p className="text-muted-foreground text-sm">
-        {formatDateKo(trip.startDate)} ~ {formatDateKo(trip.endDate)} · 자동차
-        {editor.isDraft &&
-          (editor.isGuest
-            ? " · 저장하지 않은 코스예요. 저장하려면 로그인이 필요해요."
-            : " · 저장하지 않은 코스예요. 저장하기를 누르면 내 여행에 저장돼요.")}
-      </p>
+      <div className="text-muted-foreground flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+        <label htmlFor="trip-start" className="sr-only">
+          여행 시작일
+        </label>
+        <Input
+          id="trip-start"
+          type="date"
+          className="w-auto"
+          value={trip.startDate}
+          onChange={(e) => {
+            const date = e.target.value;
+            if (date) editor.update((t) => shiftStartDate(t, date));
+          }}
+        />
+        <span>
+          부터 {trip.days.length}일 · {formatDateKo(trip.endDate)}까지 · 자동차
+        </span>
+        {editor.isDraft && (
+          <span>
+            {editor.isGuest
+              ? "· 이 브라우저에 자동으로 남아요. 로그인하고 저장하면 다른 기기에서도 볼 수 있어요."
+              : "· 이 브라우저에 자동으로 남아요. 저장하기를 누르면 내 여행에 저장돼요."}
+          </span>
+        )}
+      </div>
 
       <Tabs value={dayTab} onValueChange={setDayTab}>
         <TabsList>
@@ -126,6 +147,19 @@ export default function TripEditPage() {
               {i + 1}일차
             </TabsTrigger>
           ))}
+          {trip.days.length < MAX_TRIP_DAYS && (
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              aria-label="일차 추가"
+              onClick={() => {
+                editor.update(addDay);
+                setDayTab(String(trip.days.length));
+              }}
+            >
+              <AddIcon size="sm" />
+            </Button>
+          )}
         </TabsList>
         {trip.days.map((d, i) => (
           <TabsContent key={d.date} value={String(i)} className="pt-2">

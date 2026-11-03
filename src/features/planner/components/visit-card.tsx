@@ -1,4 +1,4 @@
-// 시간표 카드 — 도착(대기)·이용·출발과 영업 조건, 충돌 이유와 할 수 있는 동작을 보여 준다.
+// 시간표 카드 — 도착(대기)·체류·출발과 영업 조건, 충돌 이유와 할 수 있는 동작을 보여 준다.
 import {
   AddIcon,
   ChevronDownIcon,
@@ -130,9 +130,8 @@ export function VisitCard(props: VisitCardProps) {
           {s.waitMin > 0 && <dd className="text-muted-foreground text-xs">대기 {s.waitMin}분</dd>}
         </div>
         <div>
-          <dt className="text-muted-foreground text-xs">이용</dt>
-          <dd className="font-medium tabular-nums">{t(s.start)}</dd>
-          <dd className="mt-1 flex items-center gap-1">
+          <dt className="text-muted-foreground text-xs">체류</dt>
+          <dd className="flex items-center gap-1">
             <Button
               variant="outline"
               size="icon-sm"
