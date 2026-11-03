@@ -1,14 +1,16 @@
 // 장소 상세(S05)의 "저장" — 개인 보관함에 연결한다. 일정에 추가와는 별개 동작이다 (기능명세 §3).
 // 비회원은 로그인 화면으로 보내고 돌아오게 한다. 저장 해제는 되돌리기를 함께 띄운다 (태그·메모 보존).
+import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { paths } from "@/app/paths";
 import { useAuthState } from "@/app/use-auth-state";
 import { CheckIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
-import { NETWORK_HINT, useSavePlace, useSavedPlaces, useUnsavePlace } from "../hooks/use-library";
+import { useSavePlace, useSavedPlaces, useUnsavePlace } from "../hooks/use-library";
 
 export function PlaceSaveAction({ placeId }: { placeId: string }) {
+  const { t } = useTranslation("library");
   const authState = useAuthState();
   const navigate = useNavigate();
   const location = useLocation();
@@ -29,7 +31,7 @@ export function PlaceSaveAction({ placeId }: { placeId: string }) {
           void navigate(paths.login, { state: { from: location.pathname + location.search } });
         }}
       >
-        보관함에 저장
+        {t("saveAction.save")}
       </Button>
     );
   }
@@ -44,14 +46,17 @@ export function PlaceSaveAction({ placeId }: { placeId: string }) {
         onClick={() => {
           save.mutate(placeId, {
             onSuccess: () =>
-              toast("보관함에 저장했어요.", {
-                action: { label: "보관함 보기", onClick: () => void navigate(paths.library) },
+              toast(t("toast.saved"), {
+                action: {
+                  label: t("toast.viewLibrary"),
+                  onClick: () => void navigate(paths.library),
+                },
               }),
-            onError: () => toast.error(`보관함에 저장하지 못했어요. ${NETWORK_HINT}`),
+            onError: () => toast.error(t("toast.saveFailed")),
           });
         }}
       >
-        보관함에 저장
+        {t("saveAction.save")}
       </Button>
     );
   }
@@ -67,11 +72,11 @@ export function PlaceSaveAction({ placeId }: { placeId: string }) {
         }}
       >
         <CheckIcon size="sm" />
-        보관함에 저장됨
+        {t("saveAction.saved")}
       </Button>
       {saved.tags.length > 0 && (
         <p className="text-muted-foreground text-sm">
-          내 태그 {saved.tags.map((t) => `#${t}`).join(" ")}
+          {t("saveAction.myTags", { tags: saved.tags.map((tag) => `#${tag}`).join(" ") })}
         </p>
       )}
     </div>

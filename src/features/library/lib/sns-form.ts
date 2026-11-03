@@ -1,5 +1,6 @@
 // S07 SNS 링크 폼 값·검사 — 화면, 로그인 왕복 보존 스토어, 저장 입력 변환이 같은 모양을 쓴다.
 import { z } from "zod";
+import i18n, { type resources } from "@/lib/i18n";
 import { isSigunCode, type CustomPlace, type SigunCode, type SnsLink } from "@/shared/domain";
 import type { LinkTarget, SnsLinkInput } from "../api/library-api";
 import {
@@ -27,38 +28,35 @@ export function draftKey(d: LinkedPlaceDraft): string {
 
 export const NO_SIGUN = "none";
 
+// 검사 메시지는 보여 줄 때의 언어로 — 스키마가 모듈 상수라 메시지를 콜백(zod v4 error)으로 넘긴다
+type ValidationKey = keyof (typeof resources)["ko"]["library"]["validation"];
+export const validationMsg = (key: ValidationKey, max?: number) => ({
+  error: () => i18n.t(`validation.${key}`, { ns: "library", max }),
+});
+
 /** 쉼표로 나눈 태그 입력 — S07 링크와 S06 태그·메모 고치기가 같은 검사를 쓴다 */
 export const tagsSchema = z
   .string()
-  .refine(
-    (v) => parseTags(v).length <= MAX_TAGS,
-    `태그는 ${String(MAX_TAGS)}개까지 붙일 수 있어요.`,
-  )
+  .refine((v) => parseTags(v).length <= MAX_TAGS, validationMsg("tagsMax", MAX_TAGS))
   .refine(
     (v) => parseTags(v).every((t) => t.length <= MAX_TAG_LENGTH),
-    `태그 하나는 ${String(MAX_TAG_LENGTH)}자까지 쓸 수 있어요.`,
+    validationMsg("tagLength", MAX_TAG_LENGTH),
   );
 
 export const memoSchema = z
   .string()
-  .max(MAX_MEMO_LENGTH, `메모는 ${String(MAX_MEMO_LENGTH)}자까지 쓸 수 있어요.`);
+  .max(MAX_MEMO_LENGTH, validationMsg("memoMax", MAX_MEMO_LENGTH));
 
 export const snsFormSchema = z.object({
   url: z
     .string()
     .trim()
-    .min(1, "원문 링크 주소를 붙여 넣어 주세요.")
-    .max(MAX_URL_LENGTH, `링크 주소는 ${String(MAX_URL_LENGTH)}자까지 넣을 수 있어요.`)
-    .refine(
-      (v) => normalizeSnsUrl(v) !== null,
-      "http:// 또는 https://로 시작하는 주소를 넣어 주세요.",
-    ),
+    .min(1, validationMsg("urlRequired"))
+    .max(MAX_URL_LENGTH, validationMsg("urlMax", MAX_URL_LENGTH))
+    .refine((v) => normalizeSnsUrl(v) !== null, validationMsg("urlFormat")),
   places: z
     .array(z.custom<LinkedPlaceDraft>())
-    .max(
-      MAX_LINKED_PLACES,
-      `한 링크에 장소는 ${String(MAX_LINKED_PLACES)}곳까지 연결할 수 있어요.`,
-    ),
+    .max(MAX_LINKED_PLACES, validationMsg("placesMax", MAX_LINKED_PLACES)),
   sigun: z.string(),
   tags: tagsSchema,
   memo: memoSchema,

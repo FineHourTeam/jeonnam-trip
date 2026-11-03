@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { Link, useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { paths } from "@/app/paths";
@@ -24,13 +25,7 @@ import { SnsLinkExistsError } from "../api/library-api";
 import { useSaveSnsLink, useSnsLinks } from "../hooks/use-library";
 import { useLibraryViewStore } from "../hooks/use-library-view-store";
 import { useSnsFormStore } from "../hooks/use-sns-form-store";
-import {
-  MAX_MEMO_LENGTH,
-  MAX_TAGS,
-  SNS_PLATFORM_LABEL,
-  normalizeSnsUrl,
-  snsPlatformOf,
-} from "../lib/library";
+import { MAX_MEMO_LENGTH, MAX_TAGS, normalizeSnsUrl, snsPlatformOf } from "../lib/library";
 import {
   EMPTY_SNS_FORM,
   NO_SIGUN,
@@ -51,6 +46,7 @@ interface SnsLinkFormProps {
 }
 
 export function SnsLinkForm({ link, initial, restored }: SnsLinkFormProps) {
+  const { t } = useTranslation("library");
   const navigate = useNavigate();
   const location = useLocation();
   const authState = useAuthState();
@@ -97,21 +93,24 @@ export function SnsLinkForm({ link, initial, restored }: SnsLinkFormProps) {
           const n = v.places.length;
           toast.success(
             link
-              ? "링크를 고쳤어요."
+              ? t("snsForm.edited")
               : n > 0
-                ? `링크와 장소 ${String(n)}곳을 보관했어요.`
-                : "링크를 장소 연결 전 링크에 보관했어요.",
+                ? t("snsForm.savedWithPlaces", { count: n })
+                : t("snsForm.savedUnlinked"),
           );
           goToLibrary(n > 0);
         },
         onError: (e) => {
           if (e instanceof SnsLinkExistsError) {
-            toast("이미 보관한 링크예요. 보관한 링크에 장소를 더해 주세요.", {
-              action: { label: "링크 열기", onClick: () => void navigate(paths.snsEdit(e.linkId)) },
+            toast(t("snsForm.exists"), {
+              action: {
+                label: t("snsForm.openLink"),
+                onClick: () => void navigate(paths.snsEdit(e.linkId)),
+              },
             });
             return;
           }
-          toast.error("링크를 보관하지 못했어요. 네트워크 연결을 확인한 뒤 다시 시도해 주세요.");
+          toast.error(t("snsForm.saveFailed"));
         },
       },
     );
@@ -122,7 +121,7 @@ export function SnsLinkForm({ link, initial, restored }: SnsLinkFormProps) {
     if (!duplicate) return;
     const input = mergeLinkInput(duplicate, linkInputOf(v));
     if (!input) {
-      toast.error("합치면 장소·태그·메모 한도를 넘어요. 보관한 링크를 열어 직접 고쳐 주세요.");
+      toast.error(t("snsForm.mergeTooMany"));
       return;
     }
     save.mutate(
@@ -130,11 +129,11 @@ export function SnsLinkForm({ link, initial, restored }: SnsLinkFormProps) {
       {
         onSuccess: () => {
           clearPending();
-          toast.success("보관한 링크에 쓴 내용을 더했어요.");
+          toast.success(t("snsForm.merged"));
           goToLibrary(input.targets.length > 0);
         },
         onError: () => {
-          toast.error("링크를 보관하지 못했어요. 네트워크 연결을 확인한 뒤 다시 시도해 주세요.");
+          toast.error(t("snsForm.saveFailed"));
         },
       },
     );
@@ -145,7 +144,7 @@ export function SnsLinkForm({ link, initial, restored }: SnsLinkFormProps) {
       {showRestored && (
         <Alert>
           <AlertDescription className="flex flex-wrap items-center justify-between gap-2">
-            쓰던 내용을 그대로 불러왔어요. 확인하고 저장해 주세요.
+            {t("snsForm.restored")}
             <Button
               type="button"
               variant="ghost"
@@ -156,14 +155,14 @@ export function SnsLinkForm({ link, initial, restored }: SnsLinkFormProps) {
                 setShowRestored(false);
               }}
             >
-              새로 쓰기
+              {t("snsForm.startOver")}
             </Button>
           </AlertDescription>
         </Alert>
       )}
 
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="sns-url">원문 링크</Label>
+        <Label htmlFor="sns-url">{t("snsForm.url")}</Label>
         <Input
           id="sns-url"
           type="url"
@@ -177,18 +176,18 @@ export function SnsLinkForm({ link, initial, restored }: SnsLinkFormProps) {
         />
         <p id="sns-url-hint" className="text-muted-foreground text-xs">
           {link
-            ? "주소는 바꿀 수 없어요. 다른 주소는 새 링크로 보관해 주세요."
+            ? t("snsForm.urlLocked")
             : normalized
-              ? `${SNS_PLATFORM_LABEL[snsPlatformOf(normalized)]} 링크로 보관해요. 미리보기는 가져오지 않아요.`
-              : "인스타그램·유튜브·블로그 등 http:// 또는 https:// 주소를 붙여 넣어 주세요."}
+              ? t("snsForm.urlPlatform", { platform: t(`platform.${snsPlatformOf(normalized)}`) })
+              : t("snsForm.urlHint")}
         </p>
         {errors.url && <p className="text-destructive text-sm">{errors.url.message}</p>}
         {duplicate && (
           <div className="flex flex-col items-start gap-2">
             <p className="text-destructive text-sm">
-              이미 보관한 링크예요.{" "}
+              {t("snsForm.duplicate")}{" "}
               <Link to={paths.snsEdit(duplicate.id)} className="underline underline-offset-4">
-                보관한 링크 열기
+                {t("snsForm.openDuplicate")}
               </Link>
             </p>
             {!link && !guest && hasExtra && (
@@ -199,7 +198,7 @@ export function SnsLinkForm({ link, initial, restored }: SnsLinkFormProps) {
                 disabled={save.isPending}
                 onClick={() => void merge()}
               >
-                쓴 내용을 보관한 링크에 더하기
+                {t("snsForm.merge")}
               </Button>
             )}
           </div>
@@ -219,7 +218,7 @@ export function SnsLinkForm({ link, initial, restored }: SnsLinkFormProps) {
       />
 
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="sns-sigun">지역 (선택)</Label>
+        <Label htmlFor="sns-sigun">{t("snsForm.sigun")}</Label>
         <Controller
           control={form.control}
           name="sigun"
@@ -229,10 +228,10 @@ export function SnsLinkForm({ link, initial, restored }: SnsLinkFormProps) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={NO_SIGUN}>미분류</SelectItem>
+                <SelectItem value={NO_SIGUN}>{t("snsForm.noSigun")}</SelectItem>
                 {SIGUNS.map((s) => (
                   <SelectItem key={s.code} value={s.code}>
-                    {s.name}
+                    {t(`sigun.${s.code}`, { ns: "common" })}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -242,27 +241,27 @@ export function SnsLinkForm({ link, initial, restored }: SnsLinkFormProps) {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="sns-tags">태그 (선택)</Label>
+        <Label htmlFor="sns-tags">{t("snsForm.tags")}</Label>
         <Input
           id="sns-tags"
-          placeholder="예: 오션뷰, 사진"
+          placeholder={t("snsForm.tagsPlaceholder")}
           aria-describedby="sns-tags-hint"
           aria-invalid={errors.tags ? true : undefined}
           {...form.register("tags")}
         />
         <p id="sns-tags-hint" className="text-muted-foreground text-xs">
-          쉼표로 나눠 {MAX_TAGS}개까지 붙여요. 이번에 새로 담는 장소에도 같은 태그가 붙어요.
+          {t("snsForm.tagsHint", { max: MAX_TAGS })}
         </p>
         {errors.tags && <p className="text-destructive text-sm">{errors.tags.message}</p>}
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="sns-memo">메모 (선택)</Label>
+        <Label htmlFor="sns-memo">{t("snsForm.memo")}</Label>
         <Textarea
           id="sns-memo"
           rows={3}
           maxLength={MAX_MEMO_LENGTH}
-          placeholder="예: 댓글에 적힌 주차 팁 확인하기"
+          placeholder={t("snsForm.memoPlaceholder")}
           aria-invalid={errors.memo ? true : undefined}
           {...form.register("memo")}
         />
@@ -275,12 +274,10 @@ export function SnsLinkForm({ link, initial, restored }: SnsLinkFormProps) {
           size="lg"
           disabled={authState.status === "loading" || save.isPending || duplicate !== undefined}
         >
-          {save.isPending ? "보관하는 중…" : guest ? "로그인하고 저장하기" : "저장하기"}
+          {save.isPending ? t("snsForm.saving") : guest ? t("snsForm.loginAndSave") : t("submit")}
         </Button>
         {guest && (
-          <p className="text-muted-foreground text-center text-xs">
-            링크는 계정에 보관해요. 로그인하고 돌아오면 쓰던 내용이 그대로 있어요.
-          </p>
+          <p className="text-muted-foreground text-center text-xs">{t("snsForm.guestHint")}</p>
         )}
         {link && (
           <div className="flex justify-center">

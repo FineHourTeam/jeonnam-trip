@@ -1,4 +1,5 @@
 // S06 저장한 장소 필터 — 지역·종류·분위기(개인 태그 + 장소 분위기 태그). 다른 축은 AND, 같은 묶음 복수 선택은 OR.
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
@@ -10,7 +11,7 @@ import {
 } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { PLACE_CATEGORIES } from "@/features/places";
-import { PLACE_CATEGORY_LABEL, SIGUNS, isSigunCode } from "@/shared/domain";
+import { SIGUNS, isSigunCode } from "@/shared/domain";
 import { EMPTY_LIBRARY_FILTER, isFiltered, type LibraryFilter } from "../lib/library";
 
 const ALL = "all";
@@ -22,11 +23,12 @@ interface LibraryFiltersProps {
 }
 
 export function LibraryFilters({ value, moods, onChange }: LibraryFiltersProps) {
+  const { t } = useTranslation("library");
   return (
     <div className="flex flex-col gap-3">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="library-sigun">지역</Label>
+          <Label htmlFor="library-sigun">{t("filters.sigun")}</Label>
           <Select
             value={value.sigun ?? ALL}
             onValueChange={(v) => {
@@ -37,10 +39,10 @@ export function LibraryFilters({ value, moods, onChange }: LibraryFiltersProps) 
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={ALL}>전체 지역</SelectItem>
+              <SelectItem value={ALL}>{t("filters.allSigun")}</SelectItem>
               {SIGUNS.map((s) => (
                 <SelectItem key={s.code} value={s.code}>
-                  {s.name}
+                  {t(`sigun.${s.code}`, { ns: "common" })}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -54,7 +56,7 @@ export function LibraryFilters({ value, moods, onChange }: LibraryFiltersProps) 
               onChange(EMPTY_LIBRARY_FILTER);
             }}
           >
-            조건 초기화
+            {t("resetFilter")}
           </Button>
         )}
       </div>
@@ -65,20 +67,18 @@ export function LibraryFilters({ value, moods, onChange }: LibraryFiltersProps) 
         onValueChange={(v) => {
           onChange({ ...value, categories: PLACE_CATEGORIES.filter((c) => v.includes(c)) });
         }}
-        aria-label="종류 (여러 개 선택)"
+        aria-label={t("filters.categoryGroup")}
         className="flex-wrap justify-start"
       >
         {PLACE_CATEGORIES.map((c) => (
           <ToggleGroupItem key={c} value={c}>
-            {PLACE_CATEGORY_LABEL[c]}
+            {t(`placeCategory.${c}`, { ns: "common" })}
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
       {moods.length > 0 && (
         <div className="flex flex-col gap-1.5">
-          <p className="text-muted-foreground text-xs">
-            분위기·태그 (여러 개 고르면 하나라도 맞는 곳)
-          </p>
+          <p className="text-muted-foreground text-xs">{t("filters.moodHint")}</p>
           <ToggleGroup
             type="multiple"
             variant="outline"
@@ -87,7 +87,7 @@ export function LibraryFilters({ value, moods, onChange }: LibraryFiltersProps) 
             onValueChange={(v) => {
               onChange({ ...value, moods: moods.filter((m) => v.includes(m)) });
             }}
-            aria-label="분위기·태그 (여러 개 선택)"
+            aria-label={t("filters.moodGroup")}
             className="flex-wrap justify-start"
           >
             {moods.map((m) => (

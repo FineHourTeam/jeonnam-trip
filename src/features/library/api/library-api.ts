@@ -13,6 +13,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import i18n from "@/lib/i18n";
 import { COL, type CustomPlace, type SavedPlace, type SnsLink } from "@/shared/domain";
 import { refKey, snsPlatformOf } from "../lib/library";
 
@@ -20,7 +21,7 @@ export class SnsLinkExistsError extends Error {
   readonly linkId: string;
 
   constructor(linkId: string) {
-    super("이미 보관한 링크예요.");
+    super(i18n.t("errors.linkExists", { ns: "library" }));
     this.name = "SnsLinkExistsError";
     this.linkId = linkId;
   }
@@ -28,7 +29,7 @@ export class SnsLinkExistsError extends Error {
 
 export class SnsLinkNotFoundError extends Error {
   constructor() {
-    super("링크를 찾을 수 없어요.");
+    super(i18n.t("errors.linkNotFound", { ns: "library" }));
     this.name = "SnsLinkNotFoundError";
   }
 }

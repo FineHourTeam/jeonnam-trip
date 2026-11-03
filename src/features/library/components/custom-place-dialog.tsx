@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { AddIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
@@ -34,7 +35,7 @@ import {
   type PlaceCategory,
 } from "@/shared/domain";
 import { parseLatLng } from "../lib/library";
-import { NO_SIGUN } from "../lib/sns-form";
+import { NO_SIGUN, validationMsg } from "../lib/sns-form";
 
 const NONE = "none";
 
@@ -42,18 +43,15 @@ const schema = z.object({
   name: z
     .string()
     .trim()
-    .min(1, "장소 이름을 입력해 주세요.")
-    .max(60, "이름은 60자까지 쓸 수 있어요."),
+    .min(1, validationMsg("nameRequired"))
+    .max(60, validationMsg("nameMax", 60)),
   sigun: z.string(),
   category: z.string(),
-  address: z.string().trim().max(200, "주소는 200자까지 쓸 수 있어요."),
+  address: z.string().trim().max(200, validationMsg("addressMax", 200)),
   coords: z
     .string()
     .trim()
-    .refine(
-      (v) => v === "" || parseLatLng(v) !== null,
-      "위도, 경도 순서로 국내 좌표를 입력해 주세요. 예: 34.7936, 126.3886",
-    ),
+    .refine((v) => v === "" || parseLatLng(v) !== null, validationMsg("coords")),
 });
 
 type Values = z.infer<typeof schema>;
@@ -69,13 +67,14 @@ export function CustomPlaceDialog({
 }: {
   onAdd: (place: Omit<CustomPlace, "id" | "createdAt">) => void;
 }) {
+  const { t } = useTranslation("library");
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button type="button" variant="outline" className="self-start">
           <AddIcon size="sm" />
-          장소 직접 입력
+          {t("customPlace.title")}
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -97,6 +96,7 @@ function CustomPlaceForm({
 }: {
   onAdd: (place: Omit<CustomPlace, "id" | "createdAt">) => void;
 }) {
+  const { t } = useTranslation("library");
   const form = useForm<Values>({ resolver: zodResolver(schema), defaultValues: EMPTY });
   const { errors } = form.formState;
   const submit = form.handleSubmit((v) => {
@@ -120,13 +120,11 @@ function CustomPlaceForm({
       noValidate
     >
       <DialogHeader>
-        <DialogTitle>장소 직접 입력</DialogTitle>
-        <DialogDescription>
-          등록되지 않은 장소를 나만 보는 개인 장소로 보관해요. 이름만 넣어도 돼요.
-        </DialogDescription>
+        <DialogTitle>{t("customPlace.title")}</DialogTitle>
+        <DialogDescription>{t("customPlace.description")}</DialogDescription>
       </DialogHeader>
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="custom-name">장소 이름</Label>
+        <Label htmlFor="custom-name">{t("customPlace.name")}</Label>
         <Input
           id="custom-name"
           maxLength={60}
@@ -137,7 +135,7 @@ function CustomPlaceForm({
       </div>
       <div className="flex flex-wrap gap-3">
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="custom-sigun">지역 (선택)</Label>
+          <Label htmlFor="custom-sigun">{t("customPlace.sigun")}</Label>
           <Controller
             control={form.control}
             name="sigun"
@@ -147,10 +145,10 @@ function CustomPlaceForm({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={NO_SIGUN}>모름</SelectItem>
+                  <SelectItem value={NO_SIGUN}>{t("customPlace.unknown")}</SelectItem>
                   {SIGUNS.map((s) => (
                     <SelectItem key={s.code} value={s.code}>
-                      {s.name}
+                      {t(`sigun.${s.code}`, { ns: "common" })}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -159,7 +157,7 @@ function CustomPlaceForm({
           />
         </div>
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="custom-category">종류 (선택)</Label>
+          <Label htmlFor="custom-category">{t("customPlace.category")}</Label>
           <Controller
             control={form.control}
             name="category"
@@ -169,10 +167,10 @@ function CustomPlaceForm({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={NONE}>모름</SelectItem>
+                  <SelectItem value={NONE}>{t("customPlace.unknown")}</SelectItem>
                   {PLACE_CATEGORIES.map((c) => (
                     <SelectItem key={c} value={c}>
-                      {PLACE_CATEGORY_LABEL[c]}
+                      {t(`placeCategory.${c}`, { ns: "common" })}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -182,7 +180,7 @@ function CustomPlaceForm({
         </div>
       </div>
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="custom-address">주소 (선택)</Label>
+        <Label htmlFor="custom-address">{t("customPlace.address")}</Label>
         <Input
           id="custom-address"
           maxLength={200}
@@ -192,28 +190,27 @@ function CustomPlaceForm({
         {errors.address && <p className="text-destructive text-sm">{errors.address.message}</p>}
       </div>
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="custom-coords">좌표 (선택)</Label>
+        <Label htmlFor="custom-coords">{t("customPlace.coords")}</Label>
         <Input
           id="custom-coords"
           inputMode="decimal"
-          placeholder="예: 34.7936, 126.3886"
+          placeholder={t("customPlace.coordsPlaceholder")}
           aria-describedby="custom-coords-hint"
           aria-invalid={errors.coords ? true : undefined}
           {...form.register("coords")}
         />
         <p id="custom-coords-hint" className="text-muted-foreground text-xs">
-          지도 앱에서 복사한 위도, 경도를 붙여 넣어 주세요. 비워 두면 위치 미확인으로 보관하고 경로
-          계산에서 빠져요.
+          {t("customPlace.coordsHint")}
         </p>
         {errors.coords && <p className="text-destructive text-sm">{errors.coords.message}</p>}
       </div>
       <DialogFooter>
         <DialogClose asChild>
           <Button type="button" variant="outline">
-            닫기
+            {t("close", { ns: "common" })}
           </Button>
         </DialogClose>
-        <Button type="submit">연결하기</Button>
+        <Button type="submit">{t("customPlace.submit")}</Button>
       </DialogFooter>
     </form>
   );

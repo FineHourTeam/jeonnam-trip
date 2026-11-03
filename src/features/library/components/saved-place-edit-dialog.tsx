@@ -1,6 +1,7 @@
 // 저장한 장소의 개인 태그·메모 고치기 — 공통 장소 정보는 바꾸지 않는다 (기능명세 §1).
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -52,6 +53,7 @@ export function SavedPlaceEditDialog({ entry, onClose }: SavedPlaceEditDialogPro
 }
 
 function EditForm({ entry, onDone }: { entry: LibraryEntry; onDone: () => void }) {
+  const { t } = useTranslation("library");
   const update = useUpdateSavedPlace();
   const form = useForm<Values>({
     resolver: zodResolver(schema),
@@ -64,13 +66,10 @@ function EditForm({ entry, onDone }: { entry: LibraryEntry; onDone: () => void }
       { id: entry.saved.id, tags: parseTags(v.tags), memo: v.memo.trim() },
       {
         onSuccess: () => {
-          toast.success("태그와 메모를 저장했어요.");
+          toast.success(t("edit.saved"));
           onDone();
         },
-        onError: () =>
-          toast.error(
-            "태그와 메모를 저장하지 못했어요. 다른 기기에서 저장을 해제했는지 확인하고 다시 시도해 주세요.",
-          ),
+        onError: () => toast.error(t("edit.failed")),
       },
     );
   });
@@ -78,30 +77,30 @@ function EditForm({ entry, onDone }: { entry: LibraryEntry; onDone: () => void }
   return (
     <form onSubmit={(e) => void submit(e)} className="flex flex-col gap-4" noValidate>
       <DialogHeader>
-        <DialogTitle>태그·메모 고치기</DialogTitle>
-        <DialogDescription>{entryName(entry)} · 나만 보는 정보예요.</DialogDescription>
+        <DialogTitle>{t("edit.title")}</DialogTitle>
+        <DialogDescription>{t("edit.description", { name: entryName(entry) })}</DialogDescription>
       </DialogHeader>
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="saved-tags">태그</Label>
+        <Label htmlFor="saved-tags">{t("edit.tags")}</Label>
         <Input
           id="saved-tags"
-          placeholder="예: 오션뷰, 사진"
+          placeholder={t("edit.tagsPlaceholder")}
           aria-describedby="saved-tags-hint"
           aria-invalid={errors.tags ? true : undefined}
           {...form.register("tags")}
         />
         <p id="saved-tags-hint" className="text-muted-foreground text-xs">
-          쉼표로 나눠 {MAX_TAGS}개까지 붙일 수 있어요.
+          {t("edit.tagsHint", { max: MAX_TAGS })}
         </p>
         {errors.tags && <p className="text-destructive text-sm">{errors.tags.message}</p>}
       </div>
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="saved-memo">메모</Label>
+        <Label htmlFor="saved-memo">{t("edit.memo")}</Label>
         <Textarea
           id="saved-memo"
           rows={4}
           maxLength={MAX_MEMO_LENGTH}
-          placeholder="예: 창가 자리가 좋아요"
+          placeholder={t("edit.memoPlaceholder")}
           aria-invalid={errors.memo ? true : undefined}
           {...form.register("memo")}
         />
@@ -110,11 +109,11 @@ function EditForm({ entry, onDone }: { entry: LibraryEntry; onDone: () => void }
       <DialogFooter>
         <DialogClose asChild>
           <Button type="button" variant="outline">
-            닫기
+            {t("close", { ns: "common" })}
           </Button>
         </DialogClose>
         <Button type="submit" disabled={update.isPending}>
-          {update.isPending ? "저장하는 중…" : "저장하기"}
+          {update.isPending ? t("edit.saving") : t("submit")}
         </Button>
       </DialogFooter>
     </form>
