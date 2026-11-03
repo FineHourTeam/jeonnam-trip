@@ -1,1 +1,164 @@
-{}
+{
+  "provider": {
+    "kakao": "Kakao",
+    "google": "Google",
+    "unknown": "Unknown"
+  },
+  "login": {
+    "title": "Log in",
+    "intro": "Log in to save the trips you plan and keep viewing and editing them on other devices.",
+    "draftInApp": "Your draft trip \"{{title}}\" is only kept in this in-app browser for now. It won't show up in other browsers.",
+    "draftKept": "Your draft trip \"{{title}}\" is still on this device. You can save it after you log in.",
+    "kakaoButton": "Continue with Kakao",
+    "googleButton": "Sign in with Google",
+    "success": "You're logged in.",
+    "backWithoutLogin": "Go back without logging in",
+    "inApp": {
+      "title": "Google sign-in isn't available in this app",
+      "withLink": "To sign in with Google, use the button below to open this page in another browser.",
+      "safari": "To sign in with Google, open the more (⋯) menu on the screen and tap 'Open in Safari'.",
+      "openExternal": "Open in another browser"
+    },
+    "sdkLoadError": "We couldn't open the Kakao login screen. Please check your network connection."
+  },
+  "failure": {
+    "cancelled": {
+      "title": "Login was cancelled",
+      "description": "Log in again to save."
+    },
+    "popupBlocked": {
+      "title": "The login window didn't open",
+      "description": "Your browser blocked the pop-up. Allow pop-ups from the address bar and try again."
+    },
+    "network": {
+      "title": "We couldn't log you in",
+      "description": "Check your network connection and try again."
+    },
+    "unauthorizedDomain": {
+      "title": "You can't log in from this address",
+      "description": "Please try again from the official 머물전남. address."
+    },
+    "accountExists": {
+      "title": "An account with this email already exists",
+      "description": "Log in with the method you first signed up with (Google or Kakao)."
+    },
+    "expired": {
+      "title": "We couldn't finish logging you in",
+      "description": "The login request expired. Please log in again."
+    },
+    "unknown": {
+      "title": "We couldn't log you in",
+      "description": "Please try again in a moment."
+    },
+    "providerUnavailable": {
+      "title": "{{provider}} login isn't available yet",
+      "description": "We'll turn it on as soon as it's ready. For now, please log in with your {{other}} account."
+    }
+  },
+  "kakaoCallback": {
+    "title": "Kakao login",
+    "loading": "Logging you in with your Kakao account.",
+    "retry": "Log in again"
+  },
+  "account": {
+    "title": "My account",
+    "name": "Name",
+    "noName": "No name",
+    "email": "Email",
+    "noEmail": "No email",
+    "method": "Login method",
+    "signOut": "Log out",
+    "signedOut": "You're logged out.",
+    "signOutFailed": "We couldn't log you out. Check your network and try again.",
+    "confirmTitle": "Log out?",
+    "confirmWithDraft": "Your unsaved draft trip will be removed from this device. Saved trips will be there when you log in again.",
+    "confirmBody": "Saved trips will be there when you log in again.",
+    "confirmAction": "Log out"
+  },
+  "myTrips": {
+    "title": "My trips",
+    "newTrip": "Plan a trip",
+    "loadError": "We couldn't load your trips.",
+    "empty": "You haven't saved any trips yet.",
+    "emptyHint": "Pick a festival or place to plan your first trip.",
+    "copySuffix": "{{title}} (copy)",
+    "duplicated": "Trip copied.",
+    "duplicateFailed": "We couldn't copy the trip. Please try again.",
+    "deleted": "Trip deleted.",
+    "deleteFailed": "We couldn't delete the trip. Please try again.",
+    "deleteTitle": "Delete this trip?",
+    "deleteBody": "Deleting \"{{title}}\" can't be undone.",
+    "deleteBodyShared": "Deleting \"{{title}}\" can't be undone. Its share link will stop working too.",
+    "deleteAction": "Delete",
+    "card": {
+      "dates_one": "{{start}} – {{end}} · {{count}} place",
+      "dates_other": "{{start}} – {{end}} · {{count}} places",
+      "noRegion": "Region not set",
+      "meta": "{{regions}} · Edited {{date}}",
+      "shared": "Shared",
+      "private": "Private",
+      "more": "More options for {{title}}",
+      "open": "Open and edit",
+      "duplicate": "Copy",
+      "shareSettings": "Share settings"
+    }
+  },
+  "days": {
+    "title": "Day {{n}} · {{date}}",
+    "empty": "No places added for this day.",
+    "festival": "Festival",
+    "fixed": "Fixed at {{time}}",
+    "stay": "Stay {{min}} min",
+    "noLocation": "Location unconfirmed"
+  },
+  "sharedTrip": {
+    "goneTitle": "This trip can't be opened",
+    "errorTitle": "We couldn't load the trip",
+    "errorBody": "Check your network connection and try again.",
+    "explore": "Explore destinations",
+    "label": "Shared trip",
+    "car": "By car",
+    "copyHint": "Copy it to your trips to change the dates and order. The original trip stays the same.",
+    "copyMine": "Copy to my trips",
+    "loginCopy": "Log in to copy",
+    "copied": "Copied to your trips. Adjust the dates and order to fit your plans.",
+    "copyFailed": "We couldn't copy it. Please try again.",
+    "notice": "Opening hours and festival schedules are as of when this was shared. Once you copy it, travel times and visit windows are recalculated in the trip editor."
+  },
+  "share": {
+    "loadErrorTitle": "We couldn't load the trip",
+    "loadErrorBody": "This trip isn't yours or has been deleted.",
+    "viewMyTrips": "View my trips",
+    "title": "Share settings",
+    "backToTrip": "Back to trip",
+    "updated": "The shared version now matches your current trip.",
+    "created": "Share link created.",
+    "publishFailed": "We couldn't share it. Check your network and try again.",
+    "linkCopied": "Link copied.",
+    "linkCopyFailed": "We couldn't copy it. Please select the link and copy it yourself.",
+    "statusError": "We couldn't check the sharing status.",
+    "activeNotice": "Anyone with the link can view this trip.",
+    "linkLabel": "Share link",
+    "copy": "Copy",
+    "published": "This version was shared on {{date}} (version {{version}}).",
+    "outdated": "You've edited the trip since then. Update it so others can see the changes.",
+    "notShared": "This trip isn't shared yet. Creating a link makes the content below public.",
+    "update": "Update shared version",
+    "create": "Create share link",
+    "unshare": "Stop sharing",
+    "previewTitle": "What will be shared",
+    "includes": "Title, dates, regions, and each day's places with their order, stay time, and location",
+    "excludes": "Not included: personal notes, start and end locations (such as your lodging)",
+    "customPlaces_one": "The name and location of {{count}} place you added yourself will also be public.",
+    "customPlaces_other": "The names and locations of {{count}} places you added yourself will also be public.",
+    "unshareTitle": "Stop sharing?",
+    "unshareBody": "The current link will stop working. Copies others have already saved to their trips will stay.",
+    "unshareAction": "Stop sharing",
+    "unshared": "Sharing stopped.",
+    "unshareFailed": "We couldn't stop sharing. Please try again."
+  },
+  "errors": {
+    "shareNotFound": "Sharing was turned off, or this link doesn't exist.",
+    "shareInactive": "Sharing for this link was already turned off. Please create a new link."
+  }
+}

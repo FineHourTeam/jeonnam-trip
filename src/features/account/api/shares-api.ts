@@ -14,19 +14,20 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import i18n from "@/lib/i18n";
 import { COL, type SharedTrip, type Trip } from "@/shared/domain";
 import { toSharedTrip } from "../lib/share-copy";
 
 export class ShareNotFoundError extends Error {
   constructor() {
-    super("공유가 해제됐거나 없는 링크예요.");
+    super(i18n.t("errors.shareNotFound", { ns: "account" }));
     this.name = "ShareNotFoundError";
   }
 }
 
 export class ShareInactiveError extends Error {
   constructor() {
-    super("공유가 이미 해제된 링크예요. 새 링크를 만들어 주세요.");
+    super(i18n.t("errors.shareInactive", { ns: "account" }));
     this.name = "ShareInactiveError";
   }
 }

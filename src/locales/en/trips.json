@@ -1,1 +1,10 @@
-{}
+{
+  "defaultTitle": "New trip",
+  "errors": {
+    "versionConflict": "This trip was already saved on another device.",
+    "shareLinkConflict": "Share settings were changed on another device. We've loaded the latest version, so please check again.",
+    "notFound": "We couldn't find this trip.",
+    "tooLong_one": "Trips can be up to {{count}} day long.",
+    "tooLong_other": "Trips can be up to {{count}} days long."
+  }
+}

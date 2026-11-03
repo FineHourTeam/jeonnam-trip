@@ -1,5 +1,6 @@
 // 코스 조립 순수 함수 — 축제·장소·크리에이터·보관함 화면이 "일정에 추가"할 때 같은 규칙을 쓴다.
 // 담는 순간 이름·위치·영업정보 사본(snapshot)을 함께 저장한다 (기능명세 §1).
+import i18n from "@/lib/i18n";
 import { dateRange, diffDays } from "@/shared/lib/date";
 import {
   DEFAULT_STAY_MIN,
@@ -85,7 +86,7 @@ export function emptyDay(date: string): TripDay {
 
 export class TripTooLongError extends Error {
   constructor() {
-    super(`여행 기간은 최대 ${String(MAX_TRIP_DAYS)}일까지 만들 수 있어요.`);
+    super(i18n.t("errors.tooLong", { ns: "trips", count: MAX_TRIP_DAYS }));
     this.name = "TripTooLongError";
   }
 }
@@ -101,7 +102,7 @@ export function newTripDraft(input: {
   const days = diffDays(input.startDate, input.endDate) + 1;
   if (days < 1 || days > MAX_TRIP_DAYS) throw new TripTooLongError();
   return {
-    title: input.title ?? "새 여행",
+    title: input.title ?? i18n.t("defaultTitle", { ns: "trips" }),
     startDate: input.startDate,
     endDate: input.endDate,
     mode: "car",

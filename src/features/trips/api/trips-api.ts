@@ -13,25 +13,26 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import i18n from "@/lib/i18n";
 import { COL, type Trip, type TripDraft } from "@/shared/domain";
 
 export class VersionConflictError extends Error {
   constructor() {
-    super("다른 기기에서 먼저 저장된 코스예요.");
+    super(i18n.t("errors.versionConflict", { ns: "trips" }));
     this.name = "VersionConflictError";
   }
 }
 
 export class ShareLinkConflictError extends Error {
   constructor() {
-    super("다른 기기에서 공유 설정이 바뀌었어요. 최신 상태를 불러왔으니 다시 확인해 주세요.");
+    super(i18n.t("errors.shareLinkConflict", { ns: "trips" }));
     this.name = "ShareLinkConflictError";
   }
 }
 
 export class TripNotFoundError extends Error {
   constructor() {
-    super("코스를 찾을 수 없어요.");
+    super(i18n.t("errors.notFound", { ns: "trips" }));
     this.name = "TripNotFoundError";
   }
 }

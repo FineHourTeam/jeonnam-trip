@@ -1,1 +1,9 @@
-{}
+{
+  "defaultTitle": "新しい旅行",
+  "errors": {
+    "versionConflict": "ほかの端末で先に保存されたコースです。",
+    "shareLinkConflict": "ほかの端末で共有設定が変わりました。最新の状態を読み込んだので、もう一度確認してください。",
+    "notFound": "コースが見つかりません。",
+    "tooLong": "旅行の期間は最大{{count}}日までつくれます。"
+  }
+}

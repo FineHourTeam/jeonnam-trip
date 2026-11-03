@@ -2,6 +2,7 @@
 // JS 키는 공개 값(카카오 콘솔의 JavaScript SDK 도메인으로 제한). 버전을 고정하고 SRI로 파일을 검증한다.
 // ponytail: 버전 고정 — 새 SDK가 필요하면 src와 integrity를 함께 바꾼다 (developers.kakao.com/docs/ko/javascript/download)
 import { env } from "@/lib/env";
+import i18n from "@/lib/i18n";
 
 const SDK_SRC = "https://t1.kakaocdn.net/kakao_js_sdk/2.8.4/kakao.min.js";
 const SDK_INTEGRITY = "sha384-BGX7Wb16GmRFagri4bLJV2DgipVZaU2AI812GZtHtHzzDQJnfHasDXN5houxv45w";
@@ -24,7 +25,7 @@ declare global {
 
 export class KakaoSdkLoadError extends Error {
   constructor() {
-    super("카카오 로그인 화면을 열지 못했어요. 네트워크 연결을 확인해 주세요.");
+    super(i18n.t("login.sdkLoadError", { ns: "account" }));
     this.name = "KakaoSdkLoadError";
   }
 }
