@@ -67,9 +67,7 @@ export function AppLayout() {
             )}
           >
             <img src="/logo-mark.png" alt="" className="size-8" />
-            <span>
-              머물전남<span className="text-point">.</span>
-            </span>
+            <span>머물전남</span>
           </Link>
           <nav aria-label="주 메뉴" className="hidden gap-1 md:flex">
             {NAV.map((item) => (

@@ -32,11 +32,9 @@ interface HomeHeroProps {
   labelledBy: string;
   /** 사진 위에 올릴 제목·조건 카드 */
   children: ReactNode;
-  /** PC(lg 이상)에서 오른쪽에 함께 올릴 장면 — 모바일은 높이가 모자라 히어로 아래에 따로 둔다 */
-  aside?: ReactNode;
 }
 
-export function HomeHero({ labelledBy, children, aside }: HomeHeroProps) {
+export function HomeHero({ labelledBy, children }: HomeHeroProps) {
   const places = usePlacesByIds(HERO_PLACE_IDS);
   const slides = buildHeroSlides(places.data ?? []);
   const hasPhotos = slides.length > 0;
@@ -52,16 +50,8 @@ export function HomeHero({ labelledBy, children, aside }: HomeHeroProps) {
         className="bg-scrim text-scrim-foreground pointer-events-none absolute inset-0"
       />
       {/* 가운데 글·카드 밖에서는 사진을 밀어 넘길 수 있게 바깥 틀은 포인터를 통과시킨다. 위 여백 pt-20 = 겹친 헤더(h-14) + 6 */}
-      <div
-        className={cn(
-          "text-scrim-foreground pointer-events-none relative mx-auto flex w-full flex-1 flex-col justify-center px-4 pt-20 pb-8",
-          aside
-            ? "max-w-screen-md lg:grid lg:max-w-screen-xl lg:grid-cols-2 lg:items-center lg:gap-12"
-            : "max-w-screen-md",
-        )}
-      >
+      <div className="text-scrim-foreground pointer-events-none relative mx-auto flex w-full max-w-screen-md flex-1 flex-col justify-center px-4 pt-20 pb-8">
         <div className="pointer-events-auto flex flex-col gap-6">{children}</div>
-        {aside && <div className="pointer-events-auto hidden lg:block">{aside}</div>}
       </div>
     </section>
   );

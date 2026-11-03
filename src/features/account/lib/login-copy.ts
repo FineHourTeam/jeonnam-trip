@@ -21,7 +21,7 @@ const FAILURE_COPY: Record<Exclude<LoginFailure, "provider-unavailable">, LoginC
   },
   "unauthorized-domain": {
     title: "이 주소에서는 로그인할 수 없어요",
-    description: "머물전남. 공식 주소에서 다시 시도해주세요.",
+    description: "머물전남 공식 주소에서 다시 시도해주세요.",
   },
   "account-exists": {
     title: "같은 이메일로 가입한 계정이 있어요",

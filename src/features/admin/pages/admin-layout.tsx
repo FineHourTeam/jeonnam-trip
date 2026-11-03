@@ -57,7 +57,7 @@ export default function AdminLayout() {
         <div className="mx-auto flex h-14 max-w-screen-xl items-center gap-4 overflow-x-auto px-4">
           <Link to={paths.admin} className="flex shrink-0 items-center gap-2 font-bold">
             <img src="/logo-mark.png" alt="" className="size-7" />
-            머물전남. 운영
+            머물전남 운영
           </Link>
           <nav aria-label="관리 메뉴" className="flex gap-1">
             {NAV.map((item) => (
