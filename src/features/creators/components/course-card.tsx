@@ -1,9 +1,11 @@
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { paths } from "@/app/paths";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { sigunName, type CreatorCourse } from "@/shared/domain";
-import { courseDayCount, formatDays } from "../lib/course";
+import type { CreatorCourse } from "@/shared/domain";
+import { courseText } from "@/shared/lib/content-text";
+import { courseDayCount, formatDays, tagLabel } from "../lib/course";
 import { CreatorAvatar } from "./creator-avatar";
 
 interface CourseCardProps {
@@ -14,7 +16,11 @@ interface CourseCardProps {
 
 export function CourseCard({ course, cover }: CourseCardProps) {
   const placeCount = course.days.reduce((n, d) => n + d.items.length, 0);
-  const regions = course.siguns.map(sigunName).join(" · ");
+  const { t, i18n } = useTranslation("creators");
+  const { title } = courseText(course, i18n.language);
+  const regions = course.siguns
+    .map((s) => t(`sigun.${s}`, { ns: "common" }))
+    .join(t("regionSeparator"));
   return (
     <Link
       to={paths.creatorDetail(course.id)}
@@ -39,15 +45,15 @@ export function CourseCard({ course, cover }: CourseCardProps) {
       <div className="flex flex-col gap-2 p-4">
         <div className="flex flex-wrap gap-1.5">
           <Badge variant="secondary">{formatDays(courseDayCount(course))}</Badge>
-          {course.tags.map((t) => (
-            <Badge key={t} variant="outline">
-              {t}
+          {course.tags.map((tag) => (
+            <Badge key={tag} variant="outline">
+              {tagLabel(tag, i18n.language)}
             </Badge>
           ))}
         </div>
-        <p className="line-clamp-2 font-medium text-pretty">{course.title}</p>
+        <p className="line-clamp-2 font-medium text-pretty">{title}</p>
         <p className="text-muted-foreground text-sm">
-          {regions} · 장소 {placeCount}곳
+          {t("card.meta", { regions, count: placeCount })}
         </p>
         <div className="mt-1 flex items-center gap-2">
           <CreatorAvatar creator={course.creator} size="sm" />

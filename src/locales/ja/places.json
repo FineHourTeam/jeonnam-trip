@@ -1,0 +1,112 @@
+{
+  "error": {
+    "notFound": "スポットが見つかりません。",
+    "network": "ネットワーク接続を確認して、もう一度お試しください。"
+  },
+  "needsCheck": "要確認",
+  "card": {
+    "noPhoto": "写真なし",
+    "select": "{{name}}を選択"
+  },
+  "filters": {
+    "nameLabel": "スポット名",
+    "namePlaceholder": "例：儒達山",
+    "search": "検索",
+    "nameHint": "入力した文字で名前が始まるスポットを探します。",
+    "region": "地域",
+    "allRegions": "すべての地域",
+    "categories": "種類（複数選択可）",
+    "reset": "条件をリセット",
+    "subHint": "詳細な種類（複数選ぶといずれかに当てはまるスポット）",
+    "subcategories": "詳細な種類（複数選択可）"
+  },
+  "hours": {
+    "closed": "定休日",
+    "lastOrder": "ラストオーダー {{time}}",
+    "weekday": "{{day}}曜日"
+  },
+  "info": {
+    "hoursTitle": "営業時間",
+    "hoursUnknown": "営業時間は要確認です。訪問前に運営元へお問い合わせください。旅程に入れる場合は時間をご自身で決めてください。",
+    "basicsTitle": "利用情報",
+    "address": "住所",
+    "phone": "電話",
+    "parking": "駐車場",
+    "reservation": "予約",
+    "pets": "ペット",
+    "available": "あり",
+    "unavailable": "なし",
+    "noReservation": "受け付けていません",
+    "petsAllowed": "同伴可",
+    "petsNotAllowed": "同伴不可",
+    "checksTitle": "情報の出典と確認",
+    "state": {
+      "verified": "確認済み",
+      "unverified": "未確認",
+      "conflict": "情報が食い違い"
+    },
+    "check": {
+      "location": "位置",
+      "hours": "営業時間",
+      "info": "基本情報"
+    },
+    "collectedOn": "{{date}} 収集",
+    "checkedOn": "{{date}} 確認",
+    "viewSource": "{{label}}の原文を見る",
+    "sources": "出典：{{sources}}",
+    "disclaimer": "自動で収集した情報、または確認時点の情報です。訪問前に運営元の案内をもう一度ご確認ください。"
+  },
+  "detail": {
+    "back": "スポット一覧",
+    "notFoundTitle": "スポットが見つかりません",
+    "loadErrorTitle": "スポット情報を読み込めませんでした",
+    "notFoundBody": "公開が終了したか、アドレスが間違っている可能性があります。",
+    "seoFallback": "{{sigun}}の{{category}}",
+    "unverified": "未確認の情報を含む",
+    "noHoursNote": "営業時間が確認できていないため、コースでは営業時間の確認が必要と表示されます。",
+    "noLocationRoute": "位置が確認できていないため、ルート計算には含まれません。",
+    "locationTitle": "位置",
+    "noLocationMap": "位置が確認できていないため、地図には表示しません。",
+    "noPhotos": "登録された写真がありません",
+    "photoAlt": "{{name}}の写真 {{n}}"
+  },
+  "list": {
+    "seoTitle": "スポット",
+    "seoDescription": "全羅南道22市郡の観光地・飲食店・カフェ・宿泊施設を地域と種類で探して、旅程に入れてみましょう。",
+    "title": "全羅南道のスポット",
+    "intro": "行きたい場所を選んで、作成中のコースの好きな日に入れられます。",
+    "subcategoryCleared": "選んだ種類に含まれない詳細な種類の選択を解除しました。",
+    "count": "スポット {{formatted}}件",
+    "loadErrorTitle": "スポット一覧を読み込めませんでした",
+    "emptyFiltered": "条件に合うスポットがありません",
+    "emptyAll": "公開中のスポットはまだありません",
+    "emptyHint": "地域や種類を変えるか、名前の最初の部分でもう一度探してみてください。",
+    "nextPageError": "続きのスポットを読み込めませんでした。もう一度お試しください。",
+    "loadingMore": "読み込み中…",
+    "more": "スポットをもっと見る",
+    "selected": "選んだスポット {{count}}件",
+    "clearSelection": "選択を解除"
+  },
+  "addToTrip": {
+    "drafting": "{{title}}（作成中）",
+    "newTripWithPlaces": "このスポットで新しい旅行をつくる",
+    "newTrip": "新しい旅行をつくる",
+    "loadTripsError": "マイ旅行を読み込めませんでした。もう一度試すか、新しい旅行をつくって入れてください。",
+    "noTarget": "入れられるコースがありません。旅行をつくると、選んだスポットを1日目に入れて始めます。",
+    "customPlacesNote": "自分で登録したスポットは、旅行をつくった後に保存リストからもう一度入れてください。",
+    "day": "{{day}}日目",
+    "added": "「{{title}}」の{{day}}に{{count}}件を入れました。",
+    "skipped": "すでに入っていた{{count}}件は除きました。",
+    "viewCourse": "コースを見る",
+    "allDuplicateMulti": "選んだスポットはすべて{{day}}に入っています。",
+    "allDuplicate": "すでに{{day}}に入っているスポットです。",
+    "conflict": "別の端末で先に保存されたコースです。最新のコースを読み込んだので、もう一度入れてください。",
+    "saveError": "コースに入れられませんでした。ネットワーク接続を確認して、もう一度お試しください。",
+    "course": "コース",
+    "dayLabel": "日程",
+    "courseOf": "「{{title}}」コース",
+    "dayOption": "{{day}} · {{date}}",
+    "adding": "追加中…",
+    "add": "旅行に追加"
+  }
+}

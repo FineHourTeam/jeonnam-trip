@@ -1,4 +1,5 @@
 // S02 조회 조건 — 시군·진행 상태·날짜. 값은 URL 검색 파라미터가 들고 있어 뒤로 가기·공유에도 유지된다.
+import { useTranslation } from "react-i18next";
 import { DateFilterInput } from "@/components/date-filter-input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -27,12 +28,13 @@ interface FestivalFiltersProps {
 const ALL = "all";
 
 export function FestivalFilters({ values, today, onChange, onReset }: FestivalFiltersProps) {
+  const { t } = useTranslation("festivals");
   const dirty = values.sigun !== null || values.phase !== null || values.date !== null;
   return (
     <div className="flex flex-col gap-3">
       <div className="flex flex-wrap items-end gap-3">
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="festival-sigun">지역</Label>
+          <Label htmlFor="festival-sigun">{t("filters.region")}</Label>
           <Select
             value={values.sigun ?? ALL}
             onValueChange={(v) => {
@@ -43,17 +45,17 @@ export function FestivalFilters({ values, today, onChange, onReset }: FestivalFi
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={ALL}>전체 지역</SelectItem>
+              <SelectItem value={ALL}>{t("filters.allRegions")}</SelectItem>
               {SIGUNS.map((s) => (
                 <SelectItem key={s.code} value={s.code}>
-                  {s.name}
+                  {t(`sigun.${s.code}`, { ns: "common" })}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="festival-date">날짜</Label>
+          <Label htmlFor="festival-date">{t("filters.date")}</Label>
           <DateFilterInput
             id="festival-date"
             min={today}
@@ -74,15 +76,15 @@ export function FestivalFilters({ values, today, onChange, onReset }: FestivalFi
             if (!v) return;
             onChange({ phase: v === "ongoing" || v === "upcoming" ? v : null });
           }}
-          aria-label="진행 상태"
+          aria-label={t("filters.phase")}
         >
-          <ToggleGroupItem value={ALL}>전체</ToggleGroupItem>
-          <ToggleGroupItem value="ongoing">진행 중</ToggleGroupItem>
-          <ToggleGroupItem value="upcoming">예정</ToggleGroupItem>
+          <ToggleGroupItem value={ALL}>{t("filters.all")}</ToggleGroupItem>
+          <ToggleGroupItem value="ongoing">{t("state.ongoing")}</ToggleGroupItem>
+          <ToggleGroupItem value="upcoming">{t("state.upcoming")}</ToggleGroupItem>
         </ToggleGroup>
         {dirty && (
           <Button variant="ghost" size="sm" onClick={onReset}>
-            조건 초기화
+            {t("filters.reset")}
           </Button>
         )}
       </div>

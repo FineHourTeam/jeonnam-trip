@@ -4,6 +4,7 @@
 // 버튼은 각 브랜드 가이드(카카오 로그인 디자인 가이드·Google Identity 브랜딩)대로 — 레이블·로고·색을 바꾸지 않는다.
 // 카카오톡·네이버 앱 같은 앱 안 브라우저는 Google이 로그인을 막으므로(403 disallowed_useragent) Google 버튼만 잠그고
 // 외부 브라우저로 안내한다. 카카오 로그인은 막힌다는 근거가 없어 그대로 열어 둔다.
+import { useTranslation } from "react-i18next";
 import { Navigate, useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { paths } from "@/app/paths";
@@ -22,11 +23,12 @@ import { failureCopyOf } from "../lib/login-copy";
 
 // 카카오 먼저, Google 다음 (레이블은 각 가이드의 표준 문구)
 const PROVIDER_BUTTONS = [
-  { provider: "kakao", label: "카카오 로그인", logo: kakaoSymbol },
-  { provider: "google", label: "Google 계정으로 로그인", logo: googleG },
+  { provider: "kakao", labelKey: "login.kakaoButton", logo: kakaoSymbol },
+  { provider: "google", labelKey: "login.googleButton", logo: googleG },
 ] as const;
 
 export default function LoginPage() {
+  const { t } = useTranslation("account");
   const location = useLocation();
   const navigate = useNavigate();
   const authState = useAuthState();
@@ -52,17 +54,13 @@ export default function LoginPage() {
   return (
     <section className="mx-auto flex max-w-sm flex-col gap-6 px-4 py-10">
       <div className="flex flex-col gap-2">
-        <h1 className="text-xl font-semibold text-balance">로그인</h1>
-        <p className="text-muted-foreground text-sm">
-          로그인하면 만든 코스를 저장하고, 다른 기기에서도 이어서 보고 고칠 수 있어요.
-        </p>
+        <h1 className="text-xl font-semibold text-balance">{t("login.title")}</h1>
+        <p className="text-muted-foreground text-sm">{t("login.intro")}</p>
       </div>
 
       {draft && (
         <div className="bg-background-subtle text-foreground rounded-lg p-4 text-sm">
-          {inApp
-            ? `작성 중인 「${draft.title}」 코스는 지금 이 앱 안 브라우저에만 남아 있어요. 다른 브라우저에서는 보이지 않아요.`
-            : `작성 중인 「${draft.title}」 코스는 이 기기에 그대로 있어요. 로그인한 뒤 이어서 저장할 수 있어요.`}
+          {t(inApp ? "login.draftInApp" : "login.draftKept", { title: draft.title })}
         </div>
       )}
 
@@ -86,7 +84,7 @@ export default function LoginPage() {
         {authState.status === "loading" ? (
           <Skeleton className="h-24 w-full rounded-lg" />
         ) : (
-          PROVIDER_BUTTONS.map(({ provider, label, logo }) => (
+          PROVIDER_BUTTONS.map(({ provider, labelKey, logo }) => (
             <Button
               key={provider}
               variant={provider}
@@ -98,7 +96,7 @@ export default function LoginPage() {
                 signIn
                   .mutateAsync(provider)
                   .then(() => {
-                    if (provider === "google") toast.success("로그인했어요.");
+                    if (provider === "google") toast.success(t("login.success"));
                   })
                   .catch(() => undefined); // 실패 문구는 signIn.error로 그린다
               }}
@@ -108,12 +106,12 @@ export default function LoginPage() {
               ) : (
                 <img src={logo} alt="" aria-hidden className="size-4.5" />
               )}
-              {label}
+              {t(labelKey)}
             </Button>
           ))
         )}
         <Button variant="ghost" size="lg" onClick={cancel}>
-          로그인 없이 돌아가기
+          {t("login.backWithoutLogin")}
         </Button>
       </div>
     </section>
@@ -121,19 +119,18 @@ export default function LoginPage() {
 }
 
 function InAppNotice({ externalUrl }: { externalUrl: string | null }) {
+  const { t } = useTranslation("account");
   return (
     <div className="flex flex-col gap-2">
       <Alert role="alert">
-        <AlertTitle>이 앱 안에서는 Google 로그인을 할 수 없어요</AlertTitle>
+        <AlertTitle>{t("login.inApp.title")}</AlertTitle>
         <AlertDescription>
-          {externalUrl
-            ? "Google 계정으로 로그인하려면 아래 버튼으로 다른 브라우저에서 열어주세요."
-            : "Google 계정으로 로그인하려면 화면의 더보기(⋯) 메뉴에서 'Safari로 열기'를 눌러 열어주세요."}
+          {t(externalUrl ? "login.inApp.withLink" : "login.inApp.safari")}
         </AlertDescription>
       </Alert>
       {externalUrl && (
         <Button asChild variant="outline" size="lg">
-          <a href={externalUrl}>다른 브라우저로 열기</a>
+          <a href={externalUrl}>{t("login.inApp.openExternal")}</a>
         </Button>
       )}
     </div>

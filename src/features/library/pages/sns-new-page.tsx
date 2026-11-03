@@ -1,6 +1,7 @@
 // S07 SNS 링크 저장 — 새 링크, 또는 ?link=<id>로 보관한 링크를 고친다(나중에 장소 연결).
 // 서비스가 영상·게시물에서 장소를 자동으로 찾지 않는다 — 사용자가 원문을 보고 직접 연결한다 (기능명세 §4).
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useSearchParams } from "react-router";
 import { paths } from "@/app/paths";
 import { useAuthState } from "@/app/use-auth-state";
@@ -18,9 +19,10 @@ import { EMPTY_SNS_FORM, formOfLink } from "../lib/sns-form";
 import type { CustomPlace, SnsLink } from "@/shared/domain";
 
 export default function SnsNewPage() {
+  const { t } = useTranslation("library");
   const [params] = useSearchParams();
   const linkId = params.get("link");
-  const title = linkId ? "SNS 링크 고치기" : "SNS 링크 저장";
+  const title = linkId ? t("snsPage.titleEdit") : t("snsPage.titleNew");
 
   return (
     <section className="mx-auto flex max-w-screen-md flex-col gap-6 px-4 py-6">
@@ -28,15 +30,12 @@ export default function SnsNewPage() {
       <Button variant="ghost" size="sm" asChild className="self-start">
         <Link to={paths.library}>
           <ChevronLeftIcon size="sm" />
-          보관함
+          {t("snsPage.back")}
         </Link>
       </Button>
       <div className="flex flex-col gap-1">
         <h1 className="text-xl font-semibold text-balance">{title}</h1>
-        <p className="text-muted-foreground text-sm text-pretty">
-          인스타그램·유튜브·블로그에서 본 곳을 원문 링크와 함께 보관해요. 영상이나 글에서 장소를
-          자동으로 찾아 주지는 않으니, 원문을 보고 장소를 직접 연결해 주세요.
-        </p>
+        <p className="text-muted-foreground text-sm text-pretty">{t("snsPage.intro")}</p>
       </div>
       {linkId ? <EditLink key={linkId} linkId={linkId} /> : <NewLink />}
     </section>
@@ -52,20 +51,17 @@ function NewLink() {
 }
 
 function EditLink({ linkId }: { linkId: string }) {
+  const { t } = useTranslation("library");
   const authState = useAuthState();
   if (authState.status === "loading") return <FormSkeleton />;
   if (authState.status === "guest") {
-    return (
-      <LoginRequired
-        title="로그인하면 보관한 링크를 고칠 수 있어요"
-        description="보관한 링크와 연결한 장소는 계정에 있어요. 로그인하면 이 화면으로 돌아와요."
-      />
-    );
+    return <LoginRequired title={t("snsPage.guestTitle")} description={t("snsPage.guestBody")} />;
   }
   return <EditLinkLoaded linkId={linkId} />;
 }
 
 function EditLinkLoaded({ linkId }: { linkId: string }) {
+  const { t } = useTranslation("library");
   const links = useSnsLinks();
   const customs = useCustomPlaces();
   const link = links.data?.find((l) => l.id === linkId);
@@ -83,10 +79,10 @@ function EditLinkLoaded({ linkId }: { linkId: string }) {
   if (!link) {
     return (
       <div className="bg-background-subtle text-foreground flex flex-col items-center gap-3 rounded-lg px-4 py-10 text-center">
-        <p className="font-medium">링크를 찾을 수 없어요</p>
-        <p className="text-muted-foreground text-sm">이미 삭제했거나 주소가 잘못된 링크예요.</p>
+        <p className="font-medium">{t("snsPage.notFoundTitle")}</p>
+        <p className="text-muted-foreground text-sm">{t("snsPage.notFoundBody")}</p>
         <Button asChild variant="outline">
-          <Link to={paths.library}>보관함으로 가기</Link>
+          <Link to={paths.library}>{t("snsPage.goLibrary")}</Link>
         </Button>
       </div>
     );
@@ -118,13 +114,14 @@ function EditLinkForm({ link, customs }: { link: SnsLink; customs: CustomPlace[]
 }
 
 function LoadError({ onRetry }: { onRetry: () => void }) {
+  const { t } = useTranslation("library");
   return (
     <div className="flex flex-col items-start gap-3">
       <Alert variant="destructive">
-        <AlertTitle>링크를 불러오지 못했어요</AlertTitle>
-        <AlertDescription>네트워크 연결을 확인한 뒤 다시 시도해 주세요.</AlertDescription>
+        <AlertTitle>{t("snsPage.loadError")}</AlertTitle>
+        <AlertDescription>{t("networkHint")}</AlertDescription>
       </Alert>
-      <Button onClick={onRetry}>다시 시도</Button>
+      <Button onClick={onRetry}>{t("retry", { ns: "common" })}</Button>
     </div>
   );
 }

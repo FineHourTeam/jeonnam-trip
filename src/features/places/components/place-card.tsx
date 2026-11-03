@@ -1,7 +1,10 @@
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { paths } from "@/app/paths";
 import { Checkbox } from "@/components/ui/checkbox";
-import { PLACE_CATEGORY_LABEL, sigunName, type Place } from "@/shared/domain";
+import { subcategoryLabel } from "../lib/place-filter";
+import type { Place } from "@/shared/domain";
+import { placeText } from "@/shared/lib/content-text";
 
 interface PlaceCardProps {
   place: Place;
@@ -11,7 +14,9 @@ interface PlaceCardProps {
 }
 
 export function PlaceCard({ place, selected = false, onToggle }: PlaceCardProps) {
+  const { t, i18n } = useTranslation("places");
   const photo = place.photos[0];
+  const { name } = placeText(place, i18n.language);
   return (
     <div className="border-border bg-card text-card-foreground has-[a:hover]:bg-background-subtle flex items-center gap-3 rounded-lg border p-3">
       <Link
@@ -27,23 +32,25 @@ export function PlaceCard({ place, selected = false, onToggle }: PlaceCardProps)
           />
         ) : (
           <div className="bg-background-subtle text-muted-foreground flex size-20 shrink-0 items-center justify-center rounded-md text-xs">
-            사진 없음
+            {t("card.noPhoto")}
           </div>
         )}
         <div className="flex min-w-0 flex-col gap-1">
           <p className="text-muted-foreground text-xs">
-            {PLACE_CATEGORY_LABEL[place.category]}
-            {place.subcategory ? ` · ${place.subcategory}` : ""}
+            {t(`placeCategory.${place.category}`, { ns: "common" })}
+            {place.subcategory ? ` · ${subcategoryLabel(place.subcategory, i18n.language)}` : ""}
           </p>
-          <p className="line-clamp-2 font-medium text-pretty">{place.name}</p>
-          <p className="text-muted-foreground text-sm">{sigunName(place.sigun)}</p>
+          <p className="line-clamp-2 font-medium text-pretty">{name}</p>
+          <p className="text-muted-foreground text-sm">
+            {t(`sigun.${place.sigun}`, { ns: "common" })}
+          </p>
         </div>
       </Link>
       {onToggle && (
         <Checkbox
           checked={selected}
           onCheckedChange={onToggle}
-          aria-label={`${place.name} 선택`}
+          aria-label={t("card.select", { name })}
           className="size-5"
         />
       )}

@@ -1,4 +1,5 @@
 // 저장 해제 확인 — 보관함 항목만 지우고, 이미 담은 일정은 바꾸지 않는다 (화면설계 S06: 저장 해제와 일정 삭제 구분).
+import { useTranslation } from "react-i18next";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,6 +19,7 @@ interface RemoveSavedDialogProps {
 }
 
 export function RemoveSavedDialog({ entry, onClose }: RemoveSavedDialogProps) {
+  const { t, i18n } = useTranslation("library");
   const { unsave } = useUnsavePlace();
 
   const confirm = () => {
@@ -35,17 +37,21 @@ export function RemoveSavedDialog({ entry, onClose }: RemoveSavedDialogProps) {
     >
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>저장을 해제할까요?</AlertDialogTitle>
+          <AlertDialogTitle>{t("remove.title")}</AlertDialogTitle>
           <AlertDialogDescription>
-            「{entry ? entryName(entry) : ""}」 저장을 해제하면 개인 태그·메모도 함께 지워져요. 이미
-            일정에 담은 장소는 그대로 남아요.
-            {entry?.saved.ref.kind === "custom" &&
-              " 직접 등록한 장소는 해제하면 보관함에 다시 담을 수 없어요."}
+            {t(
+              entry?.saved.ref.kind === "custom"
+                ? "remove.descriptionCustom"
+                : "remove.description",
+              {
+                name: entry ? entryName(entry, i18n.language) : "",
+              },
+            )}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>닫기</AlertDialogCancel>
-          <AlertDialogAction onClick={confirm}>저장 해제하기</AlertDialogAction>
+          <AlertDialogCancel>{t("close", { ns: "common" })}</AlertDialogCancel>
+          <AlertDialogAction onClick={confirm}>{t("remove.confirm")}</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

@@ -1,5 +1,6 @@
 // 개인 코스 ↔ 공유본 변환 순수 함수.
 // 공유본에는 개인 메모·출발/종료 위치를 넣지 않는다 (기능명세 §8). 받는 사람이 복사하면 새 방문 항목 id로 개인 초안을 만든다.
+import i18n from "@/lib/i18n";
 import type { SharedTrip, Trip, TripDraft } from "@/shared/domain";
 
 export function toSharedTrip(
@@ -56,7 +57,7 @@ export function draftFromTrip(
   newId: () => string = () => crypto.randomUUID(),
 ): TripDraft {
   return {
-    title: `${trip.title} (사본)`,
+    title: i18n.t("myTrips.copySuffix", { ns: "account", title: trip.title }),
     startDate: trip.startDate,
     endDate: trip.endDate,
     mode: trip.mode,

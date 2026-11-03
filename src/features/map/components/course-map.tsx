@@ -2,12 +2,18 @@
 // 지도 인스턴스·오버레이는 외부 시스템이라 Effect로 동기화한다.
 // 경로 선을 누르면 그 구간과 시작·끝 지점만 강조하고 나머지는 흐리게 둔다. 지도 빈 곳이나 마커를 누르면 풀린다.
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import type { LatLng } from "@/shared/domain";
 import { useNaverMaps } from "../hooks/use-naver-maps";
-import { naverMapsAuthFailed, type NMap, type NOverlay } from "../lib/naver-maps";
+import {
+  NaverMapsLoadError,
+  naverMapsAuthFailed,
+  type NMap,
+  type NOverlay,
+} from "../lib/naver-maps";
 
 export interface CourseMapPoint {
   id: string;
@@ -49,6 +55,7 @@ function nearestId(points: { id: string; location: LatLng }[], at: LatLng | unde
 }
 
 export function CourseMap({ points, paths, selectedId, onSelect, className }: CourseMapProps) {
+  const { t } = useTranslation("map");
   const sdk = useNaverMaps();
   const elRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<NMap | null>(null);
@@ -167,9 +174,13 @@ export function CourseMap({ points, paths, selectedId, onSelect, className }: Co
           className,
         )}
       >
-        <p className="text-sm">{sdk.error.message}</p>
+        <p className="text-sm">
+          {sdk.error instanceof NaverMapsLoadError
+            ? t(`load.${sdk.error.reason}`)
+            : sdk.error.message}
+        </p>
         <Button variant="outline" size="sm" onClick={() => void sdk.refetch()}>
-          다시 시도
+          {t("retry", { ns: "common" })}
         </Button>
       </div>
     );
@@ -178,10 +189,10 @@ export function CourseMap({ points, paths, selectedId, onSelect, className }: Co
   return (
     <div className={cn("relative overflow-hidden rounded-lg", className)}>
       {sdk.isPending && <Skeleton className="absolute inset-0" />}
-      <div ref={elRef} className="size-full" role="region" aria-label="코스 지도" />
+      <div ref={elRef} className="size-full" role="region" aria-label={t("course.label")} />
       {sdk.isSuccess && located.length === 0 && (
         <p className="bg-background text-foreground absolute inset-x-4 top-4 rounded-md p-3 text-center text-sm shadow-sm">
-          위치가 확인된 장소가 없어 지도에 표시할 수 없어요.
+          {t("course.noLocation")}
         </p>
       )}
     </div>

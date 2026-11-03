@@ -1,5 +1,6 @@
 // 로그인 화면 순수 로직 — 로그인 방법, Firebase 에러 코드 분류, 로그인 후 복귀 경로.
 import { paths } from "@/app/paths";
+import i18n from "@/lib/i18n";
 
 export type LoginProvider = "kakao" | "google";
 
@@ -7,19 +8,19 @@ export type LoginProvider = "kakao" | "google";
 export const KAKAO_UID_PREFIX = "kakao:";
 const GOOGLE_PROVIDER_ID = "google.com";
 
-export const LOGIN_PROVIDER_NAME: Record<LoginProvider, string> = {
-  kakao: "카카오",
-  google: "Google",
-};
+/** 로그인 방법 표시명 — 지금 화면 언어로 */
+export function loginProviderName(provider: LoginProvider): string {
+  return i18n.t(`provider.${provider}`, { ns: "account" });
+}
 
 /**
  * 내 계정 화면에 보여줄 로그인 방법. Google은 providerData의 providerId로,
  * 카카오는 커스텀 토큰 로그인이라 providerData가 비어 있어 uid 접두사로 알아본다.
  */
 export function providerNameOf(uid: string, providerIds: readonly string[]): string {
-  if (uid.startsWith(KAKAO_UID_PREFIX)) return LOGIN_PROVIDER_NAME.kakao;
-  if (providerIds.includes(GOOGLE_PROVIDER_ID)) return LOGIN_PROVIDER_NAME.google;
-  return "알 수 없음";
+  if (uid.startsWith(KAKAO_UID_PREFIX)) return loginProviderName("kakao");
+  if (providerIds.includes(GOOGLE_PROVIDER_ID)) return loginProviderName("google");
+  return i18n.t("provider.unknown", { ns: "account" });
 }
 
 /** 카카오 로그인 후 돌아올 주소 — 카카오 콘솔(JavaScript 키 > 리다이렉트 URI)과 서버 허용 목록에 같은 값이 있어야 한다 */

@@ -1,4 +1,5 @@
 // S04 조회 조건 — 지역·종류·세부 종류·검색어. 값은 URL 검색 파라미터가 들고 있다.
+import { useTranslation } from "react-i18next";
 import { SearchIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,9 +12,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { PLACE_CATEGORY_LABEL, SIGUNS, isSigunCode } from "@/shared/domain";
+import { SIGUNS, isSigunCode } from "@/shared/domain";
 import type { PlaceListQuery } from "../api/places-api";
-import { PLACE_CATEGORIES, subcategoriesOf } from "../lib/place-filter";
+import { PLACE_CATEGORIES, subcategoriesOf, subcategoryLabel } from "../lib/place-filter";
 
 interface PlaceFiltersProps {
   values: PlaceListQuery;
@@ -24,6 +25,7 @@ interface PlaceFiltersProps {
 const ALL = "all";
 
 export function PlaceFilters({ values, onChange, onReset }: PlaceFiltersProps) {
+  const { t, i18n } = useTranslation("places");
   const dirty = values.sigun !== null || values.categories.length > 0 || values.q !== "";
   const subOptions = subcategoriesOf(values.categories);
   return (
@@ -37,7 +39,7 @@ export function PlaceFilters({ values, onChange, onReset }: PlaceFiltersProps) {
           onChange({ q: typeof q === "string" ? q.trim() : "" });
         }}
       >
-        <Label htmlFor="place-q">장소 이름</Label>
+        <Label htmlFor="place-q">{t("filters.nameLabel")}</Label>
         <div className="flex gap-2">
           {/* key: 조건 초기화·뒤로 가기로 URL이 바뀌면 입력값도 따라간다 */}
           <Input
@@ -47,21 +49,21 @@ export function PlaceFilters({ values, onChange, onReset }: PlaceFiltersProps) {
             type="search"
             maxLength={50}
             defaultValue={values.q}
-            placeholder="예: 유달산"
+            placeholder={t("filters.namePlaceholder")}
             aria-describedby="place-q-hint"
           />
           <Button type="submit" variant="outline">
             <SearchIcon size="sm" />
-            검색
+            {t("filters.search")}
           </Button>
         </div>
         <p id="place-q-hint" className="text-muted-foreground text-xs">
-          입력한 글자로 이름이 시작하는 장소를 찾아요.
+          {t("filters.nameHint")}
         </p>
       </form>
       <div className="flex flex-wrap items-end gap-3">
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="place-sigun">지역</Label>
+          <Label htmlFor="place-sigun">{t("filters.region")}</Label>
           <Select
             value={values.sigun ?? ALL}
             onValueChange={(v) => {
@@ -72,10 +74,10 @@ export function PlaceFilters({ values, onChange, onReset }: PlaceFiltersProps) {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={ALL}>전체 지역</SelectItem>
+              <SelectItem value={ALL}>{t("filters.allRegions")}</SelectItem>
               {SIGUNS.map((s) => (
                 <SelectItem key={s.code} value={s.code}>
-                  {s.name}
+                  {t(`sigun.${s.code}`, { ns: "common" })}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -90,26 +92,24 @@ export function PlaceFilters({ values, onChange, onReset }: PlaceFiltersProps) {
           onValueChange={(v) => {
             onChange({ categories: PLACE_CATEGORIES.filter((c) => v.includes(c)) });
           }}
-          aria-label="종류 (여러 개 선택)"
+          aria-label={t("filters.categories")}
           className="flex-wrap"
         >
           {PLACE_CATEGORIES.map((c) => (
             <ToggleGroupItem key={c} value={c}>
-              {PLACE_CATEGORY_LABEL[c]}
+              {t(`placeCategory.${c}`, { ns: "common" })}
             </ToggleGroupItem>
           ))}
         </ToggleGroup>
         {dirty && (
           <Button variant="ghost" size="sm" onClick={onReset}>
-            조건 초기화
+            {t("filters.reset")}
           </Button>
         )}
       </div>
       {subOptions.length > 0 && (
         <div className="flex flex-col gap-1.5">
-          <p className="text-muted-foreground text-xs">
-            세부 종류 (여러 개 고르면 하나라도 맞는 곳)
-          </p>
+          <p className="text-muted-foreground text-xs">{t("filters.subHint")}</p>
           <ToggleGroup
             type="multiple"
             variant="outline"
@@ -118,12 +118,12 @@ export function PlaceFilters({ values, onChange, onReset }: PlaceFiltersProps) {
             onValueChange={(v) => {
               onChange({ subcategories: subOptions.filter((s) => v.includes(s)) });
             }}
-            aria-label="세부 종류 (여러 개 선택)"
+            aria-label={t("filters.subcategories")}
             className="flex-wrap"
           >
             {subOptions.map((s) => (
               <ToggleGroupItem key={s} value={s}>
-                {s}
+                {subcategoryLabel(s, i18n.language)}
               </ToggleGroupItem>
             ))}
           </ToggleGroup>

@@ -1,8 +1,15 @@
 // 화면 공용 표기 — 확인일은 "2026. 10. 19." (rules.md § 한국어 카피 — 숫자·날짜), 외부 링크는 http(s)만.
 
-export function formatDotDate(date: string): string {
+/** 확인일 같은 연월일 — ko "2026. 10. 19." · en "Oct 19, 2026" · ja "2026/10/19" */
+export function formatDotDate(date: string, lng: string): string {
   const [y = 0, m = 0, d = 0] = date.split("-").map(Number);
-  return `${String(y)}. ${String(m)}. ${String(d)}.`;
+  if (lng === "ko") return `${String(y)}. ${String(m)}. ${String(d)}.`;
+  return new Intl.DateTimeFormat(lng, {
+    timeZone: "UTC",
+    year: "numeric",
+    month: lng === "ja" ? "numeric" : "short",
+    day: "numeric",
+  }).format(Date.UTC(y, m - 1, d));
 }
 
 /** http/https 주소만 링크로 쓴다 (javascript: URI 차단) */

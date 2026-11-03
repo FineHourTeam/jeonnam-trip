@@ -1,4 +1,5 @@
 // S05 장소 상세 — 사진·소개·영업시간·이용 정보·위치·출처와 "보관함에 저장"·"일정에 추가".
+import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router";
 import { paths } from "@/app/paths";
 import { ChevronLeftIcon } from "@/components/icons";
@@ -9,14 +10,17 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PlaceSaveAction } from "@/features/library";
 import { CourseMap } from "@/features/map";
-import { PLACE_CATEGORY_LABEL, sigunName, type Place } from "@/shared/domain";
+import type { Place } from "@/shared/domain";
 import { PlaceNotFoundError } from "../api/places-api";
 import { PlaceAddToTrip } from "../components/place-add-to-trip";
 import { PlaceBasics, PlaceChecks, PlaceHours } from "../components/place-info";
 import { usePlace } from "../hooks/use-places";
 import { hoursUnknown } from "../lib/hours";
+import { placeText } from "@/shared/lib/content-text";
+import { subcategoryLabel } from "../lib/place-filter";
 
 export default function PlaceDetailPage() {
+  const { t } = useTranslation("places");
   const { placeId } = useParams();
   const query = usePlace(placeId);
 
@@ -25,7 +29,7 @@ export default function PlaceDetailPage() {
       <Button variant="ghost" size="sm" asChild className="self-start">
         <Link to={paths.places}>
           <ChevronLeftIcon size="sm" />
-          장소 목록
+          {t("detail.back")}
         </Link>
       </Button>
       {query.isPending ? (
@@ -48,67 +52,59 @@ export default function PlaceDetailPage() {
 }
 
 function LoadError({ notFound, onRetry }: { notFound: boolean; onRetry: () => void }) {
+  const { t } = useTranslation("places");
   return (
     <div className="flex flex-col items-start gap-3">
       <Alert variant="destructive">
-        <AlertTitle>
-          {notFound ? "장소를 찾을 수 없어요" : "장소 정보를 불러오지 못했어요"}
-        </AlertTitle>
+        <AlertTitle>{notFound ? t("detail.notFoundTitle") : t("detail.loadErrorTitle")}</AlertTitle>
         <AlertDescription>
-          {notFound
-            ? "공개가 끝났거나 주소가 잘못된 장소예요."
-            : "네트워크 연결을 확인한 뒤 다시 시도해 주세요."}
+          {notFound ? t("detail.notFoundBody") : t("error.network")}
         </AlertDescription>
       </Alert>
-      {!notFound && <Button onClick={onRetry}>다시 시도</Button>}
+      {!notFound && <Button onClick={onRetry}>{t("retry", { ns: "common" })}</Button>}
     </div>
   );
 }
 
 function PlaceDetail({ place }: { place: Place }) {
+  const { t, i18n } = useTranslation("places");
+  const sigun = t(`sigun.${place.sigun}`, { ns: "common" });
+  const category = t(`placeCategory.${place.category}`, { ns: "common" });
   const unverified = Object.values(place.checks).some((c) => c.state !== "verified");
   const noHours = hoursUnknown(place.hours);
+  const { name, summary } = placeText(place, i18n.language);
   return (
     <>
       <Seo
-        title={place.name}
-        description={
-          place.summary?.slice(0, 120) ??
-          `${sigunName(place.sigun)} ${PLACE_CATEGORY_LABEL[place.category]}`
-        }
+        title={name}
+        description={summary?.slice(0, 120) ?? t("detail.seoFallback", { sigun, category })}
         image={place.photos[0]}
       />
-      <Photos place={place} />
+      <Photos place={place} name={name} />
 
       <header className="flex flex-col gap-2">
         <div className="flex flex-wrap gap-2">
-          <Badge variant="secondary">{PLACE_CATEGORY_LABEL[place.category]}</Badge>
-          {place.subcategory && <Badge variant="outline">{place.subcategory}</Badge>}
-          {unverified && <Badge variant="outline">미확인 정보 포함</Badge>}
+          <Badge variant="secondary">{category}</Badge>
+          {place.subcategory && (
+            <Badge variant="outline">{subcategoryLabel(place.subcategory, i18n.language)}</Badge>
+          )}
+          {unverified && <Badge variant="outline">{t("detail.unverified")}</Badge>}
         </div>
-        <h1 className="text-xl font-semibold text-balance">{place.name}</h1>
+        <h1 className="text-xl font-semibold text-balance">{name}</h1>
         <p className="text-muted-foreground text-sm">
-          {sigunName(place.sigun)}
+          {sigun}
           {place.area ? ` · ${place.area}` : ""}
         </p>
         <PlaceSaveAction placeId={place.id} />
       </header>
 
-      {place.summary && (
-        <p className="leading-relaxed text-pretty whitespace-pre-line">{place.summary}</p>
-      )}
+      {summary && <p className="leading-relaxed text-pretty whitespace-pre-line">{summary}</p>}
 
       <div className="border-border flex flex-col gap-3 rounded-lg border p-4">
         <PlaceAddToTrip places={[place]} />
-        {noHours && (
-          <p className="text-muted-foreground text-sm">
-            영업시간이 확인되지 않아 코스에서 “영업시간 확인이 필요해요”로 표시돼요.
-          </p>
-        )}
+        {noHours && <p className="text-muted-foreground text-sm">{t("detail.noHoursNote")}</p>}
         {!place.location && (
-          <p className="text-muted-foreground text-sm">
-            위치가 확인되지 않아 경로 계산에서는 빠져요.
-          </p>
+          <p className="text-muted-foreground text-sm">{t("detail.noLocationRoute")}</p>
         )}
       </div>
 
@@ -116,17 +112,15 @@ function PlaceDetail({ place }: { place: Place }) {
       <PlaceBasics place={place} />
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-base font-semibold">위치</h2>
+        <h2 className="text-base font-semibold">{t("detail.locationTitle")}</h2>
         {place.location ? (
           <CourseMap
             className="aspect-video w-full"
-            points={[{ id: place.id, label: place.name, order: 1, location: place.location }]}
+            points={[{ id: place.id, label: name, order: 1, location: place.location }]}
             paths={[]}
           />
         ) : (
-          <p className="text-muted-foreground text-sm">
-            위치가 확인되지 않아 지도에 표시하지 않아요.
-          </p>
+          <p className="text-muted-foreground text-sm">{t("detail.noLocationMap")}</p>
         )}
       </section>
 
@@ -135,11 +129,12 @@ function PlaceDetail({ place }: { place: Place }) {
   );
 }
 
-function Photos({ place }: { place: Place }) {
+function Photos({ place, name }: { place: Place; name: string }) {
+  const { t } = useTranslation("places");
   if (place.photos.length === 0) {
     return (
       <div className="bg-background-subtle text-muted-foreground flex aspect-video w-full items-center justify-center rounded-lg text-sm">
-        등록된 사진이 없어요
+        {t("detail.noPhotos")}
       </div>
     );
   }
@@ -149,7 +144,7 @@ function Photos({ place }: { place: Place }) {
         <img
           key={src}
           src={src}
-          alt={`${place.name} 사진 ${String(i + 1)}`}
+          alt={t("detail.photoAlt", { name, n: i + 1 })}
           loading={i === 0 ? "eager" : "lazy"}
           className="aspect-video w-full shrink-0 snap-start rounded-lg object-cover"
         />

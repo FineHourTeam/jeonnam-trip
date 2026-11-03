@@ -110,8 +110,32 @@ export interface Place {
     hours: FieldCheck;
     info: FieldCheck;
   };
+  /** 영어·일본어 번역 (scripts/apply-translations.mjs가 쓴다) — ko는 번역 당시 원문 */
+  i18n?: PlaceTranslations;
   status: ContentStatus;
   updatedAt: string;
+}
+
+export interface PlaceText {
+  name?: string;
+  summary?: string;
+  address?: string;
+}
+
+/** 콘텐츠 번역 — ko는 번역 당시 원문 (지금 원문과 다르면 그 필드는 번역을 안 쓴다) */
+export interface Translations<T> {
+  ko: T;
+  en?: T;
+  ja?: T;
+}
+
+export type PlaceTranslations = Translations<PlaceText>;
+
+/** 코스 번역 필드 — notes 키는 "d{일차}-{순서}" (0부터) */
+export interface CourseText {
+  title?: string;
+  summary?: string;
+  notes?: Record<string, string>;
 }
 
 export interface FestivalProgram {
@@ -158,6 +182,8 @@ export interface Festival {
   };
   status: ContentStatus;
   updatedAt: string;
+  /** 이름·소개·주소 번역 (장소와 같은 모양) */
+  i18n?: PlaceTranslations;
 }
 
 /** 크리에이터 코스 순서 기준 — 영상 등장 순서만 확인됐으면 실제 여행 순서로 표현하지 않는다 */
@@ -180,4 +206,5 @@ export interface CreatorCourse {
   days: { day: number; items: { placeId: string; note?: string }[] }[];
   status: ContentStatus;
   updatedAt: string;
+  i18n?: Translations<CourseText>;
 }

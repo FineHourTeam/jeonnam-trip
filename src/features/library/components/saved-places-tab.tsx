@@ -1,6 +1,7 @@
 // S06 저장한 장소 탭 — 필터, 카드 목록, 고른 장소를 코스·일차에 담는 막대.
 // 고른 장소는 필터를 바꿔도 유지한다 (필터에 가려진 장소도 담긴다 — 막대에 수를 보여 준다).
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { paths } from "@/app/paths";
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,7 @@ import { SavedPlaceCard } from "./saved-place-card";
 import { SavedPlaceEditDialog } from "./saved-place-edit-dialog";
 
 export function SavedPlacesTab({ entries }: { entries: LibraryEntry[] }) {
+  const { t } = useTranslation("library");
   const filter = useLibraryViewStore((s) => s.filter);
   const setFilter = useLibraryViewStore((s) => s.setFilter);
   const selected = useLibraryViewStore((s) => s.selected);
@@ -30,13 +32,11 @@ export function SavedPlacesTab({ entries }: { entries: LibraryEntry[] }) {
   if (entries.length === 0) {
     return (
       <div className="bg-background-subtle text-foreground flex flex-col items-center gap-3 rounded-lg px-4 py-10 text-center">
-        <p className="font-medium">아직 저장한 장소가 없어요</p>
-        <p className="text-muted-foreground text-sm text-pretty">
-          장소 상세에서 “보관함에 저장”을 누르면 여기에 모여요.
-        </p>
+        <p className="font-medium">{t("savedTab.emptyTitle")}</p>
+        <p className="text-muted-foreground text-sm text-pretty">{t("savedTab.emptyBody")}</p>
         <div className="flex flex-wrap justify-center gap-2">
           <Button asChild>
-            <Link to={paths.places}>장소 둘러보기</Link>
+            <Link to={paths.places}>{t("browsePlaces")}</Link>
           </Button>
         </div>
       </div>
@@ -56,14 +56,12 @@ export function SavedPlacesTab({ entries }: { entries: LibraryEntry[] }) {
     <div className="flex flex-col gap-4">
       <LibraryFilters value={active} moods={moods} onChange={setFilter} />
       <p className="text-sm font-medium" aria-live="polite">
-        장소 {shown.length.toLocaleString("ko-KR")}곳
+        {t("savedTab.count", { count: shown.length })}
       </p>
       {shown.length === 0 ? (
         <div className="bg-background-subtle text-foreground flex flex-col items-center gap-3 rounded-lg px-4 py-10 text-center">
-          <p className="font-medium">조건에 맞는 장소가 없어요</p>
-          <p className="text-muted-foreground text-sm">
-            지역·종류를 모르는 장소는 그 조건을 고르면 빠져요.
-          </p>
+          <p className="font-medium">{t("savedTab.noMatchTitle")}</p>
+          <p className="text-muted-foreground text-sm">{t("savedTab.noMatchBody")}</p>
           {isFiltered(active) && (
             <Button
               variant="outline"
@@ -71,7 +69,7 @@ export function SavedPlacesTab({ entries }: { entries: LibraryEntry[] }) {
                 setFilter(EMPTY_LIBRARY_FILTER);
               }}
             >
-              조건 초기화
+              {t("resetFilter")}
             </Button>
           )}
         </div>
@@ -100,9 +98,9 @@ export function SavedPlacesTab({ entries }: { entries: LibraryEntry[] }) {
       {picked.length > 0 && (
         <div className="border-border bg-background text-foreground sticky bottom-16 flex flex-col gap-3 rounded-lg border p-4 shadow-md md:bottom-4">
           <div className="flex items-center justify-between gap-2">
-            <p className="text-sm font-medium">고른 장소 {picked.length}곳</p>
+            <p className="text-sm font-medium">{t("savedTab.picked", { count: picked.length })}</p>
             <Button variant="ghost" size="sm" onClick={clear}>
-              선택 해제
+              {t("savedTab.clearSelection")}
             </Button>
           </div>
           <PlaceAddToTrip

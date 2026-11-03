@@ -1,10 +1,12 @@
 // S05 정보 구역 — 영업시간·이용 정보·원문·정보 확인 상태.
 // 확정된 사실(주차·예약·반려동물)만 적고, 모르는 값은 "확인 필요"로 남긴다 (기능명세 §3).
 import type { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import { Badge } from "@/components/ui/badge";
-import type { FieldCheck, Place, VerifyState } from "@/shared/domain";
-import { formatDateKo } from "@/shared/lib/date";
+import type { FieldCheck, Place } from "@/shared/domain";
+import { formatDay } from "@/shared/lib/date";
 import { formatDotDate, safeHttpUrl, telHref } from "@/shared/lib/format";
+import { placeText } from "@/shared/lib/content-text";
 import { formatPlaceRanges, hoursUnknown, weeklyRows } from "../lib/hours";
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
@@ -17,18 +19,16 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 }
 
 export function PlaceHours({ place }: { place: Place }) {
+  const { t, i18n } = useTranslation("places");
   return (
-    <Section title="영업시간">
+    <Section title={t("info.hoursTitle")}>
       {hoursUnknown(place.hours) ? (
-        <p className="text-muted-foreground text-sm">
-          영업시간 확인 필요 · 방문 전에 운영처에 문의해 주세요. 일정에 담으면 시간을 직접 정해야
-          해요.
-        </p>
+        <p className="text-muted-foreground text-sm">{t("info.hoursUnknown")}</p>
       ) : (
         <ul className="divide-border flex flex-col divide-y text-sm">
           {weeklyRows(place.hours).map((r) => (
             <li key={r.day} className="flex justify-between gap-4 py-2">
-              <span>{r.day}요일</span>
+              <span>{t("hours.weekday", { day: r.day })}</span>
               <span className={r.known ? undefined : "text-muted-foreground"}>{r.text}</span>
             </li>
           ))}
@@ -38,7 +38,7 @@ export function PlaceHours({ place }: { place: Place }) {
         <ul className="flex flex-col gap-1 text-sm">
           {place.hours.exceptions.map((x) => (
             <li key={x.date}>
-              {formatDateKo(x.date)} {formatPlaceRanges(x.ranges)}
+              {formatDay(x.date, i18n.language)} {formatPlaceRanges(x.ranges)}
               {x.note ? ` · ${x.note}` : ""}
             </li>
           ))}
@@ -48,18 +48,19 @@ export function PlaceHours({ place }: { place: Place }) {
   );
 }
 
-function factText(v: boolean | null, yes: string, no: string): string {
-  if (v === null) return "확인 필요";
-  return v ? yes : no;
-}
-
 export function PlaceBasics({ place }: { place: Place }) {
+  const { t, i18n } = useTranslation("places");
+  const { address } = placeText(place, i18n.language);
+  const factText = (v: boolean | null, yes: string, no: string): string => {
+    if (v === null) return t("needsCheck");
+    return v ? yes : no;
+  };
   const tel = place.phone ? telHref(place.phone) : null;
   const rows: [string, ReactNode][] = [];
-  if (place.address) rows.push(["주소", place.address]);
+  if (address) rows.push([t("info.address"), address]);
   if (place.phone) {
     rows.push([
-      "전화",
+      t("info.phone"),
       tel ? (
         <a href={tel} className="text-primary underline-offset-4 hover:underline">
           {place.phone}
@@ -69,15 +70,24 @@ export function PlaceBasics({ place }: { place: Place }) {
       ),
     ]);
   }
-  rows.push(["주차", factText(place.facts.parking, "가능", "불가")]);
+  rows.push([
+    t("info.parking"),
+    factText(place.facts.parking, t("info.available"), t("info.unavailable")),
+  ]);
   if (place.facts.reservation !== null) {
-    rows.push(["예약", factText(place.facts.reservation, "가능", "받지 않음")]);
+    rows.push([
+      t("info.reservation"),
+      factText(place.facts.reservation, t("info.available"), t("info.noReservation")),
+    ]);
   }
   if (place.facts.pets !== null) {
-    rows.push(["반려동물", factText(place.facts.pets, "동반 가능", "동반 불가")]);
+    rows.push([
+      t("info.pets"),
+      factText(place.facts.pets, t("info.petsAllowed"), t("info.petsNotAllowed")),
+    ]);
   }
   return (
-    <Section title="이용 정보">
+    <Section title={t("info.basicsTitle")}>
       <dl className="flex flex-col gap-2 text-sm">
         {rows.map(([label, value]) => (
           <div key={label} className="flex gap-4">
@@ -90,42 +100,36 @@ export function PlaceBasics({ place }: { place: Place }) {
   );
 }
 
-const STATE_LABEL: Record<VerifyState, string> = {
-  verified: "확인됨",
-  unverified: "미확인",
-  conflict: "정보 상충",
-};
-
-const CHECK_ROWS = [
-  ["location", "위치"],
-  ["hours", "영업시간"],
-  ["info", "기본 정보"],
-] as const;
+const CHECK_ROWS = ["location", "hours", "info"] as const;
 
 function CheckBadge({ check }: { check: FieldCheck }) {
+  const { t } = useTranslation("places");
   const variant =
     check.state === "verified" ? "secondary" : check.state === "conflict" ? "warning" : "outline";
-  return <Badge variant={variant}>{STATE_LABEL[check.state]}</Badge>;
+  return <Badge variant={variant}>{t(`info.state.${check.state}`)}</Badge>;
 }
 
 export function PlaceChecks({ place }: { place: Place }) {
-  const sources = [...new Set(CHECK_ROWS.map(([k]) => place.checks[k].source).filter(Boolean))];
+  const { t, i18n } = useTranslation("places");
+  const sources = [...new Set(CHECK_ROWS.map((k) => place.checks[k].source).filter(Boolean))];
   const links = place.sources.flatMap((s) => {
     const url = safeHttpUrl(s.url);
     return url ? [{ url, label: s.label ?? new URL(url).hostname }] : [];
   });
   return (
-    <Section title="정보 출처와 확인">
+    <Section title={t("info.checksTitle")}>
       <ul className="flex flex-col gap-2 text-sm">
-        {CHECK_ROWS.map(([key, label]) => {
+        {CHECK_ROWS.map((key) => {
           const check = place.checks[key];
           return (
             <li key={key} className="flex flex-wrap items-center gap-2">
-              <span className="w-24 shrink-0">{label}</span>
+              <span className="w-24 shrink-0">{t(`info.check.${key}`)}</span>
               <CheckBadge check={check} />
               {check.checkedAt && (
                 <span className="text-muted-foreground">
-                  {formatDotDate(check.checkedAt)} {check.state === "unverified" ? "수집" : "확인"}
+                  {t(check.state === "unverified" ? "info.collectedOn" : "info.checkedOn", {
+                    date: formatDotDate(check.checkedAt, i18n.language),
+                  })}
                 </span>
               )}
             </li>
@@ -142,18 +146,18 @@ export function PlaceChecks({ place }: { place: Place }) {
                 rel="noopener noreferrer"
                 className="text-primary underline-offset-4 hover:underline"
               >
-                {l.label} 원문 보기
+                {t("info.viewSource", { label: l.label })}
               </a>
             </li>
           ))}
         </ul>
       )}
       {sources.length > 0 && (
-        <p className="text-muted-foreground text-xs">출처: {sources.join(" / ")}</p>
+        <p className="text-muted-foreground text-xs">
+          {t("info.sources", { sources: sources.join(" / ") })}
+        </p>
       )}
-      <p className="text-muted-foreground text-xs">
-        자동 수집했거나 확인 당시 기준인 정보예요. 방문 전에 운영처 안내를 한 번 더 확인해 주세요.
-      </p>
+      <p className="text-muted-foreground text-xs">{t("info.disclaimer")}</p>
     </Section>
   );
 }

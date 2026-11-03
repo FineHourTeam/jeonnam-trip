@@ -21,6 +21,32 @@ export const PLACE_SUBCATEGORIES: Record<PlaceCategory, string[]> = {
   lodging: ["펜션", "호텔·리조트", "글램핑·캠핑", "한옥스테이", "모텔", "청소년수련원"],
 };
 
+/** 세부 종류 표시명 — 저장값(한국어)은 그대로 두고 en·ja 화면에서만 바꿔 보인다. 목록에 없는 값은 원문 그대로 */
+const SUBCATEGORY_LABEL: Record<string, { en: string; ja: string }> = {
+  "역사·문화·전시": { en: "History, culture & exhibits", ja: "歴史・文化・展示" },
+  "자연·생태": { en: "Nature & ecology", ja: "自然・生態" },
+  "마을·거리": { en: "Villages & streets", ja: "村・街並み" },
+  힐링관광: { en: "Relaxation", ja: "ヒーリング観光" },
+  체험관광: { en: "Hands-on activities", ja: "体験観光" },
+  "산업·경제": { en: "Industry & economy", ja: "産業・経済" },
+  특산물: { en: "Local specialties", ja: "特産品" },
+  한식: { en: "Korean food", ja: "韓国料理" },
+  특화거리: { en: "Food streets", ja: "グルメ通り" },
+  모범음식점: { en: "Certified restaurants", ja: "模範飲食店" },
+  카페: { en: "Cafe", ja: "カフェ" },
+  이색쇼핑: { en: "Unique shopping", ja: "ユニークショッピング" },
+  펜션: { en: "Pension", ja: "ペンション" },
+  "호텔·리조트": { en: "Hotels & resorts", ja: "ホテル・リゾート" },
+  "글램핑·캠핑": { en: "Glamping & camping", ja: "グランピング・キャンプ" },
+  한옥스테이: { en: "Hanok stay", ja: "韓屋ステイ" },
+  모텔: { en: "Motel", ja: "モーテル" },
+  청소년수련원: { en: "Youth hostel", ja: "青少年修練院" },
+};
+
+export function subcategoryLabel(value: string, lng: string): string {
+  return lng === "en" || lng === "ja" ? (SUBCATEGORY_LABEL[value]?.[lng] ?? value) : value;
+}
+
 function isPlaceCategory(v: string): v is PlaceCategory {
   return v in PLACE_CATEGORY_LABEL;
 }

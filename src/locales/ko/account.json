@@ -1,0 +1,162 @@
+{
+  "provider": {
+    "kakao": "카카오",
+    "google": "Google",
+    "unknown": "알 수 없음"
+  },
+  "login": {
+    "title": "로그인",
+    "intro": "로그인하면 만든 코스를 저장하고, 다른 기기에서도 이어서 보고 고칠 수 있어요.",
+    "draftInApp": "작성 중인 「{{title}}」 코스는 지금 이 앱 안 브라우저에만 남아 있어요. 다른 브라우저에서는 보이지 않아요.",
+    "draftKept": "작성 중인 「{{title}}」 코스는 이 기기에 그대로 있어요. 로그인한 뒤 이어서 저장할 수 있어요.",
+    "kakaoButton": "카카오로 시작하기",
+    "googleButton": "Google 계정으로 로그인",
+    "success": "로그인했어요.",
+    "backWithoutLogin": "로그인 없이 돌아가기",
+    "inApp": {
+      "title": "이 앱 안에서는 Google 로그인을 할 수 없어요",
+      "withLink": "Google 계정으로 로그인하려면 아래 버튼으로 다른 브라우저에서 열어주세요.",
+      "safari": "Google 계정으로 로그인하려면 화면의 더보기(⋯) 메뉴에서 'Safari로 열기'를 눌러 열어주세요.",
+      "openExternal": "다른 브라우저로 열기"
+    },
+    "sdkLoadError": "카카오 로그인 화면을 열지 못했어요. 네트워크 연결을 확인해 주세요."
+  },
+  "failure": {
+    "cancelled": {
+      "title": "로그인을 취소했어요",
+      "description": "저장하려면 다시 로그인해주세요."
+    },
+    "popupBlocked": {
+      "title": "로그인 창이 열리지 않았어요",
+      "description": "브라우저가 팝업을 막았어요. 주소창에서 팝업을 허용하고 다시 시도해주세요."
+    },
+    "network": {
+      "title": "로그인하지 못했어요",
+      "description": "네트워크 연결을 확인하고 다시 시도해주세요."
+    },
+    "unauthorizedDomain": {
+      "title": "이 주소에서는 로그인할 수 없어요",
+      "description": "머물전남 공식 주소에서 다시 시도해주세요."
+    },
+    "accountExists": {
+      "title": "같은 이메일로 가입한 계정이 있어요",
+      "description": "처음 가입한 방법(Google 또는 카카오)으로 로그인해주세요."
+    },
+    "expired": {
+      "title": "로그인을 마치지 못했어요",
+      "description": "로그인 요청이 만료됐어요. 다시 로그인해주세요."
+    },
+    "unknown": {
+      "title": "로그인하지 못했어요",
+      "description": "잠시 후 다시 시도해주세요."
+    },
+    "providerUnavailable": {
+      "title": "{{provider}} 로그인을 아직 쓸 수 없어요",
+      "description": "준비가 끝나면 바로 열어 둘게요. 지금은 {{other}} 계정으로 로그인해주세요."
+    }
+  },
+  "kakaoCallback": {
+    "title": "카카오 로그인",
+    "loading": "카카오 계정으로 로그인하고 있어요.",
+    "retry": "다시 로그인하기"
+  },
+  "account": {
+    "title": "내 계정",
+    "name": "이름",
+    "noName": "이름 없음",
+    "email": "이메일",
+    "noEmail": "이메일 없음",
+    "method": "로그인 방법",
+    "signOut": "로그아웃",
+    "signedOut": "로그아웃했어요.",
+    "signOutFailed": "로그아웃하지 못했어요. 네트워크를 확인하고 다시 시도해주세요.",
+    "confirmTitle": "로그아웃할까요?",
+    "confirmWithDraft": "아직 저장하지 않은 작성 중 코스가 이 기기에서 지워져요. 저장한 코스는 다시 로그인하면 볼 수 있어요.",
+    "confirmBody": "저장한 코스는 다시 로그인하면 볼 수 있어요.",
+    "confirmAction": "로그아웃하기"
+  },
+  "myTrips": {
+    "title": "내 여행",
+    "newTrip": "여행 만들기",
+    "loadError": "내 여행을 불러오지 못했어요.",
+    "empty": "아직 저장한 여행이 없어요.",
+    "emptyHint": "축제나 장소를 골라 첫 코스를 만들어 보세요.",
+    "copySuffix": "{{title}} (사본)",
+    "duplicated": "코스를 복사했어요.",
+    "duplicateFailed": "코스를 복사하지 못했어요. 다시 시도해주세요.",
+    "deleted": "코스를 삭제했어요.",
+    "deleteFailed": "코스를 삭제하지 못했어요. 다시 시도해주세요.",
+    "deleteTitle": "코스를 삭제할까요?",
+    "deleteBody": "「{{title}}」 코스를 지우면 되돌릴 수 없어요.",
+    "deleteBodyShared": "「{{title}}」 코스를 지우면 되돌릴 수 없어요. 공유 링크도 더 이상 열리지 않아요.",
+    "deleteAction": "삭제하기",
+    "card": {
+      "dates": "{{start}} ~ {{end}} · 장소 {{count}}곳",
+      "noRegion": "지역 미정",
+      "meta": "{{regions}} · 수정 {{date}}",
+      "shared": "공유 중",
+      "private": "비공개",
+      "more": "{{title}} 더보기",
+      "open": "열기·편집",
+      "duplicate": "복사",
+      "shareSettings": "공유 설정"
+    }
+  },
+  "days": {
+    "title": "{{n}}일차 · {{date}}",
+    "empty": "이 날은 담은 장소가 없어요.",
+    "festival": "축제",
+    "fixed": "{{time}} 고정",
+    "stay": "{{min}}분 머물기",
+    "noLocation": "위치 미확인"
+  },
+  "sharedTrip": {
+    "goneTitle": "열 수 없는 코스예요",
+    "errorTitle": "코스를 불러오지 못했어요",
+    "errorBody": "네트워크 연결을 확인하고 다시 시도해주세요.",
+    "explore": "여행지 둘러보기",
+    "label": "공유받은 코스",
+    "car": "자동차",
+    "copyHint": "내 코스로 복사하면 날짜·순서를 바꿔 쓸 수 있어요. 원래 코스는 바뀌지 않아요.",
+    "copyMine": "내 코스로 복사",
+    "loginCopy": "로그인하고 복사",
+    "copied": "내 코스로 복사했어요. 날짜와 순서를 내 여행에 맞게 고쳐 보세요.",
+    "copyFailed": "복사하지 못했어요. 다시 시도해주세요.",
+    "notice": "영업시간·축제 일정은 공개 시점 정보예요. 복사하면 코스 편집에서 이동시간과 방문 가능 시간을 다시 계산해요."
+  },
+  "share": {
+    "loadErrorTitle": "코스를 불러오지 못했어요",
+    "loadErrorBody": "내 코스가 아니거나 삭제된 코스예요.",
+    "viewMyTrips": "내 여행 보기",
+    "title": "공유 설정",
+    "backToTrip": "코스로 돌아가기",
+    "updated": "공유 내용을 지금 코스로 업데이트했어요.",
+    "created": "공유 링크를 만들었어요.",
+    "publishFailed": "공유하지 못했어요. 네트워크를 확인하고 다시 시도해주세요.",
+    "linkCopied": "링크를 복사했어요.",
+    "linkCopyFailed": "복사하지 못했어요. 링크를 직접 선택해 복사해 주세요.",
+    "statusError": "공유 상태를 확인하지 못했어요.",
+    "activeNotice": "링크를 아는 사람은 누구나 이 코스를 볼 수 있어요.",
+    "linkLabel": "공유 링크",
+    "copy": "복사",
+    "published": "{{date}}에 공개한 내용이에요 (공개 버전 {{version}}).",
+    "outdated": "그 뒤에 코스를 고쳤어요. 업데이트해야 받는 사람에게 보여요.",
+    "notShared": "아직 공유하지 않은 코스예요. 링크를 만들면 아래 내용이 공개돼요.",
+    "update": "공유 내용 업데이트",
+    "create": "공유 링크 만들기",
+    "unshare": "공유 해제",
+    "previewTitle": "공개될 내용",
+    "includes": "제목·날짜·지역·일차별 방문 장소와 순서·머무는 시간·위치",
+    "excludes": "빠지는 정보: 개인 메모, 출발·종료 위치(숙소 등)",
+    "customPlaces": "직접 입력한 장소 {{count}}곳도 이름·위치가 공개돼요.",
+    "unshareTitle": "공유를 해제할까요?",
+    "unshareBody": "지금 링크로는 더 이상 열리지 않아요. 이미 자기 코스로 복사해 간 사람의 코스는 그대로 남아요.",
+    "unshareAction": "해제하기",
+    "unshared": "공유를 해제했어요.",
+    "unshareFailed": "공유를 해제하지 못했어요. 다시 시도해주세요."
+  },
+  "errors": {
+    "shareNotFound": "공유가 해제됐거나 없는 링크예요.",
+    "shareInactive": "공유가 이미 해제된 링크예요. 새 링크를 만들어 주세요."
+  }
+}

@@ -1,4 +1,5 @@
 // 시간표 카드 사이의 구간 행 — 실제 경로 예상시간·거리와 별도 접근/준비 여유를 구분해 보여 준다.
+import { useTranslation } from "react-i18next";
 import { LoadingIcon, WarningIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import type { LegState } from "@/features/map";
@@ -12,35 +13,40 @@ interface LegRowProps {
 }
 
 export function LegRow({ leg, toFixed, onRetry }: LegRowProps) {
+  const { t } = useTranslation("planner");
   const buffer = toFixed
-    ? `준비 여유 ${String(DEFAULT_PREP_MIN)}분`
-    : `접근 여유 ${String(DEFAULT_ACCESS_MIN)}분`;
+    ? t("leg.prep", { n: DEFAULT_PREP_MIN })
+    : t("leg.access", { n: DEFAULT_ACCESS_MIN });
 
   return (
     <div className="border-border text-muted-foreground ml-3 flex min-h-10 items-center gap-2 border-l-2 border-dashed py-2 pl-5 text-sm">
       {leg.status === "pending" && (
         <>
           <LoadingIcon size="sm" className="animate-spin" />
-          <span>경로를 계산하고 있어요</span>
+          <span>{t("leg.pending")}</span>
         </>
       )}
       {leg.status === "ok" && (
         <span>
-          자동차 {leg.durationMin}분 · {(leg.distanceM / 1000).toFixed(1)}km · {buffer}
+          {t("leg.ok", {
+            min: leg.durationMin,
+            km: (leg.distanceM / 1000).toFixed(1),
+            buffer,
+          })}
         </span>
       )}
       {leg.status === "skipped" && (
         <>
           <WarningIcon size="sm" className="text-warning-foreground" />
-          <span>위치를 확인하지 못한 장소가 있어 경로를 계산하지 않았어요</span>
+          <span>{t("leg.skipped")}</span>
         </>
       )}
       {leg.status === "failed" && (
         <>
           <WarningIcon size="sm" className="text-destructive" />
-          <span>{leg.reason} 이후 도착시각은 확정되지 않았어요.</span>
+          <span>{t("leg.failed", { reason: leg.reason })}</span>
           <Button variant="outline" size="xs" onClick={onRetry}>
-            다시 시도
+            {t("retry", { ns: "common" })}
           </Button>
         </>
       )}

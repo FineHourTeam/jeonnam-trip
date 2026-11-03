@@ -1,6 +1,7 @@
 // S11 내 여행 — 저장한 코스 카드(제목·날짜·지역·수정일·공개 상태)와 열기·복사·공유·삭제.
 // 삭제는 공유본을 먼저 막고 코스를 지운다. 저장·삭제가 실제로 성공하기 전에는 완료로 표시하지 않는다.
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { paths } from "@/app/paths";
@@ -26,12 +27,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCreateTrip, useDeleteTrip, useMyTrips } from "@/features/trips";
-import { sigunName, type Trip } from "@/shared/domain";
-import { formatDateKo, kstDateOf } from "@/shared/lib/date";
+import type { Trip } from "@/shared/domain";
+import { formatDay, kstDateOf } from "@/shared/lib/date";
 import { useDeactivateTripShares } from "../hooks/use-shares";
 import { draftFromTrip } from "../lib/share-copy";
 
 export default function MyTripsPage() {
+  const { t } = useTranslation("account");
   const trips = useMyTrips();
   const navigate = useNavigate();
   const create = useCreateTrip();
@@ -44,10 +46,10 @@ export default function MyTripsPage() {
       { uid: trip.ownerUid, draft: draftFromTrip(trip) },
       {
         onSuccess: (copy) => {
-          toast.success("코스를 복사했어요.");
+          toast.success(t("myTrips.duplicated"));
           void navigate(paths.tripEdit(copy.id));
         },
-        onError: () => toast.error("코스를 복사하지 못했어요. 다시 시도해주세요."),
+        onError: () => toast.error(t("myTrips.duplicateFailed")),
       },
     );
   };
@@ -59,20 +61,20 @@ export default function MyTripsPage() {
     try {
       await unshare.mutateAsync(trip);
       await remove.mutateAsync(trip);
-      toast.success("코스를 삭제했어요.");
+      toast.success(t("myTrips.deleted"));
     } catch {
-      toast.error("코스를 삭제하지 못했어요. 다시 시도해주세요.");
+      toast.error(t("myTrips.deleteFailed"));
     }
   };
 
   return (
     <section className="mx-auto flex max-w-screen-md flex-col gap-4 px-4 py-6">
       <div className="flex items-center justify-between gap-2">
-        <h1 className="text-xl font-semibold">내 여행</h1>
+        <h1 className="text-xl font-semibold">{t("myTrips.title")}</h1>
         <Button size="sm" asChild>
           <Link to={paths.tripNew}>
             <AddIcon size="sm" />
-            여행 만들기
+            {t("myTrips.newTrip")}
           </Link>
         </Button>
       </div>
@@ -85,20 +87,18 @@ export default function MyTripsPage() {
       )}
       {trips.isError && (
         <div className="flex items-center gap-2">
-          <p className="text-muted-foreground text-sm">내 여행을 불러오지 못했어요.</p>
+          <p className="text-muted-foreground text-sm">{t("myTrips.loadError")}</p>
           <Button variant="outline" size="sm" onClick={() => void trips.refetch()}>
-            다시 시도
+            {t("retry", { ns: "common" })}
           </Button>
         </div>
       )}
       {trips.data?.length === 0 && (
         <div className="border-border flex flex-col items-center gap-3 rounded-lg border border-dashed p-10 text-center">
-          <p>아직 저장한 여행이 없어요.</p>
-          <p className="text-muted-foreground text-sm">
-            축제나 장소를 골라 첫 코스를 만들어 보세요.
-          </p>
+          <p>{t("myTrips.empty")}</p>
+          <p className="text-muted-foreground text-sm">{t("myTrips.emptyHint")}</p>
           <Button asChild>
-            <Link to={paths.tripNew}>여행 만들기</Link>
+            <Link to={paths.tripNew}>{t("myTrips.newTrip")}</Link>
           </Button>
         </div>
       )}
@@ -128,15 +128,18 @@ export default function MyTripsPage() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>코스를 삭제할까요?</AlertDialogTitle>
+            <AlertDialogTitle>{t("myTrips.deleteTitle")}</AlertDialogTitle>
             <AlertDialogDescription>
-              「{deleting?.title}」 코스를 지우면 되돌릴 수 없어요.
-              {deleting?.shareId ? " 공유 링크도 더 이상 열리지 않아요." : ""}
+              {t(deleting?.shareId ? "myTrips.deleteBodyShared" : "myTrips.deleteBody", {
+                title: deleting?.title ?? "",
+              })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>닫기</AlertDialogCancel>
-            <AlertDialogAction onClick={() => void confirmDelete()}>삭제하기</AlertDialogAction>
+            <AlertDialogCancel>{t("close", { ns: "common" })}</AlertDialogCancel>
+            <AlertDialogAction onClick={() => void confirmDelete()}>
+              {t("myTrips.deleteAction")}
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -152,21 +155,29 @@ interface TripCardProps {
 }
 
 function TripCard({ trip, busy, onDuplicate, onDelete }: TripCardProps) {
+  const { t, i18n } = useTranslation("account");
   const places = trip.days.reduce((n, d) => n + d.items.length, 0);
+  const regions =
+    trip.siguns.length > 0
+      ? trip.siguns.map((code) => t(`sigun.${code}`, { ns: "common" })).join(", ")
+      : t("myTrips.card.noRegion");
   return (
     <li className="border-border bg-card text-card-foreground flex items-start gap-3 rounded-lg border p-4">
       <Link to={paths.tripEdit(trip.id)} className="flex min-w-0 flex-1 flex-col gap-1">
         <span className="font-semibold break-words">{trip.title}</span>
         <span className="text-muted-foreground text-sm">
-          {formatDateKo(trip.startDate)} ~ {formatDateKo(trip.endDate)} · 장소 {places}곳
+          {t("myTrips.card.dates", {
+            start: formatDay(trip.startDate, i18n.language),
+            end: formatDay(trip.endDate, i18n.language),
+            count: places,
+          })}
         </span>
         <span className="text-muted-foreground text-sm">
-          {trip.siguns.length > 0 ? trip.siguns.map(sigunName).join(", ") : "지역 미정"} · 수정{" "}
-          {kstDateOf(trip.updatedAt)}
+          {t("myTrips.card.meta", { regions, date: kstDateOf(trip.updatedAt) })}
         </span>
         <span>
           <Badge variant={trip.shareId ? "secondary" : "outline"}>
-            {trip.shareId ? "공유 중" : "비공개"}
+            {t(trip.shareId ? "myTrips.card.shared" : "myTrips.card.private")}
           </Badge>
         </span>
       </Link>
@@ -175,7 +186,7 @@ function TripCard({ trip, busy, onDuplicate, onDelete }: TripCardProps) {
           <Button
             variant="ghost"
             size="icon-sm"
-            aria-label={`${trip.title} 더보기`}
+            aria-label={t("myTrips.card.more", { title: trip.title })}
             disabled={busy}
           >
             <MoreIcon size="sm" />
@@ -183,15 +194,15 @@ function TripCard({ trip, busy, onDuplicate, onDelete }: TripCardProps) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem asChild>
-            <Link to={paths.tripEdit(trip.id)}>열기·편집</Link>
+            <Link to={paths.tripEdit(trip.id)}>{t("myTrips.card.open")}</Link>
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={onDuplicate}>복사</DropdownMenuItem>
+          <DropdownMenuItem onSelect={onDuplicate}>{t("myTrips.card.duplicate")}</DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link to={paths.tripShare(trip.id)}>공유 설정</Link>
+            <Link to={paths.tripShare(trip.id)}>{t("myTrips.card.shareSettings")}</Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem variant="destructive" onSelect={onDelete}>
-            삭제
+            {t("delete", { ns: "common" })}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

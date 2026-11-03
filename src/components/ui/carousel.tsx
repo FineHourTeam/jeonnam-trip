@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 import { cn } from "cn";
 import useEmblaCarousel, { type UseEmblaCarouselType } from "embla-carousel-react";
 
@@ -166,6 +167,7 @@ function CarouselPrevious({
   ...props
 }: React.ComponentProps<typeof Button>) {
   const { orientation, scrollPrev, canScrollPrev } = useCarousel();
+  const { t } = useTranslation();
 
   return (
     <Button
@@ -184,7 +186,7 @@ function CarouselPrevious({
       {...props}
     >
       <ChevronLeftIcon />
-      <span className="sr-only">이전 슬라이드</span>
+      <span className="sr-only">{t("carousel.prev")}</span>
     </Button>
   );
 }
@@ -196,6 +198,7 @@ function CarouselNext({
   ...props
 }: React.ComponentProps<typeof Button>) {
   const { orientation, scrollNext, canScrollNext } = useCarousel();
+  const { t } = useTranslation();
 
   return (
     <Button
@@ -214,7 +217,7 @@ function CarouselNext({
       {...props}
     >
       <ChevronRightIcon />
-      <span className="sr-only">다음 슬라이드</span>
+      <span className="sr-only">{t("carousel.next")}</span>
     </Button>
   );
 }

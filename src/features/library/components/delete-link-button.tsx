@@ -1,5 +1,6 @@
 // SNS 링크 삭제 — 링크만 지우고, 연결했던 장소와 그 메모는 보관함에 남긴다.
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -21,6 +22,7 @@ interface DeleteLinkButtonProps {
 }
 
 export function DeleteLinkButton({ linkId, onDeleted }: DeleteLinkButtonProps) {
+  const { t } = useTranslation("library");
   const [open, setOpen] = useState(false);
   const remove = useDeleteSnsLink();
 
@@ -35,33 +37,28 @@ export function DeleteLinkButton({ linkId, onDeleted }: DeleteLinkButtonProps) {
           setOpen(true);
         }}
       >
-        링크 삭제
+        {t("deleteLink.button")}
       </Button>
       <AlertDialog open={open} onOpenChange={setOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>링크를 삭제할까요?</AlertDialogTitle>
-            <AlertDialogDescription>
-              보관함에서 이 링크만 지워요. 연결했던 장소와 메모는 저장한 장소에 그대로 남아요.
-            </AlertDialogDescription>
+            <AlertDialogTitle>{t("deleteLink.title")}</AlertDialogTitle>
+            <AlertDialogDescription>{t("deleteLink.description")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>닫기</AlertDialogCancel>
+            <AlertDialogCancel>{t("close", { ns: "common" })}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 remove.mutate(linkId, {
                   onSuccess: () => {
-                    toast.success("링크를 삭제했어요.");
+                    toast.success(t("deleteLink.done"));
                     onDeleted?.();
                   },
-                  onError: () =>
-                    toast.error(
-                      "링크를 삭제하지 못했어요. 네트워크 연결을 확인한 뒤 다시 시도해 주세요.",
-                    ),
+                  onError: () => toast.error(t("deleteLink.failed")),
                 });
               }}
             >
-              삭제하기
+              {t("deleteLink.confirm")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -1,5 +1,6 @@
 // 크리에이터 코스 순수 함수 — 목록 필터와 개인 초안 복사(기능명세 §5).
 import { addItemsToDay, visitFromPlace } from "@/features/trips";
+import i18n from "@/lib/i18n";
 import type {
   CreatorCourse,
   LatLng,
@@ -58,7 +59,9 @@ export function courseDayLegs(points: { location: LatLng | null }[]): LegRequest
 }
 
 export function formatDays(n: number): string {
-  return n === 1 ? "당일" : `${String(n - 1)}박 ${String(n)}일`;
+  return n === 1
+    ? i18n.t("duration.dayTrip", { ns: "creators" })
+    : i18n.t("duration.nights", { ns: "creators", count: n - 1, days: n });
 }
 
 export interface CourseFilter {
@@ -76,6 +79,23 @@ export function filterCourses(list: CreatorCourse[], f: CourseFilter): CreatorCo
   );
 }
 
+/** 태그 표시명 — 저장값(한국어)은 그대로 두고 en·ja 화면에서만 바꿔 보인다. 목록에 없는 태그는 원문 그대로 */
+const TAG_LABEL: Record<string, { en: string; ja: string }> = {
+  맛집: { en: "Food spots", ja: "グルメ" },
+  카페: { en: "Cafes", ja: "カフェ" },
+  "1박2일": { en: "2 days, 1 night", ja: "1泊2日" },
+  사찰: { en: "Temples", ja: "寺院" },
+  정원: { en: "Gardens", ja: "庭園" },
+  야경: { en: "Night views", ja: "夜景" },
+  계절: { en: "Seasonal", ja: "季節" },
+  뚜벅이: { en: "No car needed", ja: "車なし旅" },
+  수학여행: { en: "School trips", ja: "修学旅行" },
+};
+
+export function tagLabel(tag: string, lng: string): string {
+  return lng === "en" || lng === "ja" ? (TAG_LABEL[tag]?.[lng] ?? tag) : tag;
+}
+
 export function courseTags(list: CreatorCourse[]): string[] {
   return [...new Set(list.flatMap((c) => c.tags))].sort((a, b) => a.localeCompare(b, "ko"));
 }
@@ -85,14 +105,16 @@ export function hoursUnknown(place: Pick<Place, "hours">): boolean {
   return Object.values(place.hours.weekly).every((r) => r === null);
 }
 
-const WEEKDAY_LABEL = ["일", "월", "화", "수", "목", "금", "토"] as const;
-
 /** 정기 휴무 요일 표기 ("월·화 휴무"). 휴무 요일이 없으면 null — 미확인(null)은 휴무로 치지 않는다 */
 export function closedWeekdaysLabel(place: Pick<Place, "hours">): string | null {
-  const closed = WEEKDAY_LABEL.filter(
-    (_, d) => place.hours.weekly[d as keyof Place["hours"]["weekly"]]?.length === 0,
-  );
-  return closed.length > 0 ? `${closed.join("·")} 휴무` : null;
+  // 2023-01-01은 일요일 — 요일 번호 d(0=일)를 지금 언어의 짧은 요일 이름으로
+  const weekday = new Intl.DateTimeFormat(i18n.language, { weekday: "short", timeZone: "UTC" });
+  const closed = [0, 1, 2, 3, 4, 5, 6]
+    .filter((d) => place.hours.weekly[d as keyof Place["hours"]["weekly"]]?.length === 0)
+    .map((d) => weekday.format(Date.UTC(2023, 0, 1 + d)));
+  if (closed.length === 0) return null;
+  const days = closed.join(i18n.t("weekdaySeparator", { ns: "creators" }));
+  return i18n.t("closedOn", { ns: "creators", days });
 }
 
 /**
@@ -127,7 +149,7 @@ export function copyCourseIntoDraft(
     if (dayIndex < trip.days.length) {
       trip = addItemsToDay(trip, dayIndex, items).trip;
     } else {
-      const reason = `원본 코스 ${String(day.day)}일차 장소예요.`;
+      const reason = i18n.t("unplacedReason", { ns: "creators", day: day.day });
       trip = { ...trip, unplaced: [...trip.unplaced, ...items.map((i) => ({ ...i, reason }))] };
     }
   }

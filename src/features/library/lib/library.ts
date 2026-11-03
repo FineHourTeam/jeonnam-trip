@@ -1,6 +1,8 @@
 // 보관함 순수 로직 — 저장 항목 조립·필터, SNS 원문 주소 정리·플랫폼 판별, 태그·좌표 입력 해석.
 // 필터는 지역·종류·분위기 서로 AND, 같은 묶음 안 복수 선택은 OR (기능명세 §3).
+import i18n from "@/lib/i18n";
 import { safeHttpUrl } from "@/shared/lib/format";
+import { placeText } from "@/shared/lib/content-text";
 import type {
   CustomPlace,
   LatLng,
@@ -12,13 +14,6 @@ import type {
 } from "@/shared/domain";
 
 export type SnsPlatform = SnsLink["platform"];
-
-export const SNS_PLATFORM_LABEL: Record<SnsPlatform, string> = {
-  instagram: "인스타그램",
-  youtube: "유튜브",
-  blog: "블로그",
-  other: "기타",
-};
 
 export const MAX_URL_LENGTH = 2000;
 export const MAX_LINKED_PLACES = 20;
@@ -139,8 +134,13 @@ export function linksWithoutSavedPlace(links: SnsLink[], saved: SavedPlace[]): S
   return links.filter((l) => !l.linked.some((r) => savedKeys.has(refKey(r))));
 }
 
-export function entryName(entry: LibraryEntry): string {
-  return entry.place?.name ?? entry.custom?.name ?? "볼 수 없는 장소";
+/** 보관한 장소 이름 — 공통 장소는 화면 언어 번역(있으면), 개인 장소는 입력한 그대로 */
+export function entryName(entry: LibraryEntry, lng: string): string {
+  return (
+    (entry.place && placeText(entry.place, lng).name) ??
+    entry.custom?.name ??
+    i18n.t("unknownPlace", { ns: "library" })
+  );
 }
 
 export interface LibraryFilter {

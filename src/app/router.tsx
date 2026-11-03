@@ -1,6 +1,7 @@
 // 모든 라우트는 이 파일 한 곳에 정의한다 (rules.md § 라우팅). 페이지는 라우트 단위로 lazy 로드.
 // 각 기능은 자기 features/<기능>/pages/*.tsx 파일만 채운다 — 이 파일은 경로를 새로 만들 때만 고친다.
 import { lazy, Suspense, type ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import { createBrowserRouter } from "react-router";
 import { AppLayout } from "./app-layout";
 import { NotFoundPage, RouteErrorPage } from "./error-pages";
@@ -29,14 +30,13 @@ const AdminHomePage = lazy(() => import("@/features/admin/pages/admin-home-page"
 const AdminListPage = lazy(() => import("@/features/admin/pages/admin-list-page"));
 const AdminEditPage = lazy(() => import("@/features/admin/pages/admin-edit-page"));
 
+function PageFallback() {
+  const { t } = useTranslation();
+  return <div className="text-muted-foreground px-4 py-10 text-center">{t("loading")}</div>;
+}
+
 function page(node: ReactNode) {
-  return (
-    <Suspense
-      fallback={<div className="text-muted-foreground px-4 py-10 text-center">불러오는 중...</div>}
-    >
-      {node}
-    </Suspense>
-  );
+  return <Suspense fallback={<PageFallback />}>{node}</Suspense>;
 }
 
 export const router = createBrowserRouter([

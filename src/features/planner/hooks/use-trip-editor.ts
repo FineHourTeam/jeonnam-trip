@@ -5,6 +5,7 @@ import { useBlocker, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { paths } from "@/app/paths";
 import { useAuthState } from "@/app/use-auth-state";
+import i18n from "@/lib/i18n";
 import {
   VersionConflictError,
   useCreateTrip,
@@ -59,17 +60,17 @@ export function useTripEditor(tripId: string) {
         }
         const created = await create.mutateAsync({ uid: auth.user.uid, draft });
         clearDraft();
-        toast.success("코스를 저장했어요.");
+        toast.success(i18n.t("editor.saved", { ns: "planner" }));
         void navigate(paths.tripEdit(created.id), { replace: true });
         return;
       }
       if (!working) return;
       await save.mutateAsync(working);
       setWorking(null);
-      toast.success("코스를 저장했어요.");
+      toast.success(i18n.t("editor.saved", { ns: "planner" }));
     } catch (err) {
       if (err instanceof VersionConflictError) setConflict(true);
-      else toast.error("코스를 저장하지 못했어요. 네트워크를 확인하고 다시 시도해주세요.");
+      else toast.error(i18n.t("editor.saveFailed", { ns: "planner" }));
     }
   };
 

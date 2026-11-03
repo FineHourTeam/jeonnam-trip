@@ -1,6 +1,7 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, it, test } from "vitest";
 import {
   addDays,
+  formatDay,
   kstDateOf,
   kstDateTimeOf,
   dateRange,
@@ -42,5 +43,13 @@ describe("kstDateOf / kstDateTimeOf", () => {
     expect(kstDateOf("2026-10-19T16:30:00.000Z")).toBe("2026-10-20");
     expect(kstDateOf("2026-10-19T14:59:00.000Z")).toBe("2026-10-19");
     expect(kstDateTimeOf("2026-10-19T16:30:00.000Z")).toBe("2026-10-20 01:30");
+  });
+});
+
+describe("formatDay", () => {
+  it("언어별로 요일까지 표기한다", () => {
+    expect(formatDay("2026-10-16", "ko")).toBe("10월 16일 (금)");
+    expect(formatDay("2026-10-16", "en")).toBe("Fri, Oct 16");
+    expect(formatDay("2026-10-16", "ja")).toBe("10月16日(金)");
   });
 });

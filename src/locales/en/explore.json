@@ -1,0 +1,50 @@
+{
+  "seoTitle": "Explore Jeonnam",
+  "seoDescription": "Pick a date and region to see the Jeonnam festivals held that day, plus places and creator courses in the area.",
+  "jeonnam": "Jeonnam",
+  "filters": {
+    "region": "Region",
+    "allRegions": "All regions",
+    "date": "Date",
+    "startTrip": "Plan a trip for this date"
+  },
+  "hero": {
+    "carousel": "Photos of Jeonnam landmarks",
+    "photoAlt": "View of {{name}}",
+    "credit": "Photo: Namdo Travel Guide (남도여행길잡이) · KOGL Type 4",
+    "goTo": "Show photo {{n}}: {{name}}",
+    "pause": "Pause photo slideshow",
+    "play": "Resume photo slideshow"
+  },
+  "section": {
+    "more": "See all",
+    "moreLabel": "See all: {{title}}",
+    "errorBody": "Check your network connection and try again."
+  },
+  "festivals": {
+    "error": "We couldn't load festivals",
+    "emptyHint": "Pick another date or browse places in this area.",
+    "browsePlaces": "Browse places",
+    "title": "Festivals in {{region}}",
+    "today": "today",
+    "emptyFrom": "No festivals in {{region}} from {{date}} on"
+  },
+  "places": {
+    "title": "Places in {{region}}",
+    "error": "We couldn't load places",
+    "emptyRegion": "No places have been published in this region yet",
+    "empty": "No places have been published yet",
+    "emptyHint": "Pick another region or browse all places.",
+    "all": "See all places"
+  },
+  "courses": {
+    "title": "Creator courses in {{region}}",
+    "error": "We couldn't load courses",
+    "emptyRegion": "No courses pass through this region yet",
+    "empty": "No courses have been published yet",
+    "emptyHint": "Pick another region or browse all courses.",
+    "all": "See all courses"
+  },
+  "titleLine1": "What to do in Jeonnam?",
+  "titleLine2": "Plan a route, from festivals to great food"
+}

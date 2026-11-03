@@ -1,6 +1,6 @@
 // S01 첫 화면 사진 — 전남 대표 명소를 골라 장소 문서의 사진을 그대로 쓴다.
 // 고른 장소는 모두 남도여행길잡이에서 받은 사진이라 공공누리 제4유형 조건(출처 표시·변경 금지)을 따른다:
-// 사진 파일은 손대지 않고, 출처는 사진 위에 늘 보여 준다. 다른 출처 사진을 고르면 HERO_PHOTO_CREDIT도 함께 고친다.
+// 사진 파일은 손대지 않고, 출처는 사진 위에 늘 보여 준다. 다른 출처 사진을 고르면 locales/*/explore.json의 hero.credit도 함께 고친다.
 import type { Place } from "@/shared/domain";
 
 export interface HeroSlideConfig {
@@ -17,8 +17,6 @@ export const HERO_SLIDES: readonly HeroSlideConfig[] = [
   { placeId: "nd-p-0000010291", photo: 2 }, // 신안 홍도 — 바다
   { placeId: "nd-p-0000010555", photo: 0 }, // 담양 죽녹원 — 대숲
 ];
-
-export const HERO_PHOTO_CREDIT = "사진: 남도여행길잡이 · 공공누리 제4유형";
 
 export interface HeroSlide {
   id: string;

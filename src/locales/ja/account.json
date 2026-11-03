@@ -1,0 +1,162 @@
+{
+  "provider": {
+    "kakao": "カカオ",
+    "google": "Google",
+    "unknown": "不明"
+  },
+  "login": {
+    "title": "ログイン",
+    "intro": "ログインすると、つくったコースを保存して、ほかの端末でも続けて見たり編集したりできます。",
+    "draftInApp": "作成中のコース「{{title}}」は、いまはこのアプリ内ブラウザにだけ残っています。ほかのブラウザでは表示されません。",
+    "draftKept": "作成中のコース「{{title}}」はこの端末にそのまま残っています。ログインしたあと続けて保存できます。",
+    "kakaoButton": "カカオで始める",
+    "googleButton": "Google でログイン",
+    "success": "ログインしました。",
+    "backWithoutLogin": "ログインせずに戻る",
+    "inApp": {
+      "title": "このアプリ内では Google ログインができません",
+      "withLink": "Google アカウントでログインするには、下のボタンからほかのブラウザで開いてください。",
+      "safari": "Google アカウントでログインするには、画面のその他(⋯)メニューから「Safariで開く」をタップしてください。",
+      "openExternal": "ほかのブラウザで開く"
+    },
+    "sdkLoadError": "カカオのログイン画面を開けませんでした。ネットワーク接続を確認してください。"
+  },
+  "failure": {
+    "cancelled": {
+      "title": "ログインをキャンセルしました",
+      "description": "保存するにはもう一度ログインしてください。"
+    },
+    "popupBlocked": {
+      "title": "ログイン画面が開きませんでした",
+      "description": "ブラウザがポップアップをブロックしました。アドレスバーでポップアップを許可して、もう一度お試しください。"
+    },
+    "network": {
+      "title": "ログインできませんでした",
+      "description": "ネットワーク接続を確認して、もう一度お試しください。"
+    },
+    "unauthorizedDomain": {
+      "title": "このアドレスではログインできません",
+      "description": "머물전남 の公式アドレスからもう一度お試しください。"
+    },
+    "accountExists": {
+      "title": "同じメールアドレスで登録したアカウントがあります",
+      "description": "最初に登録した方法(Google またはカカオ)でログインしてください。"
+    },
+    "expired": {
+      "title": "ログインを完了できませんでした",
+      "description": "ログインの有効期限が切れました。もう一度ログインしてください。"
+    },
+    "unknown": {
+      "title": "ログインできませんでした",
+      "description": "しばらくしてからもう一度お試しください。"
+    },
+    "providerUnavailable": {
+      "title": "{{provider}}ログインはまだ使えません",
+      "description": "準備ができしだい利用できるようにします。いまは{{other}}アカウントでログインしてください。"
+    }
+  },
+  "kakaoCallback": {
+    "title": "カカオログイン",
+    "loading": "カカオアカウントでログインしています。",
+    "retry": "もう一度ログインする"
+  },
+  "account": {
+    "title": "マイアカウント",
+    "name": "名前",
+    "noName": "名前なし",
+    "email": "メールアドレス",
+    "noEmail": "メールアドレスなし",
+    "method": "ログイン方法",
+    "signOut": "ログアウト",
+    "signedOut": "ログアウトしました。",
+    "signOutFailed": "ログアウトできませんでした。ネットワークを確認して、もう一度お試しください。",
+    "confirmTitle": "ログアウトしますか?",
+    "confirmWithDraft": "まだ保存していない作成中のコースがこの端末から消えます。保存したコースはもう一度ログインすると見られます。",
+    "confirmBody": "保存したコースはもう一度ログインすると見られます。",
+    "confirmAction": "ログアウトする"
+  },
+  "myTrips": {
+    "title": "マイ旅行",
+    "newTrip": "旅行をつくる",
+    "loadError": "マイ旅行を読み込めませんでした。",
+    "empty": "保存した旅行はまだありません。",
+    "emptyHint": "お祭りや場所を選んで、最初のコースをつくってみましょう。",
+    "copySuffix": "{{title}}(コピー)",
+    "duplicated": "コースをコピーしました。",
+    "duplicateFailed": "コースをコピーできませんでした。もう一度お試しください。",
+    "deleted": "コースを削除しました。",
+    "deleteFailed": "コースを削除できませんでした。もう一度お試しください。",
+    "deleteTitle": "コースを削除しますか?",
+    "deleteBody": "コース「{{title}}」を削除すると元に戻せません。",
+    "deleteBodyShared": "コース「{{title}}」を削除すると元に戻せません。共有リンクも開けなくなります。",
+    "deleteAction": "削除する",
+    "card": {
+      "dates": "{{start}} ~ {{end}} · 場所 {{count}}か所",
+      "noRegion": "地域未定",
+      "meta": "{{regions}} · {{date}} 更新",
+      "shared": "共有中",
+      "private": "非公開",
+      "more": "{{title}}のその他のメニュー",
+      "open": "開く・編集",
+      "duplicate": "コピー",
+      "shareSettings": "共有設定"
+    }
+  },
+  "days": {
+    "title": "{{n}}日目 · {{date}}",
+    "empty": "この日に追加した場所はありません。",
+    "festival": "お祭り",
+    "fixed": "{{time}} 固定",
+    "stay": "{{min}}分滞在",
+    "noLocation": "位置未確認"
+  },
+  "sharedTrip": {
+    "goneTitle": "開けないコースです",
+    "errorTitle": "コースを読み込めませんでした",
+    "errorBody": "ネットワーク接続を確認して、もう一度お試しください。",
+    "explore": "旅行先をさがす",
+    "label": "共有されたコース",
+    "car": "車",
+    "copyHint": "マイコースにコピーすると、日付や順番を変えて使えます。元のコースは変わりません。",
+    "copyMine": "マイコースにコピー",
+    "loginCopy": "ログインしてコピー",
+    "copied": "マイコースにコピーしました。日付や順番を自分の旅行に合わせて直してみましょう。",
+    "copyFailed": "コピーできませんでした。もう一度お試しください。",
+    "notice": "営業時間やお祭りの日程は公開時点の情報です。コピーすると、コース編集で移動時間と訪問できる時間を計算し直します。"
+  },
+  "share": {
+    "loadErrorTitle": "コースを読み込めませんでした",
+    "loadErrorBody": "自分のコースではないか、削除されたコースです。",
+    "viewMyTrips": "マイ旅行を見る",
+    "title": "共有設定",
+    "backToTrip": "コースに戻る",
+    "updated": "共有内容をいまのコースに更新しました。",
+    "created": "共有リンクをつくりました。",
+    "publishFailed": "共有できませんでした。ネットワークを確認して、もう一度お試しください。",
+    "linkCopied": "リンクをコピーしました。",
+    "linkCopyFailed": "コピーできませんでした。リンクを選択して直接コピーしてください。",
+    "statusError": "共有状態を確認できませんでした。",
+    "activeNotice": "リンクを知っている人なら誰でもこのコースを見られます。",
+    "linkLabel": "共有リンク",
+    "copy": "コピー",
+    "published": "{{date}}に公開した内容です(公開バージョン {{version}})。",
+    "outdated": "そのあとコースを編集しました。更新すると受け取った人にも表示されます。",
+    "notShared": "まだ共有していないコースです。リンクをつくると下の内容が公開されます。",
+    "update": "共有内容を更新",
+    "create": "共有リンクをつくる",
+    "unshare": "共有を解除",
+    "previewTitle": "公開される内容",
+    "includes": "タイトル・日付・地域・日ごとの訪問場所と順番・滞在時間・位置",
+    "excludes": "含まれない情報: 個人メモ、出発・終了地点(宿など)",
+    "customPlaces": "自分で入力した場所 {{count}}か所も名前と位置が公開されます。",
+    "unshareTitle": "共有を解除しますか?",
+    "unshareBody": "いまのリンクでは開けなくなります。すでに自分のコースにコピーした人のコースはそのまま残ります。",
+    "unshareAction": "解除する",
+    "unshared": "共有を解除しました。",
+    "unshareFailed": "共有を解除できませんでした。もう一度お試しください。"
+  },
+  "errors": {
+    "shareNotFound": "共有が解除されたか、存在しないリンクです。",
+    "shareInactive": "このリンクの共有はすでに解除されています。新しいリンクをつくってください。"
+  }
+}

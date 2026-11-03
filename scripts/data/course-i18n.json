@@ -1,0 +1,1562 @@
+{
+ "cr-c-choichoi-mokpo-1n2d": {
+  "ko": {
+   "title": "먹으러 간 목포 1박 2일",
+   "summary": "유튜버 초이초이가 목포에서 1박 2일 동안 먹고 다닌 코스예요. 쫄복탕으로 시작해 홍어삼합, 민어회, 해장국, 백반까지 목포 대표 음식과 오션뷰·골목 카페를 이어 다녀요. 영상 프레임을 분석해 실제 등장 순서대로 정리했어요.",
+   "notes": {
+    "d1-0": "오전 8:40 아침 · 쫄복탕 (영상 0:27)",
+    "d1-1": "바다 보며 산책 (영상 1:55)",
+    "d1-2": "오션뷰 카페 (영상 2:50)",
+    "d1-3": "점심 · 홍어삼합과 막걸리 (영상 4:30) · 영상에선 이 전에 숙소에 차를 세우고 책방을 들렀어요",
+    "d1-4": "소화 겸 산책, 시내 전망 (영상 6:12)",
+    "d1-5": "유달산뷰 카페 (영상 6:48)",
+    "d1-6": "드라마 촬영지로 알려진 근대역사관 1관 (영상 7:11)",
+    "d1-7": "간식 · 쑥굴레와 단팥죽 (영상 7:36)",
+    "d1-8": "크림치즈 바게트 포장 (영상 8:16)",
+    "d1-9": "체크인 (영상 8:36)",
+    "d1-10": "저녁 · 민어회 한 상 (영상 9:50)",
+    "d2-0": "오전 8:30 해장 · 돼지뼈해장국 (영상 11:49)",
+    "d2-1": "모닝 커피 후 숙소 체크아웃 (영상 12:52)",
+    "d2-2": "점심 · 백반 (영상 13:19)",
+    "d2-3": "필터커피 테이크아웃 후 목포역으로 (영상 13:43)"
+   }
+  },
+  "en": {
+   "title": "Mokpo for the Food: 2 Days, 1 Night",
+   "summary": "This is the course YouTuber choichoi ate their way through over 2 days and 1 night in Mokpo. Starting with jjolboktang (small pufferfish soup), it links Mokpo's signature foods, from hongeo samhap (fermented skate with pork and kimchi), minaeo hoe (raw croaker) and haejangguk (hangover soup) to baekban (Korean set meal), with ocean-view and back-alley cafés. We analyzed the video frames and arranged the stops in the order they actually appear.",
+   "notes": {
+    "d1-0": "8:40 AM Breakfast · Jjolboktang (video 0:27)",
+    "d1-1": "Walk by the sea (video 1:55)",
+    "d1-2": "Ocean-view café (video 2:50)",
+    "d1-3": "Lunch · Hongeo samhap and makgeolli (video 4:30) · In the video, they parked at the lodging and stopped by a bookshop before this",
+    "d1-4": "Walk to help digestion, with a view over the city (video 6:12)",
+    "d1-5": "Café with a view of Yudalsan Mountain (video 6:48)",
+    "d1-6": "Modern History Museum Building 1, known as a drama filming location (video 7:11)",
+    "d1-7": "Snack · Ssukgulle (mugwort rice cake) and red bean porridge (video 7:36)",
+    "d1-8": "Cream cheese baguette to go (video 8:16)",
+    "d1-9": "Check-in (video 8:36)",
+    "d1-10": "Dinner · A full spread of minaeo hoe (video 9:50)",
+    "d2-0": "8:30 AM Hangover cure · Pork bone haejangguk (video 11:49)",
+    "d2-1": "Morning coffee, then check out of the lodging (video 12:52)",
+    "d2-2": "Lunch · Baekban (video 13:19)",
+    "d2-3": "Filter coffee to go, then off to Mokpo Station (video 13:43)"
+   }
+  },
+  "ja": {
+   "title": "食べに行った木浦 1泊2日",
+   "summary": "YouTuberのチョイチョイさんが木浦で1泊2日、食べ歩いたコースです。チョルボクタン（小フグのスープ）から始まり、ホンオサマプ（発酵エイ・ゆで豚・キムチ）、ニベの刺身、ヘジャングク（酔い覚ましスープ）、ペクパン（韓国式定食）まで、木浦を代表する料理とオーシャンビュー・路地裏のカフェを巡ります。動画のフレームを分析し、実際に登場する順に整理しました。",
+   "notes": {
+    "d1-0": "午前8:40 朝食 · チョルボクタン (動画 0:27)",
+    "d1-1": "海を見ながら散歩 (動画 1:55)",
+    "d1-2": "オーシャンビューカフェ (動画 2:50)",
+    "d1-3": "昼食 · ホンオサマプとマッコリ (動画 4:30) · 動画ではこの前に宿に車を停めて本屋に立ち寄っています",
+    "d1-4": "腹ごなしの散歩、市内の眺め (動画 6:12)",
+    "d1-5": "儒達山ビューのカフェ (動画 6:48)",
+    "d1-6": "ドラマのロケ地として知られる近代歴史館1館 (動画 7:11)",
+    "d1-7": "おやつ · スックルレ（ヨモギ餅）とあずき粥 (動画 7:36)",
+    "d1-8": "クリームチーズバゲットをテイクアウト (動画 8:16)",
+    "d1-9": "チェックイン (動画 8:36)",
+    "d1-10": "夕食 · ニベの刺身の御膳 (動画 9:50)",
+    "d2-0": "午前8:30 酔い覚まし · 豚骨ヘジャングク (動画 11:49)",
+    "d2-1": "モーニングコーヒーの後、宿をチェックアウト (動画 12:52)",
+    "d2-2": "昼食 · ペクパン (動画 13:19)",
+    "d2-3": "フィルターコーヒーをテイクアウトして木浦駅へ (動画 13:43)"
+   }
+  }
+ },
+ "cr-c-commingsoon-suncheon-1n2d": {
+  "ko": {
+   "title": "가을엔 순천, 맛집과 선암사·국가정원 1박 2일",
+   "summary": "유튜버 코밍순이 가을에 순천에서 1박 2일 동안 다닌 코스예요. 도토리 묵보쌈과 토종닭구이, 수제버거·순천 맥주, 콩나물국밥을 먹고 선암사와 야생차체험관, 순천만국가정원을 둘러봐요. 영상 프레임을 분석해 등장 순서대로 정리했어요.",
+   "notes": {
+    "d1-0": "점심 · 도토리 묵보쌈 셋트, 15분 웨이팅 (영상 0:11)",
+    "d1-1": "숲길 따라 산책, 염주 팔찌 구매 (영상 3:12)",
+    "d1-2": "다례체험 1인 3,000원(영상 기준), 주말엔 대기가 길어 구경만 (영상 5:28)",
+    "d1-3": "체크인 (영상 6:24)",
+    "d1-4": "저녁 · 토종닭 숯불구이 (영상 6:57)",
+    "d1-5": "2차 · 수제버거와 순천 맥주 (영상 9:24)",
+    "d2-0": "아침 해장 · 콩나물국밥 (영상 10:58)",
+    "d2-1": "정원 산책, 스페이스브릿지·플라밍고 구경 (영상 12:28)",
+    "d2-2": "명란대파바게트 먹고 귀가 (영상 17:37)"
+   }
+  },
+  "en": {
+   "title": "Suncheon in Autumn: Great Eats, Seonamsa Temple and the National Garden, 2 Days, 1 Night",
+   "summary": "This is the course YouTuber Commingsoon took over 2 days and 1 night in Suncheon in autumn. You'll eat dotori muk bossam (acorn jelly with boiled pork), grilled native chicken, handmade burgers with Suncheon beer, and kongnamul gukbap (bean sprout soup with rice), and look around Seonamsa Temple, the Traditional Wild Tea Experience Center and Suncheonman Bay National Garden. We analyzed the video frames and arranged the stops in the order they appear.",
+   "notes": {
+    "d1-0": "Lunch · Dotori muk bossam set, 15-minute wait (video 0:11)",
+    "d1-1": "Walk along the forest path, bought a prayer bead bracelet (video 3:12)",
+    "d1-2": "Tea ceremony experience 3,000 won per person (per the video); weekend waits are long, so they just looked around (video 5:28)",
+    "d1-3": "Check-in (video 6:24)",
+    "d1-4": "Dinner · Charcoal-grilled native chicken (video 6:57)",
+    "d1-5": "Second round · Handmade burgers and Suncheon beer (video 9:24)",
+    "d2-0": "Breakfast hangover cure · Kongnamul gukbap (video 10:58)",
+    "d2-1": "Garden walk, seeing the Space Bridge and the flamingos (video 12:28)",
+    "d2-2": "A myeongran (pollack roe) and green onion baguette, then home (video 17:37)"
+   }
+  },
+  "ja": {
+   "title": "秋は順天へ、グルメと仙巌寺・国家庭園 1泊2日",
+   "summary": "YouTuberのコミンスンさんが秋に順天で1泊2日巡ったコースです。トトリムクポッサム（どんぐりのムクとゆで豚）と地鶏焼き、手作りバーガー・順天ビール、コンナムルクッパ（もやしスープご飯）を味わい、仙巌寺と伝統野生茶体験館、順天湾国家庭園を巡ります。動画のフレームを分析し、登場順に整理しました。",
+   "notes": {
+    "d1-0": "昼食 · トトリムクポッサムのセット、15分待ち (動画 0:11)",
+    "d1-1": "森の道に沿って散歩、数珠のブレスレットを購入 (動画 3:12)",
+    "d1-2": "茶礼体験は1人3,000ウォン(動画時点)、週末は待ち時間が長いので見学のみ (動画 5:28)",
+    "d1-3": "チェックイン (動画 6:24)",
+    "d1-4": "夕食 · 地鶏の炭火焼き (動画 6:57)",
+    "d1-5": "2軒目 · 手作りバーガーと順天ビール (動画 9:24)",
+    "d2-0": "朝の酔い覚まし · コンナムルクッパ (動画 10:58)",
+    "d2-1": "庭園を散歩、スペースブリッジ・フラミンゴを見物 (動画 12:28)",
+    "d2-2": "明太子とネギのバゲットを食べて帰宅 (動画 17:37)"
+   }
+  }
+ },
+ "cr-c-unithinkso-yeosu-1n2d": {
+  "ko": {
+   "title": "다들 먹으러 가는 여수 1박 2일",
+   "summary": "유튜버 유니띵쏘가 여수에서 1박 2일 동안 다닌 먹방 코스예요. 장어구이와 게장, 명란바게트·쑥아이스크림 같은 간식, 돌산의 오션뷰 카페와 리조트, 케이블카 야경까지 이어져요. 영상 프레임을 분석해 등장 순서대로 정리했어요.",
+   "notes": {
+    "d1-0": "첫 끼 · 장어구이 (영상 1:36)",
+    "d1-1": "비 오는 날 거북선 내부 관람 (영상 3:10)",
+    "d1-2": "명란바게트 포장 (영상 4:27)",
+    "d1-3": "해풍쑥 아이스크림 (영상 6:05)",
+    "d1-4": "돌산 오션뷰 카페 (영상 7:05)",
+    "d1-5": "엑스포 산책 (영상 9:41) · 이후 중앙선어시장 근처에서 회 포장",
+    "d1-6": "김밥 포장 (영상 11:09)",
+    "d1-7": "체크인 후 포장 음식으로 저녁, 밤에 부대시설 구경 (영상 11:49)",
+    "d1-8": "돌산대교 야경 (영상 19:43)",
+    "d1-9": "밤 케이블카 (영상 20:30경) · 이후 숙소에서 야식",
+    "d2-0": "점심 · 꽃게정식 (영상 28:23)",
+    "d2-1": "식후 산책 (영상 30:40)",
+    "d2-2": "여수꿀빵 구매 (영상 31:48)",
+    "d2-3": "마지막 카페 (영상 32:07)"
+   }
+  },
+  "en": {
+   "title": "Yeosu, Where Everyone Goes to Eat: 2 Days, 1 Night",
+   "summary": "This is the mukbang (eating show) course YouTuber uni think so took over 2 days and 1 night in Yeosu. It runs from grilled eel and gejang (marinated raw crab) to snacks like myeongran (pollack roe) baguettes and mugwort ice cream, ocean-view cafés and a resort in Dolsan, and the night view from the cable car. We analyzed the video frames and arranged the stops in the order they appear.",
+   "notes": {
+    "d1-0": "First meal · Grilled eel (video 1:36)",
+    "d1-1": "Touring inside the Turtle Ship on a rainy day (video 3:10)",
+    "d1-2": "Myeongran baguette to go (video 4:27)",
+    "d1-3": "Sea-breeze mugwort ice cream (video 6:05)",
+    "d1-4": "Ocean-view café in Dolsan (video 7:05)",
+    "d1-5": "Walk around the Expo (video 9:41) · Afterward, raw fish to go near Jungang Seoneo Market",
+    "d1-6": "Gimbap to go (video 11:09)",
+    "d1-7": "After check-in, dinner from the takeout food, then a look around the resort facilities at night (video 11:49)",
+    "d1-8": "Night view of Dolsan Bridge (video 19:43)",
+    "d1-9": "Night cable car (around video 20:30) · Afterward, a late-night snack at the lodging",
+    "d2-0": "Lunch · Kkotge jeongsik (blue crab set meal) (video 28:23)",
+    "d2-1": "Walk after the meal (video 30:40)",
+    "d2-2": "Bought Yeosu kkulppang (honey bread) (video 31:48)",
+    "d2-3": "Last café (video 32:07)"
+   }
+  },
+  "ja": {
+   "title": "みんなが食べに行く麗水 1泊2日",
+   "summary": "YouTuberのユニティンソさんが麗水で1泊2日巡ったモッパン（食べ歩き）コースです。ウナギ焼きとケジャン（カニの醤油漬け）、明太子バゲット・ヨモギアイスのようなおやつ、突山のオーシャンビューカフェとリゾート、ケーブルカーの夜景まで続きます。動画のフレームを分析し、登場順に整理しました。",
+   "notes": {
+    "d1-0": "最初の食事 · ウナギ焼き (動画 1:36)",
+    "d1-1": "雨の日に亀甲船の内部を見学 (動画 3:10)",
+    "d1-2": "明太子バゲットをテイクアウト (動画 4:27)",
+    "d1-3": "海風ヨモギのアイスクリーム (動画 6:05)",
+    "d1-4": "突山のオーシャンビューカフェ (動画 7:05)",
+    "d1-5": "エキスポを散歩 (動画 9:41) · その後、中央鮮魚市場の近くで刺身をテイクアウト",
+    "d1-6": "キンパをテイクアウト (動画 11:09)",
+    "d1-7": "チェックイン後、テイクアウトした料理で夕食、夜は付帯施設を見物 (動画 11:49)",
+    "d1-8": "突山大橋の夜景 (動画 19:43)",
+    "d1-9": "夜のケーブルカー (動画 20:30頃) · その後、宿で夜食",
+    "d2-0": "昼食 · ワタリガニ定食 (動画 28:23)",
+    "d2-1": "食後の散歩 (動画 30:40)",
+    "d2-2": "麗水クルパン（はちみつパン）を購入 (動画 31:48)",
+    "d2-3": "最後のカフェ (動画 32:07)"
+   }
+  }
+ },
+ "nd-c-0000000198": {
+  "ko": {
+   "title": "영산강 황포돛배/보성녹차밭/해남 미황사",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Yeongsangang River Hwangpo Sailboat/Boseong Green Tea Field/Haenam Mihwangsa Temple",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "栄山江黄布帆船/宝城緑茶畑/海南 美黄寺",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000199": {
+  "ko": {
+   "title": "남도 문화따라 오백리, 진도와 완도&해남 봄나들이 여행",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "500 Li Along Namdo's Culture: A Spring Outing to Jindo, Wando & Haenam",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "南道の文化をたどる五百里、珍島と莞島＆海南の春のお出かけ旅",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000200": {
+  "ko": {
+   "title": "영광 백수해안도로와 함평생태공원 , 나주 황포돛배 여행",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Yeonggwang Baeksu Coastal Road, Hampyeong Ecology Park and Naju Hwangpo Sailboat Trip",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "霊光 白岫海岸道路と咸平生態公園、羅州 黄布帆船の旅",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000201": {
+  "ko": {
+   "title": "영광 백수해안도로와 함평생태공원, 나주 황포돛배 여행",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Yeonggwang Baeksu Coastal Road, Hampyeong Ecology Park and Naju Hwangpo Sailboat Trip",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "霊光 白岫海岸道路と咸平生態公園、羅州 黄布帆船の旅",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000202": {
+  "ko": {
+   "title": "[하나강산]남도 알짜배기명소",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "[Hana Gangsan] Namdo's Must-See Highlights",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "[ハナカンサン]南道の選りすぐり名所",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000203": {
+  "ko": {
+   "title": "영산강 황포돛배/보성녹차밭/미황사",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Yeongsangang River Hwangpo Sailboat/Boseong Green Tea Field/Mihwangsa Temple",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "栄山江黄布帆船/宝城緑茶畑/美黄寺",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000204": {
+  "ko": {
+   "title": "명품 오션뷰 대결! 해남 vs 진도 쏠비치 vs 접도",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Premium Ocean View Showdown! Haenam vs Sol Beach Jindo vs Jeopdo Island",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "極上オーシャンビュー対決！海南 vs ソルビーチ珍島 vs 接島",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000205": {
+  "ko": {
+   "title": "가을의 향기를 느끼며",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Feeling the Scent of Autumn",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "秋の香りを感じながら",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000206": {
+  "ko": {
+   "title": "영산강 황포돛배/보성녹차밭/미황사",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Yeongsangang River Hwangpo Sailboat/Boseong Green Tea Field/Mihwangsa Temple",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "栄山江黄布帆船/宝城緑茶畑/美黄寺",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000207": {
+  "ko": {
+   "title": "다도해일주 3일",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "3-Day Dadohae Archipelago Tour",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "多島海一周 3日",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000208": {
+  "ko": {
+   "title": "KTX 남도 정통 명품 맛집 기차여행",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "KTX Train Trip to Namdo's Authentic Top Restaurants",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "KTX 南道の本格名店グルメ列車旅",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000209": {
+  "ko": {
+   "title": "겨울바다의 멋과 편백숲의 향",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "The Charm of the Winter Sea and the Scent of Cypress Forests",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "冬の海の趣とヒノキの森の香り",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000210": {
+  "ko": {
+   "title": "다도해 드라이브",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Dadohae Archipelago Drive",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "多島海ドライブ",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000212": {
+  "ko": {
+   "title": "천년불심길",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Thousand-Year Buddhist Faith Trail",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "千年仏心の道",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000214": {
+  "ko": {
+   "title": "명품 숲 가로수 길",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Premier Tree-Lined Forest Roads",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "名品の森の並木道",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000217": {
+  "ko": {
+   "title": "몸이 먼저 반기는 길",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "A Road Your Body Welcomes First",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "体が先に喜ぶ道",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000218": {
+  "ko": {
+   "title": "철과 선박해양과의 만남",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Where Steel Meets Ships and the Sea",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "鉄と船舶・海洋との出会い",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000219": {
+  "ko": {
+   "title": "남도 해안길 생활문화 탐방",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Exploring Everyday Culture Along Namdo's Coastal Roads",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "南道の海岸道 生活文化探訪",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000220": {
+  "ko": {
+   "title": "과거에서 미래 우주까지",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "From the Past to the Future and Outer Space",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "過去から未来の宇宙まで",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000221": {
+  "ko": {
+   "title": "한반도 땅끝에서 시작하는 역사 문화체험",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "History and Culture Experiences Starting from Ttangkkeut, the Tip of the Korean Peninsula",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "朝鮮半島の地の果てから始まる歴史文化体験",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000222": {
+  "ko": {
+   "title": "고대와 현대가 공존하는 역사탐방",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "A History Tour Where the Ancient and Modern Coexist",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "古代と現代が共存する歴史探訪",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000223": {
+  "ko": {
+   "title": "산길따라 철길따라 만나보는 자연 생태 체험",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Nature and Ecology Experiences Along Mountain Trails and Railways",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "山道と線路をたどって出会う自然生態体験",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000265": {
+  "ko": {
+   "title": "증도슬로시티 느리게 걷기&갯벌체험",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Slow Walks in Jeungdo Slow City & Tidal Flat Experience",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "曽島スローシティでゆっくり歩き＆干潟体験",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000295": {
+  "ko": {
+   "title": "문화체험이 함께하는 남도 명소탐방 1박2일",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Namdo Landmarks Tour with Cultural Experiences, 2 Days, 1 Night",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "文化体験と一緒に巡る南道名所探訪 1泊2日",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000296": {
+  "ko": {
+   "title": "서부권 3박 4일",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Western Region, 4 Days, 3 Nights",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "西部圏 3泊4日",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000297": {
+  "ko": {
+   "title": "남도 몸보신 별미 / 토요일 민속공연 기차여행",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Namdo Restorative Delicacies / Saturday Folk Performance Train Trip",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "南道の滋養グルメ / 土曜日の民俗公演 列車旅",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000298": {
+  "ko": {
+   "title": "느림과 여유 슬로시티 장흥&담양",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Slowness and Ease: Slow Cities Jangheung & Damyang",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "ゆったりのんびり スローシティ長興＆潭陽",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000299": {
+  "ko": {
+   "title": "보성 대원사 벚꽃길 2일",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "2 Days on the Boseong Daewonsa Temple Cherry Blossom Road",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "宝城 大原寺の桜並木 2日",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000300": {
+  "ko": {
+   "title": "소금 천국 증도와 함평 해수찜 테라피 여행",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Salt Paradise Jeungdo and Hampyeong Seawater Steam Bath Therapy Trip",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "塩の天国・曽島と咸平海水蒸しセラピーの旅",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000301": {
+  "ko": {
+   "title": "증도슬로시티 느리게 걷기&갯벌체험",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Slow Walks in Jeungdo Slow City & Tidal Flat Experience",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "曽島スローシティでゆっくり歩き＆干潟体験",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000302": {
+  "ko": {
+   "title": "남도 예술의 혼",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "The Artistic Soul of Namdo",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "南道芸術の魂",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000303": {
+  "ko": {
+   "title": "남도몸보신 별미/토요민속공연 기차여행",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Namdo Restorative Delicacies/Saturday Folk Performance Train Trip",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "南道の滋養グルメ/土曜民俗公演 列車旅",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000304": {
+  "ko": {
+   "title": "아름다운미항 섬 속의 섬 진도접도마을로 떠나는 특별체험",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "A Special Experience at Jeopdo Village, Jindo: A Beautiful Port on an Island Within an Island",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "美しい港、島の中の島 珍島・接島村へ出かける特別体験",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000305": {
+  "ko": {
+   "title": "SLOW~슬로길걷기 유채꽃핀 청산도와담양명소",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "SLOW~ Walking the Slow Road on Cheongsando in Canola Bloom, Plus Damyang Highlights",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "SLOW~菜の花咲く青山島のスローギル歩きと潭陽の名所",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000306": {
+  "ko": {
+   "title": "보성녹차밭/무위사/대흥사/영암F1경기장",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Boseong Green Tea Field/Muwisa Temple/Daeheungsa Temple/Yeongam F1 Circuit",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "宝城緑茶畑/無為寺/大興寺/霊岩F1サーキット",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000307": {
+  "ko": {
+   "title": "바닷길을 따라 진도, 목포 어촌체험 마을",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Along the Sea Roads: Fishing Village Experiences in Jindo and Mokpo",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "海の道に沿って 珍島・木浦の漁村体験村",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000308": {
+  "ko": {
+   "title": "문화답사 일번지",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "The No. 1 Destination for Cultural Heritage Tours",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "文化探訪の一番地",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000309": {
+  "ko": {
+   "title": "남도몸보신 별미/토요민속공연 기차여행",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Namdo Restorative Delicacies/Saturday Folk Performance Train Trip",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "南道の滋養グルメ/土曜民俗公演 列車旅",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000310": {
+  "ko": {
+   "title": "식신원정대! 담양 슬로시티와 남도1번지 명품 맛집",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Foodie Expedition! Damyang Slow City and Top Restaurants in Namdo's No. 1 Destination",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "食いしん坊遠征隊！潭陽スローシティと南道一番地の名店グルメ",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000311": {
+  "ko": {
+   "title": "느림과 여유 슬로시티 장흥",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Slowness and Ease: Slow City Jangheung",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "ゆったりのんびり スローシティ長興",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000312": {
+  "ko": {
+   "title": "남도 럭셔리 별미여행",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Namdo Luxury Gourmet Trip",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "南道ラグジュアリーグルメ旅",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000313": {
+  "ko": {
+   "title": "남도정통․명품맛집 기차여행",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Namdo Authentic․Top Restaurant Train Trip",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "南道本格․名店グルメ列車旅",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000314": {
+  "ko": {
+   "title": "아름다운 순천만 갈대숲과 깊어가는 가을 남도 별미 여행",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Beautiful Suncheonman Bay Reed Fields and Namdo Delicacies in Deepening Autumn",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "美しい順天湾の葦原と深まる秋の南道グルメ旅",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000315": {
+  "ko": {
+   "title": "남도여행 서부권 1박2일(전남 1박2일)",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Namdo Trip, Western Region, 2 Days, 1 Night (Jeonnam 2 Days, 1 Night)",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "南道旅行 西部圏 1泊2日(全南 1泊2日)",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000316": {
+  "ko": {
+   "title": "증기기관차 체험, 죽녹원, 메타세콰이아",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Steam Locomotive Ride, Juknokwon Bamboo Garden, Metasequoia Road",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "蒸気機関車体験、竹緑苑、メタセコイア",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000317": {
+  "ko": {
+   "title": "남도 유배길과 숨겨진 남도의 식도락 여행",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Namdo's Exile Trails and a Hidden Namdo Gourmet Trip",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "南道の流配の道と隠れた南道の食道楽の旅",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000318": {
+  "ko": {
+   "title": "영산강 황포돛배/보성녹차밭/미황사",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Yeongsangang River Hwangpo Sailboat/Boseong Green Tea Field/Mihwangsa Temple",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "栄山江黄布帆船/宝城緑茶畑/美黄寺",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000319": {
+  "ko": {
+   "title": "영광 백수해안도로와 함평생태공원, 나주 황포돛배 여행",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Yeonggwang Baeksu Coastal Road, Hampyeong Ecology Park and Naju Hwangpo Sailboat Trip",
+   "summary": "This travel course was brought over from Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · KOGL Type 4)."
+  },
+  "ja": {
+   "title": "霊光 白岫海岸道路と咸平生態公園、羅州 黄布帆船の旅",
+   "summary": "南道旅行ガイドの旅行コースを移したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000320": {
+  "ko": {
+   "title": "[토요공연]영광~목포~진도~보성 맛기행",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "[Saturday Performance]Yeonggwang~Mokpo~Jindo~Boseong Food Tour",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "[土曜公演]霊光～木浦～珍島～宝城グルメ紀行",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000321": {
+  "ko": {
+   "title": "순천만/보석같은 길 여수 비렁길 탐방",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Suncheonman Bay/Exploring Yeosu's Gem-Like Bireong-gil Trail",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "順天湾/宝石のような道 麗水ビロンギル探訪",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000322": {
+  "ko": {
+   "title": "영암F1경기장/보성녹차밭/무위사",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Yeongam F1 Circuit/Boseong Green Tea Field/Muwisa Temple",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "霊岩F1サーキット/宝城緑茶畑/無為寺",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000393": {
+  "ko": {
+   "title": "천년의 숲길",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Thousand-Year Forest Trail",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "千年の森の道",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000394": {
+  "ko": {
+   "title": "느림의 미학 슬로시티 기행",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "The Beauty of Slowness: A Slow City Journey",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "ゆっくりの美学 スローシティ紀行",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000395": {
+  "ko": {
+   "title": "변화의 중심에 선 호남인의 삶과 역사",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Life and History of the Honam People at the Heart of Change",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "変化の中心に立つ湖南の人々の暮らしと歴史",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000396": {
+  "ko": {
+   "title": "다도해로 떠나는 해양 생태 관광",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Marine Eco-Tour to the Dadohae Archipelago",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "多島海へ出かける海洋エコツアー",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000402": {
+  "ko": {
+   "title": "자연주의 레포츠 체험문화",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Nature-Inspired Leisure Sports Experiences",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "自然派レジャースポーツ体験",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000403": {
+  "ko": {
+   "title": "남도 섬의 멋과 맛",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "The Charm and Flavors of Namdo's Islands",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "南道の島の魅力と味",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000404": {
+  "ko": {
+   "title": "남도 유적지 문화와 자연문화",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Namdo's Historic Site Culture and Natural Culture",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "南道の遺跡文化と自然文化",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000405": {
+  "ko": {
+   "title": "남도의 뱃길 따라",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Along Namdo's Sea Routes",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "南道の船路をたどって",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000406": {
+  "ko": {
+   "title": "남도 불교문화와 자연생태 체험",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Namdo Buddhist Culture and Nature Ecology Experience",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "南道の仏教文化と自然生態体験",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000407": {
+  "ko": {
+   "title": "도자기와 차의 고향을 찾아서",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "In Search of the Home of Pottery and Tea",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "陶磁器とお茶の故郷を訪ねて",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000408": {
+  "ko": {
+   "title": "선비문화와 생태탐방체험",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Seonbi Scholar Culture and Eco-Exploration Experience",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "ソンビ文化と生態探訪体験",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000409": {
+  "ko": {
+   "title": "슬로시티와 자연의 색깔",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Slow Cities and the Colors of Nature",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "スローシティと自然の色",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000410": {
+  "ko": {
+   "title": "자연과 우주의 만남",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Where Nature Meets the Universe",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "自然と宇宙の出会い",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000411": {
+  "ko": {
+   "title": "감성, 지성, 체험거리 풍부한 순천만정원",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Suncheonman Bay Garden, Rich in Emotion, Knowledge, and Things to Experience",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "感性、知性、体験が豊富な順天湾庭園",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000412": {
+  "ko": {
+   "title": "과거와 현재 문화의 만남",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Where Past and Present Cultures Meet",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "過去と現在の文化の出会い",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000413": {
+  "ko": {
+   "title": "해상왕 장보고와 고산 윤서도의 만남",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Sea King Jang Bogo Meets Gosan Yun Seon-do",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "海上王・張保皐と孤山・尹善道の出会い",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000414": {
+  "ko": {
+   "title": "서남부 역사전통 테마코스",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Southwest History & Tradition Theme Course",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "西南部 歴史・伝統テーマコース",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000415": {
+  "ko": {
+   "title": "서남부 문화예술 테마코스",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Southwest Culture & Arts Theme Course",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "西南部 文化・芸術テーマコース",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000416": {
+  "ko": {
+   "title": "서남부 자연,생태 테마코스",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Southwest Nature, Ecology Theme Course",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "西南部 自然・生態テーマコース",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000417": {
+  "ko": {
+   "title": "중남부 역사,전통 테마코스 1",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "South-Central History, Tradition Theme Course 1",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "中南部 歴史・伝統テーマコース1",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000418": {
+  "ko": {
+   "title": "중남부 역사,전통 테마코스 2",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "South-Central History, Tradition Theme Course 2",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "中南部 歴史・伝統テーマコース2",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000419": {
+  "ko": {
+   "title": "중남부 문화,예술 테마코스 2",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "South-Central Culture, Arts Theme Course 2",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "中南部 文化・芸術テーマコース2",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000420": {
+  "ko": {
+   "title": "중남부 문화,예술 테마코스 1",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "South-Central Culture, Arts Theme Course 1",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "中南部 文化・芸術テーマコース1",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000424": {
+  "ko": {
+   "title": "보성녹차밭,무위사봄꽃/슬로시티증도걷기",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Boseong Green Tea Field, Muwisa Temple Spring Flowers/Walking Slow City Jeungdo",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "宝城緑茶畑、無為寺の春の花/スローシティ曾島ウォーキング",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000425": {
+  "ko": {
+   "title": "자연과 사람이 나란히 걷는 길 -은가람 길-",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "A Path Where Nature and People Walk Side by Side -Eungaram-gil-",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "自然と人が並んで歩く道 -ウンガラムギル-",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000426": {
+  "ko": {
+   "title": "남도 정통 맛집 기차여행",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Train Trip to Namdo's Authentic Local Restaurants",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "南道の本格グルメ店をめぐる列車旅",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000427": {
+  "ko": {
+   "title": "환상의 섬 청산도와 나비의 함평",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Fantastic Cheongsando Island and Hampyeong of Butterflies",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "幻想の島・青山島と蝶の咸平",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000428": {
+  "ko": {
+   "title": "남도 맛기행",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Namdo Food Tour",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "南道グルメ紀行",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000429": {
+  "ko": {
+   "title": "KTX남도정통.명품맛집 기차여행",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "KTX Train Trip to Namdo's Authentic.Premium Restaurants",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "KTX南道の本格.名品グルメ列車旅",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000430": {
+  "ko": {
+   "title": "완도와 청산도를 찾아서",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "In Search of Wando and Cheongsando Island",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "莞島と青山島を訪ねて",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000431": {
+  "ko": {
+   "title": "듣고,마시고,먹고",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Listen, Drink, Eat",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "聴いて、飲んで、食べて",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000433": {
+  "ko": {
+   "title": "슬로시티 증도 생태 탐방&담양죽녹원",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Slow City Jeungdo Eco-Tour&Damyang Juknokwon Bamboo Garden",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "スローシティ曾島生態探訪&潭陽竹緑苑",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000434": {
+  "ko": {
+   "title": "가을냄새 가득한 담양-순천 여행",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Damyang-Suncheon Trip Full of the Scent of Autumn",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "秋の香りあふれる潭陽-順天の旅",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000435": {
+  "ko": {
+   "title": "염전에서 느림의 미학을 배우기",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Learning the Beauty of Slowness at a Salt Farm",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "塩田でゆっくりの美学を学ぶ",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000436": {
+  "ko": {
+   "title": "흑산도 버스 투어",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Heuksando Island Bus Tour",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "黒山島バスツアー",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000437": {
+  "ko": {
+   "title": "다도해가 한 눈에! 목포 야경 투어",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "The Dadohae Archipelago at a Glance! Mokpo Night View Tour",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "多島海がひと目で！木浦夜景ツアー",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000439": {
+  "ko": {
+   "title": "구례, 증기기관차 체험, 사성암, 담양여행",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Gurye, Steam Locomotive Experience, Saseongam Hermitage, Damyang Trip",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "求礼、蒸気機関車体験、四聖庵、潭陽の旅",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000440": {
+  "ko": {
+   "title": "자연 속의 예술 여행",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "An Art Journey in Nature",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "自然の中のアート旅",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000441": {
+  "ko": {
+   "title": "최서남단 섬 탐방",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Exploring the Southwesternmost Islands",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "最西南端の島探訪",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000442": {
+  "ko": {
+   "title": "겨울 목포 둘러보기",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Exploring Mokpo in Winter",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "冬の木浦めぐり",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000443": {
+  "ko": {
+   "title": "남도참살이 여행",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Namdo Wellbeing Trip",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "南道ウェルビーイング旅",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000450": {
+  "ko": {
+   "title": "꿈엔들 잊힐리야~ 4개도시 알짜투어",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Could I Ever Forget, Even in Dreams~ 4-City Highlights Tour",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "夢にも忘れられようか～4都市の厳選ツアー",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000451": {
+  "ko": {
+   "title": "두근두근 설레임 가을여행",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Heart-Fluttering Autumn Trip",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "ドキドキわくわく秋の旅",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000452": {
+  "ko": {
+   "title": "마음 충전, 해남·완도 감성여행",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Recharge Your Heart, a Haenam·Wando Mood Trip",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "心の充電、海南・莞島 感性旅",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000455": {
+  "ko": {
+   "title": "영화<살인의추억>  시네마투어",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Film<Memories of Murder>  Cinema Tour",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "映画<殺人の追憶>  シネマツアー",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000556": {
+  "ko": {
+   "title": "감성충전, 힐링여행 무안",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Recharge Your Senses, Healing Trip to Muan",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "感性充電、癒やしの旅 務安",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000557": {
+  "ko": {
+   "title": "1박2일 무안 여행",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "2 Days, 1 Night Muan Trip",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "1泊2日 務安の旅",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ },
+ "nd-c-0000000558": {
+  "ko": {
+   "title": "역사와 예술이 흐르는 해안 드라이브",
+   "summary": "남도여행길잡이 여행코스를 옮겨 온 것이에요 (남도여행길잡이(namdokorea.com) 자동 수집 · 공공누리 제4유형)."
+  },
+  "en": {
+   "title": "Coastal Drive Flowing with History and Art",
+   "summary": "This course is brought over from the travel courses on Namdo Travel Guide (automatically collected from Namdo Travel Guide (namdokorea.com) · Korea Open Government License Type 4)."
+  },
+  "ja": {
+   "title": "歴史と芸術が流れる海岸ドライブ",
+   "summary": "南道旅行ガイドの旅行コースを転載したものです（南道旅行ガイド（namdokorea.com）から自動収集・公共ヌリ第4類型）。"
+  }
+ }
+}

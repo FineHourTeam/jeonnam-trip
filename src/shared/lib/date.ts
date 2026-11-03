@@ -66,8 +66,16 @@ export function fromMinutes(min: number): string {
 
 const WEEKDAY = ["일", "월", "화", "수", "목", "금", "토"] as const;
 
-/** "10월 16일 (금)" */
-export function formatDateKo(date: string): string {
-  const [, m = 0, d = 0] = date.split("-").map(Number);
-  return `${String(m)}월 ${String(d)}일 (${WEEKDAY[dayOfWeek(date)]})`;
+/** 화면 언어별 날짜 표기 — ko "10월 16일 (금)" · en "Fri, Oct 16" · ja "10月16日(金)" */
+export function formatDay(date: string, lng: string): string {
+  if (lng === "ko") {
+    const [, m = 0, d = 0] = date.split("-").map(Number);
+    return `${String(m)}월 ${String(d)}일 (${WEEKDAY[dayOfWeek(date)]})`;
+  }
+  return new Intl.DateTimeFormat(lng, {
+    timeZone: "UTC",
+    month: lng === "ja" ? "long" : "short",
+    day: "numeric",
+    weekday: "short",
+  }).format(toUtcMs(date));
 }

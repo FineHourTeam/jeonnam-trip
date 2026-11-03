@@ -1,0 +1,14 @@
+{
+  "course": {
+    "label": "Course map",
+    "noLocation": "None of these places have a confirmed location, so we can't show them on the map."
+  },
+  "load": {
+    "auth": "Map authentication failed. The map only works on the registered service address.",
+    "network": "We couldn't load the map. Please check your network connection."
+  },
+  "directions": {
+    "failed": "We couldn't load the route.",
+    "serverError": "Route server error ({{status}})"
+  }
+}

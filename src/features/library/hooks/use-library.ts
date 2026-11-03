@@ -2,6 +2,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useCurrentUid } from "@/features/trips";
+import i18n from "@/lib/i18n";
 import type { SavedPlace } from "@/shared/domain";
 import {
   deleteSnsLink,
@@ -53,7 +54,7 @@ export function useSnsLinks() {
 
 class LoginRequiredError extends Error {
   constructor() {
-    super("로그인이 필요해요.");
+    super(i18n.t("errors.loginRequired", { ns: "library" }));
     this.name = "LoginRequiredError";
   }
 }
@@ -84,8 +85,6 @@ export function useUpdateSavedPlace() {
   return useLibraryMutation(updateSavedPlace);
 }
 
-export const NETWORK_HINT = "네트워크 연결을 확인한 뒤 다시 시도해 주세요.";
-
 /** 저장 해제 + "되돌리기" 토스트 (지우기 전 태그·메모 그대로 복구). 이미 담은 일정은 건드리지 않는다 */
 export function useUnsavePlace() {
   const remove = useLibraryMutation(removeSavedPlace);
@@ -95,18 +94,18 @@ export function useUnsavePlace() {
     remove
       .mutateAsync(saved.id)
       .then(() =>
-        toast("보관함에서 뺐어요. 이미 담은 일정은 그대로예요.", {
+        toast(i18n.t("toast.unsaved", { ns: "library" }), {
           action: {
-            label: "되돌리기",
+            label: i18n.t("toast.undo", { ns: "library" }),
             onClick: () => {
               restore
                 .mutateAsync(saved)
-                .catch(() => toast.error(`되돌리지 못했어요. ${NETWORK_HINT}`));
+                .catch(() => toast.error(i18n.t("toast.undoFailed", { ns: "library" })));
             },
           },
         }),
       )
-      .catch(() => toast.error(`저장을 해제하지 못했어요. ${NETWORK_HINT}`));
+      .catch(() => toast.error(i18n.t("toast.unsaveFailed", { ns: "library" })));
   };
   return { unsave, isPending: remove.isPending || restore.isPending };
 }

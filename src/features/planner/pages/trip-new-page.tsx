@@ -7,6 +7,7 @@
 // 여러 개가 함께 오면 축제 → 크리에이터 코스 → 고른 장소 순으로 하나만 쓴다.
 // 이 화면은 거쳐 가기만 하므로 편집 화면으로 갈 때 기록을 바꿔치기한다 — 뒤로 가기로 돌아와 초안을 다시 만들지 않게.
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router";
 import { toast } from "sonner";
 import { paths } from "@/app/paths";
@@ -40,6 +41,7 @@ import {
   visitFromPlace,
 } from "@/features/trips";
 import { MAX_TRIP_DAYS, isSigunCode, type Festival, type TripDraft } from "@/shared/domain";
+import i18n from "@/lib/i18n";
 import { addDays, todayKst } from "@/shared/lib/date";
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
@@ -51,11 +53,12 @@ function withFestival(draft: TripDraft, festival: Festival, date: string, progra
   if (dayIndex >= 0) return addItemsToDay(draft, dayIndex, [item]).trip;
   return {
     ...draft,
-    unplaced: [...draft.unplaced, { ...item, reason: "방문일이 여행 기간 밖이에요." }],
+    unplaced: [...draft.unplaced, { ...item, reason: i18n.t("new.outOfRange", { ns: "planner" }) }],
   };
 }
 
 export default function TripNewPage() {
+  const { t } = useTranslation("planner");
   const navigate = useNavigate();
   const existing = useTripDraftStore((s) => s.draft);
   const setDraft = useTripDraftStore((s) => s.setDraft);
@@ -109,12 +112,12 @@ export default function TripNewPage() {
         origin: { kind: "festival", festivalId },
       });
       if (festival.data.state === "cancelled") {
-        return { draft, notice: "취소된 축제라 코스에 담지 않았어요." };
+        return { draft, notice: t("new.festivalCancelled") };
       }
       if (!visitDate) {
         return {
           draft,
-          notice: "방문일이 없어 축제를 담지 않았어요. 축제 상세에서 방문일을 골라 주세요.",
+          notice: t("new.festivalNoDate"),
         };
       }
       return { draft: withFestival(draft, festival.data, visitDate, programId) };
@@ -134,17 +137,18 @@ export default function TripNewPage() {
         coursePlaces.data,
       );
       const skipped = [
-        missing > 0 && `지금은 볼 수 없는 장소 ${String(missing)}곳`,
-        duplicates > 0 && `같은 일차에 겹친 장소 ${String(duplicates)}곳`,
+        missing > 0 && t("new.skippedMissing", { count: missing }),
+        duplicates > 0 && t("new.skippedDuplicates", { count: duplicates }),
       ].filter(Boolean);
       return {
         draft: trip,
         notice:
-          skipped.length > 0 ? `가져오지 못한 장소가 있어요 (${skipped.join(", ")}).` : undefined,
+          skipped.length > 0
+            ? t("new.skippedNotice", { list: skipped.join(t("listSeparator")) })
+            : undefined,
       };
     }
-    if (creatorId)
-      return { draft: blankDraft(), notice: "찾을 수 없는 코스라 빈 코스로 시작해요." };
+    if (creatorId) return { draft: blankDraft(), notice: t("new.courseNotFound") };
     if (pickedPlaces.data && pickedPlaces.data.length > 0) {
       return { draft: addItemsToDay(blankDraft(), 0, pickedPlaces.data.map(visitFromPlace)).trip };
     }
@@ -167,10 +171,10 @@ export default function TripNewPage() {
         <div className="bg-background-subtle text-foreground flex flex-col gap-3 rounded-lg p-4 text-sm">
           <p>
             {festivalId
-              ? "축제 정보를 불러오지 못했어요."
+              ? t("new.festivalError")
               : creatorId
-                ? "코스 정보를 불러오지 못했어요."
-                : "고른 장소를 불러오지 못했어요."}
+                ? t("new.courseError")
+                : t("new.pickedError")}
           </p>
           <div className="flex flex-wrap gap-2">
             <Button
@@ -182,7 +186,7 @@ export default function TripNewPage() {
                 else void pickedPlaces.refetch();
               }}
             >
-              다시 시도
+              {t("retry", { ns: "common" })}
             </Button>
             <Button
               variant="outline"
@@ -192,13 +196,13 @@ export default function TripNewPage() {
                 start(blankDraft());
               }}
             >
-              빈 코스로 시작
+              {t("new.startBlank")}
             </Button>
           </div>
         </div>
       ) : (
         <div aria-busy="true" className="flex flex-col gap-3">
-          <p className="text-muted-foreground text-sm">코스를 준비하고 있어요.</p>
+          <p className="text-muted-foreground text-sm">{t("new.preparing")}</p>
           <Skeleton className="h-10 w-2/3" />
           <Skeleton className="h-40 w-full" />
         </div>
@@ -212,10 +216,9 @@ export default function TripNewPage() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>저장하지 않은 코스가 있어요</AlertDialogTitle>
+            <AlertDialogTitle>{t("new.overwriteTitle")}</AlertDialogTitle>
             <AlertDialogDescription>
-              「{existing?.title}」 코스를 아직 저장하지 않았어요. 새로 만들면 작성 중이던 내용은
-              사라져요.
+              {t("new.overwriteBody", { title: existing?.title })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -224,14 +227,14 @@ export default function TripNewPage() {
                 void navigate(paths.tripDraft, { replace: true });
               }}
             >
-              작성 중인 코스 열기
+              {t("new.openDraft")}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 if (pending) start(pending.draft, pending.notice);
               }}
             >
-              새로 만들기
+              {t("new.startNew")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
