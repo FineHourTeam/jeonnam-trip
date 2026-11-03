@@ -4,6 +4,7 @@
 // 홈 맨 위에서는 투명해진 헤더(AppLayout)가 이 구역 위에 겹친다 — 막(scrim)을 늘 깔아 헤더의 흰 글자도 읽히게 한다.
 import { useReducedMotion } from "motion/react";
 import { useEffect, useId, useState, type ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { paths } from "@/app/paths";
 import { ChevronRightIcon, PauseIcon, PlayIcon } from "@/components/icons";
@@ -16,13 +17,7 @@ import {
 } from "@/components/ui/carousel";
 import { usePlacesByIds } from "@/features/places";
 import { cn } from "@/lib/utils";
-import { sigunName } from "@/shared/domain";
-import {
-  HERO_PHOTO_CREDIT,
-  HERO_SLIDES,
-  buildHeroSlides,
-  type HeroSlide,
-} from "../lib/hero-slides";
+import { HERO_SLIDES, buildHeroSlides, type HeroSlide } from "../lib/hero-slides";
 
 const AUTOPLAY_MS = 6000;
 const HERO_PLACE_IDS = HERO_SLIDES.map((s) => s.placeId);
@@ -58,6 +53,7 @@ export function HomeHero({ labelledBy, children }: HomeHeroProps) {
 }
 
 function HeroPhotos({ slides }: { slides: HeroSlide[] }) {
+  const { t } = useTranslation("explore");
   const reduceMotion = useReducedMotion() ?? false;
   const captionId = useId();
   const [api, setApi] = useState<CarouselApi>();
@@ -95,7 +91,7 @@ function HeroPhotos({ slides }: { slides: HeroSlide[] }) {
       <Carousel
         setApi={setApi}
         opts={{ loop: true }}
-        aria-label="전남 명소 사진"
+        aria-label={t("hero.carousel")}
         aria-describedby={captionId}
         className="absolute inset-0"
       >
@@ -104,7 +100,7 @@ function HeroPhotos({ slides }: { slides: HeroSlide[] }) {
             <CarouselItem key={s.id} className="pl-0" aria-hidden={i !== current}>
               <img
                 src={s.src}
-                alt={`${s.name} 풍경`}
+                alt={t("hero.photoAlt", { name: s.name })}
                 loading={i === 0 ? "eager" : "lazy"}
                 fetchPriority={i === 0 ? "high" : "auto"}
                 draggable={false}
@@ -125,10 +121,10 @@ function HeroPhotos({ slides }: { slides: HeroSlide[] }) {
               to={paths.placeDetail(slide.id)}
               className="focus-visible:ring-ring inline-flex items-center gap-1 self-start rounded-md font-semibold text-pretty underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:outline-none"
             >
-              {slide.name} · {sigunName(slide.sigun)}
+              {slide.name} · {t(`sigun.${slide.sigun}`, { ns: "common" })}
               <ChevronRightIcon size="sm" />
             </Link>
-            <p className="text-xs">{HERO_PHOTO_CREDIT}</p>
+            <p className="text-xs">{t("hero.credit")}</p>
           </div>
         )}
         {slides.length > 1 && (
@@ -137,7 +133,7 @@ function HeroPhotos({ slides }: { slides: HeroSlide[] }) {
               <button
                 key={s.id}
                 type="button"
-                aria-label={`${String(i + 1)}번째 사진 보기: ${s.name}`}
+                aria-label={t("hero.goTo", { n: i + 1, name: s.name })}
                 aria-current={i === current}
                 onClick={() => {
                   api?.scrollTo(i, reduceMotion);
@@ -155,7 +151,7 @@ function HeroPhotos({ slides }: { slides: HeroSlide[] }) {
             <Button
               variant="ghost"
               size="icon-sm"
-              aria-label={autoplay ? "사진 자동 넘김 멈추기" : "사진 자동 넘김 다시 시작하기"}
+              aria-label={autoplay ? t("hero.pause") : t("hero.play")}
               onClick={() => {
                 setAutoplayChoice(!autoplay);
               }}

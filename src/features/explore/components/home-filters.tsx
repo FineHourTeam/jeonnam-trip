@@ -1,4 +1,5 @@
 // S01 상단 — 지역·날짜와 "이 날짜로 여행 만들기". 값은 URL 검색 파라미터가 들고 있다.
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { DateFilterInput } from "@/components/date-filter-input";
 import { Button } from "@/components/ui/button";
@@ -24,10 +25,11 @@ interface HomeFiltersProps {
 const ALL = "all";
 
 export function HomeFilters({ values, today, onChange, tripNewTo }: HomeFiltersProps) {
+  const { t } = useTranslation("explore");
   return (
     <div className="flex flex-wrap items-end gap-3">
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="home-sigun">지역</Label>
+        <Label htmlFor="home-sigun">{t("filters.region")}</Label>
         <Select
           value={values.sigun ?? ALL}
           onValueChange={(v) => {
@@ -38,17 +40,17 @@ export function HomeFilters({ values, today, onChange, tripNewTo }: HomeFiltersP
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={ALL}>전체 지역</SelectItem>
+            <SelectItem value={ALL}>{t("filters.allRegions")}</SelectItem>
             {SIGUNS.map((s) => (
               <SelectItem key={s.code} value={s.code}>
-                {s.name}
+                {t(`sigun.${s.code}`, { ns: "common" })}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
       </div>
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="home-date">날짜</Label>
+        <Label htmlFor="home-date">{t("filters.date")}</Label>
         <DateFilterInput
           id="home-date"
           min={today}
@@ -61,7 +63,7 @@ export function HomeFilters({ values, today, onChange, tripNewTo }: HomeFiltersP
         />
       </div>
       <Button asChild className="w-full sm:ml-auto sm:w-auto">
-        <Link to={tripNewTo}>이 날짜로 여행 만들기</Link>
+        <Link to={tripNewTo}>{t("filters.startTrip")}</Link>
       </Button>
     </div>
   );

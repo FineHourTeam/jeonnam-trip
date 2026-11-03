@@ -13,11 +13,12 @@ import {
   type QueryConstraint,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import i18n from "@/lib/i18n";
 import { COL, type Festival, type SigunCode } from "@/shared/domain";
 
 export class FestivalNotFoundError extends Error {
   constructor() {
-    super("축제를 찾을 수 없어요.");
+    super(i18n.t("error.notFound", { ns: "festivals" }));
     this.name = "FestivalNotFoundError";
   }
 }

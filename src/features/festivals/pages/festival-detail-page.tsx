@@ -1,4 +1,5 @@
 // S03 축제 상세 — 취소된 축제도 열람은 되지만 일정 추가는 막는다 (기능명세 §2).
+import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router";
 import { paths } from "@/app/paths";
 import { ChevronLeftIcon } from "@/components/icons";
@@ -8,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CourseMap } from "@/features/map";
-import { sigunName, type Festival } from "@/shared/domain";
+import type { Festival } from "@/shared/domain";
 import { todayKst } from "@/shared/lib/date";
 import { FestivalNotFoundError } from "../api/festivals-api";
 import {
@@ -23,6 +24,7 @@ import { useFestival } from "../hooks/use-festivals";
 import { formatPeriod } from "../lib/format";
 
 export default function FestivalDetailPage() {
+  const { t } = useTranslation("festivals");
   const { festivalId } = useParams();
   const query = useFestival(festivalId);
 
@@ -31,7 +33,7 @@ export default function FestivalDetailPage() {
       <Button variant="ghost" size="sm" asChild className="self-start">
         <Link to={paths.festivals}>
           <ChevronLeftIcon size="sm" />
-          축제 목록
+          {t("detail.backToList")}
         </Link>
       </Button>
       {query.isPending ? (
@@ -54,31 +56,30 @@ export default function FestivalDetailPage() {
 }
 
 function LoadError({ notFound, onRetry }: { notFound: boolean; onRetry: () => void }) {
+  const { t } = useTranslation("festivals");
   return (
     <div className="flex flex-col items-start gap-3">
       <Alert variant="destructive">
-        <AlertTitle>
-          {notFound ? "축제를 찾을 수 없어요" : "축제 정보를 불러오지 못했어요"}
-        </AlertTitle>
+        <AlertTitle>{notFound ? t("detail.notFoundTitle") : t("detail.errorTitle")}</AlertTitle>
         <AlertDescription>
-          {notFound
-            ? "공개가 끝났거나 주소가 잘못된 축제예요."
-            : "네트워크 연결을 확인한 뒤 다시 시도해 주세요."}
+          {notFound ? t("detail.notFoundBody") : t("detail.errorBody")}
         </AlertDescription>
       </Alert>
-      {!notFound && <Button onClick={onRetry}>다시 시도</Button>}
+      {!notFound && <Button onClick={onRetry}>{t("retry", { ns: "common" })}</Button>}
     </div>
   );
 }
 
 function FestivalDetail({ festival }: { festival: Festival }) {
+  const { t, i18n } = useTranslation("festivals");
+  const sigun = t(`sigun.${festival.sigun}`, { ns: "common" });
   const today = todayKst();
   const unverified = festival.checks.schedule.state !== "verified";
   return (
     <>
       <Seo
         title={festival.name}
-        description={festival.summary ?? `${sigunName(festival.sigun)} 축제`}
+        description={festival.summary ?? t("detail.seoDescription", { sigun })}
         image={festival.photos[0]}
       />
       <Photos festival={festival} />
@@ -86,24 +87,24 @@ function FestivalDetail({ festival }: { festival: Festival }) {
       <header className="flex flex-col gap-2">
         <div className="flex flex-wrap gap-2">
           <FestivalStateBadge festival={festival} today={today} />
-          {unverified && <Badge variant="outline">미확인</Badge>}
+          {unverified && <Badge variant="outline">{t("detail.unverified")}</Badge>}
         </div>
         <h1 className="text-xl font-semibold text-balance">{festival.name}</h1>
         <p className="text-muted-foreground text-sm">
-          {sigunName(festival.sigun)} · {formatPeriod(festival.startDate, festival.endDate)}
+          {sigun} · {formatPeriod(festival.startDate, festival.endDate, i18n.language)}
         </p>
       </header>
 
       {festival.state !== "scheduled" && (
         <Alert variant={festival.state === "cancelled" ? "destructive" : "default"}>
           <AlertTitle>
-            {festival.state === "cancelled" ? "취소된 축제예요" : "일정이 바뀐 축제예요"}
+            {festival.state === "cancelled" ? t("detail.cancelledTitle") : t("detail.changedTitle")}
           </AlertTitle>
           <AlertDescription>
             {festival.stateNote ??
               (festival.state === "cancelled"
-                ? "상세 정보는 볼 수 있지만 일정에 새로 담을 수 없어요."
-                : "바뀐 기간과 운영시간을 확인한 뒤 일정에 담아 주세요.")}
+                ? t("detail.cancelledBody")
+                : t("detail.changedBody"))}
           </AlertDescription>
         </Alert>
       )}
@@ -116,7 +117,7 @@ function FestivalDetail({ festival }: { festival: Festival }) {
       <FestivalBasics festival={festival} />
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-base font-semibold">위치</h2>
+        <h2 className="text-base font-semibold">{t("detail.location")}</h2>
         {festival.location ? (
           <CourseMap
             className="aspect-video w-full"
@@ -126,9 +127,7 @@ function FestivalDetail({ festival }: { festival: Festival }) {
             paths={[]}
           />
         ) : (
-          <p className="text-muted-foreground text-sm">
-            위치가 확인되지 않아 지도에 표시하지 않아요.
-          </p>
+          <p className="text-muted-foreground text-sm">{t("detail.noLocation")}</p>
         )}
       </section>
 
@@ -138,10 +137,11 @@ function FestivalDetail({ festival }: { festival: Festival }) {
 }
 
 function Photos({ festival }: { festival: Festival }) {
+  const { t } = useTranslation("festivals");
   if (festival.photos.length === 0) {
     return (
       <div className="bg-background-subtle text-muted-foreground flex aspect-video w-full items-center justify-center rounded-lg text-sm">
-        등록된 사진이 없어요
+        {t("detail.noPhotos")}
       </div>
     );
   }
@@ -152,7 +152,7 @@ function Photos({ festival }: { festival: Festival }) {
           <img
             key={src}
             src={src}
-            alt={`${festival.name} 사진 ${String(i + 1)}`}
+            alt={t("detail.photoAlt", { name: festival.name, n: i + 1 })}
             loading={i === 0 ? "eager" : "lazy"}
             className="aspect-video w-full shrink-0 snap-start rounded-lg object-cover"
           />

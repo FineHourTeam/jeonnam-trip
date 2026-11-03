@@ -1,1 +1,51 @@
-{}
+{
+  "seoTitle": "전남 여행지 둘러보기",
+  "seoDescription": "날짜와 지역을 고르면 그날 열리는 전남 축제와 그 지역 장소·크리에이터 코스를 함께 볼 수 있어요.",
+  "title": "전남 여행지 둘러보기",
+  "intro": "지역과 날짜를 고르면 그날 열리는 축제와 그 지역 장소·코스를 모아 보여 줘요.",
+  "jeonnam": "전남",
+  "filters": {
+    "region": "지역",
+    "allRegions": "전체 지역",
+    "date": "날짜",
+    "startTrip": "이 날짜로 여행 만들기"
+  },
+  "hero": {
+    "carousel": "전남 명소 사진",
+    "photoAlt": "{{name}} 풍경",
+    "credit": "사진: 남도여행길잡이 · 공공누리 제4유형",
+    "goTo": "{{n}}번째 사진 보기: {{name}}",
+    "pause": "사진 자동 넘김 멈추기",
+    "play": "사진 자동 넘김 다시 시작하기"
+  },
+  "section": {
+    "more": "전체 보기",
+    "moreLabel": "{{title}} 전체 보기",
+    "errorBody": "네트워크 연결을 확인한 뒤 다시 시도해 주세요."
+  },
+  "festivals": {
+    "titleToday": "오늘 열리는 축제",
+    "titleOn": "{{date}} 열리는 축제",
+    "error": "축제를 불러오지 못했어요",
+    "emptyToday": "{{region}}에서 오늘 열리는 축제가 없어요",
+    "emptyOn": "{{region}}에서 {{date}} 열리는 축제가 없어요",
+    "emptyHint": "다른 날짜를 고르거나 이 지역 장소를 둘러보세요.",
+    "browsePlaces": "장소 둘러보기"
+  },
+  "places": {
+    "title": "{{region}} 장소",
+    "error": "장소를 불러오지 못했어요",
+    "emptyRegion": "이 지역에 공개된 장소가 아직 없어요",
+    "empty": "아직 공개된 장소가 없어요",
+    "emptyHint": "다른 지역을 고르거나 전체 장소를 둘러보세요.",
+    "all": "전체 장소 보기"
+  },
+  "courses": {
+    "title": "{{region}} 크리에이터 코스",
+    "error": "코스를 불러오지 못했어요",
+    "emptyRegion": "이 지역을 지나는 코스가 아직 없어요",
+    "empty": "공개된 코스가 아직 없어요",
+    "emptyHint": "다른 지역을 고르거나 전체 코스를 둘러보세요.",
+    "all": "전체 코스 보기"
+  }
+}
