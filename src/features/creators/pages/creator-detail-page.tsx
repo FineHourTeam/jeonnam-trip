@@ -28,6 +28,7 @@ import {
   tagLabel,
 } from "../lib/course";
 import { youtubeEmbedUrl, youtubeVideoId } from "../lib/youtube";
+import { CreatorAvatar } from "../components/creator-avatar";
 
 export default function CreatorDetailPage() {
   const { courseId } = useParams();
@@ -120,8 +121,8 @@ function CourseDetail({ course }: { course: CreatorCourse }) {
           />
         )}
         <div className="flex flex-col gap-1">
-          <p>
-            {t("detail.source")}{" "}
+          <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <CreatorAvatar creator={course.creator} />
             {channelUrl ? (
               <a
                 href={channelUrl}

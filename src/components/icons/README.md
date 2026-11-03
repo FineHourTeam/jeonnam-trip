@@ -69,6 +69,7 @@ import { DeleteIcon } from "@/components/icons";
 | `ChevronDownIcon` | 펼치기·드롭다운 | 2026-10-16 |
 | `ChevronRightIcon` | 다음·상세로 이동 | 2026-10-16 |
 | `AddIcon` | 추가 (장소·일차·코스) | 2026-10-16 |
+| `DecreaseIcon` | 줄이기 (체류 시간 등 값 감소) | 2026-11-03 |
 | `DeleteIcon` | 삭제 | 2026-10-16 |
 | `EditIcon` | 편집 | 2026-10-16 |
 | `SearchIcon` | 검색 | 2026-10-16 |

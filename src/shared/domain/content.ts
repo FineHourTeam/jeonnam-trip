@@ -192,7 +192,11 @@ export type CourseOrderBasis = "video_order" | "verified_trip" | "editor_suggest
 export interface CreatorCourse {
   id: string;
   title: string;
-  creator: { name: string; channelUrl?: string };
+  creator: {
+    name: string;
+    channelUrl?: string;
+    /** 유튜브 채널 프로필 사진 주소 */ avatarUrl?: string;
+  };
   sourceUrl: string;
   siguns: SigunCode[];
   tags: string[];

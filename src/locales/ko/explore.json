@@ -1,8 +1,6 @@
 {
   "seoTitle": "전남 여행지 둘러보기",
   "seoDescription": "날짜와 지역을 고르면 그날 열리는 전남 축제와 그 지역 장소·크리에이터 코스를 함께 볼 수 있어요.",
-  "title": "전남 여행지 둘러보기",
-  "intro": "지역과 날짜를 고르면 그날 열리는 축제와 그 지역 장소·코스를 모아 보여 줘요.",
   "jeonnam": "전남",
   "filters": {
     "region": "지역",
@@ -24,13 +22,12 @@
     "errorBody": "네트워크 연결을 확인한 뒤 다시 시도해 주세요."
   },
   "festivals": {
-    "titleToday": "오늘 열리는 축제",
-    "titleOn": "{{date}} 열리는 축제",
     "error": "축제를 불러오지 못했어요",
-    "emptyToday": "{{region}}에서 오늘 열리는 축제가 없어요",
-    "emptyOn": "{{region}}에서 {{date}} 열리는 축제가 없어요",
     "emptyHint": "다른 날짜를 고르거나 이 지역 장소를 둘러보세요.",
-    "browsePlaces": "장소 둘러보기"
+    "browsePlaces": "장소 둘러보기",
+    "title": "{{region}}에서 열리는 축제",
+    "today": "오늘",
+    "emptyFrom": "{{region}}에서 {{date}} 이후 열리는 축제가 없어요"
   },
   "places": {
     "title": "{{region}} 장소",
@@ -47,5 +44,7 @@
     "empty": "공개된 코스가 아직 없어요",
     "emptyHint": "다른 지역을 고르거나 전체 코스를 둘러보세요.",
     "all": "전체 코스 보기"
-  }
+  },
+  "titleLine1": "전남에서 뭐하지?",
+  "titleLine2": "축제부터 맛집까지 코스짜기"
 }

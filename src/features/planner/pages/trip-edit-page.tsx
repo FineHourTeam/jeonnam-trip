@@ -1,9 +1,9 @@
 // S10 코스 편집 — /trips/draft(로그인 전 초안) 또는 /trips/:tripId(저장된 코스).
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useParams } from "react-router";
+import { Link, useParams, useSearchParams } from "react-router";
 import { paths } from "@/app/paths";
-import { ChevronLeftIcon } from "@/components/icons";
+import { AddIcon, ChevronLeftIcon } from "@/components/icons";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   AlertDialog,
@@ -20,17 +20,20 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TripNotFoundError } from "@/features/trips";
+import { MAX_TRIP_DAYS } from "@/shared/domain";
 import { formatDay } from "@/shared/lib/date";
 import { DayPanel } from "../components/day-panel";
 import { UnplacedList } from "../components/unplaced-list";
 import { useTripEditor } from "../hooks/use-trip-editor";
-import { placeUnplaced } from "../lib/trip-edits";
+import { addDay, placeUnplaced, shiftStartDate } from "../lib/trip-edits";
 
 export default function TripEditPage() {
   const { t, i18n } = useTranslation("planner");
   const { tripId = "draft" } = useParams();
   const editor = useTripEditor(tripId);
-  const [dayTab, setDayTab] = useState("0");
+  const [params] = useSearchParams();
+  // 장소 추가 창(?add=일차)을 연 채 장소 상세에 다녀오면 그 일차 탭으로 돌아온다
+  const [dayTab, setDayTab] = useState(() => params.get("add") ?? "0");
   const { trip } = editor;
 
   if (editor.isLoading) {
@@ -114,13 +117,30 @@ export default function TripEditPage() {
         )}
       </header>
 
-      <p className="text-muted-foreground text-sm">
-        {t("edit.period", {
-          start: formatDay(trip.startDate, i18n.language),
-          end: formatDay(trip.endDate, i18n.language),
-        })}
-        {editor.isDraft && (editor.isGuest ? t("edit.draftGuest") : t("edit.draftAuthed"))}
-      </p>
+      <div className="text-muted-foreground flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+        <label htmlFor="trip-start" className="sr-only">
+          {t("edit.startDate")}
+        </label>
+        <Input
+          id="trip-start"
+          type="date"
+          className="w-auto"
+          value={trip.startDate}
+          onChange={(e) => {
+            const date = e.target.value;
+            if (date) editor.update((draft) => shiftStartDate(draft, date));
+          }}
+        />
+        <span>
+          {t("edit.periodFrom", {
+            count: trip.days.length,
+            end: formatDay(trip.endDate, i18n.language),
+          })}
+        </span>
+        {editor.isDraft && (
+          <span>{editor.isGuest ? t("edit.draftGuest") : t("edit.draftAuthed")}</span>
+        )}
+      </div>
 
       <Tabs value={dayTab} onValueChange={setDayTab}>
         <TabsList>
@@ -129,6 +149,19 @@ export default function TripEditPage() {
               {t("dayLabel", { day: i + 1 })}
             </TabsTrigger>
           ))}
+          {trip.days.length < MAX_TRIP_DAYS && (
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              aria-label={t("edit.addDay")}
+              onClick={() => {
+                editor.update(addDay);
+                setDayTab(String(trip.days.length));
+              }}
+            >
+              <AddIcon size="sm" />
+            </Button>
+          )}
         </TabsList>
         {trip.days.map((d, i) => (
           <TabsContent key={d.date} value={String(i)} className="pt-2">

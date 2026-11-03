@@ -12,8 +12,7 @@
     "notFound": "코스를 찾을 수 없어요."
   },
   "card": {
-    "meta": "{{regions}} · 장소 {{count}}곳",
-    "source": "출처 {{name}}"
+    "meta": "{{regions}} · 장소 {{count}}곳"
   },
   "filters": {
     "region": "지역",
@@ -53,7 +52,6 @@
     "networkHint": "네트워크 연결을 확인한 뒤 다시 시도해 주세요.",
     "seoDescription": "{{name}}님이 구성한 {{regions}} 여행 코스",
     "videoTitle": "{{name}} 영상: {{title}}",
-    "source": "출처",
     "viewOriginal": "원문 보기",
     "reviewedAt": "운영팀 확인일 {{date}}",
     "orderBasis": {

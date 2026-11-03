@@ -12,8 +12,7 @@
     "notFound": "コースが見つかりません。"
   },
   "card": {
-    "meta": "{{regions}}・{{count}}か所",
-    "source": "出典 {{name}}"
+    "meta": "{{regions}}・{{count}}か所"
   },
   "filters": {
     "region": "地域",
@@ -53,7 +52,6 @@
     "networkHint": "ネットワーク接続を確認して、もう一度お試しください。",
     "seoDescription": "{{name}}さんがまとめた{{regions}}の旅行コース",
     "videoTitle": "{{name}}の動画: {{title}}",
-    "source": "出典",
     "viewOriginal": "元のページを見る",
     "reviewedAt": "運営チーム確認日 {{date}}",
     "orderBasis": {

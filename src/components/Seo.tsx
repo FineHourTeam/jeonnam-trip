@@ -4,7 +4,7 @@
 // 인증 뒤 화면은 noindex 권장. index.html의 기본 메타는 폴백(첫 페인트·크롤러), 라우트별은 이걸로 덮는다.
 
 // 서비스명 — 설치 시 bootstrap이 머물전남.을 실제 제품명으로 치환한다.
-const SITE_NAME = "머물전남.";
+const SITE_NAME = "머물전남";
 
 interface SeoProps {
   /** 페이지 제목 (서비스명은 자동으로 접미) */

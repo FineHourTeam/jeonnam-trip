@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { CreatorCourse } from "@/shared/domain";
 import { courseText } from "@/shared/lib/content-text";
 import { courseDayCount, formatDays, tagLabel } from "../lib/course";
+import { CreatorAvatar } from "./creator-avatar";
 
 interface CourseCardProps {
   course: CreatorCourse;
@@ -54,9 +55,10 @@ export function CourseCard({ course, cover }: CourseCardProps) {
         <p className="text-muted-foreground text-sm">
           {t("card.meta", { regions, count: placeCount })}
         </p>
-        <p className="text-muted-foreground text-xs">
-          {t("card.source", { name: course.creator.name })}
-        </p>
+        <div className="mt-1 flex items-center gap-2">
+          <CreatorAvatar creator={course.creator} size="sm" />
+          <p className="min-w-0 truncate text-sm font-medium">{course.creator.name}</p>
+        </div>
       </div>
     </Link>
   );

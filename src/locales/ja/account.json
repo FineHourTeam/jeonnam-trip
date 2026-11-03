@@ -36,7 +36,7 @@
     },
     "unauthorizedDomain": {
       "title": "このアドレスではログインできません",
-      "description": "머물전남. の公式アドレスからもう一度お試しください。"
+      "description": "머물전남 の公式アドレスからもう一度お試しください。"
     },
     "accountExists": {
       "title": "同じメールアドレスで登録したアカウントがあります",

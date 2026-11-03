@@ -36,7 +36,7 @@
     },
     "unauthorizedDomain": {
       "title": "You can't log in from this address",
-      "description": "Please try again from the official 머물전남. address."
+      "description": "Please try again from the official 머물전남 address."
     },
     "accountExists": {
       "title": "An account with this email already exists",

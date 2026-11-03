@@ -39,6 +39,8 @@ export interface NaverMapsApi {
     strokeColor: string;
     strokeWeight: number;
     strokeOpacity?: number;
+    clickable?: boolean;
+    zIndex?: number;
   }) => NOverlay;
   Event: {
     addListener(target: object, type: string, fn: () => void): object;

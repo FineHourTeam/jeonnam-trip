@@ -1,8 +1,6 @@
 {
   "seoTitle": "Explore Jeonnam",
   "seoDescription": "Pick a date and region to see the Jeonnam festivals held that day, plus places and creator courses in the area.",
-  "title": "Explore Jeonnam",
-  "intro": "Pick a region and date to see that day's festivals along with places and courses in the area.",
   "jeonnam": "Jeonnam",
   "filters": {
     "region": "Region",
@@ -24,13 +22,12 @@
     "errorBody": "Check your network connection and try again."
   },
   "festivals": {
-    "titleToday": "Festivals today",
-    "titleOn": "Festivals on {{date}}",
     "error": "We couldn't load festivals",
-    "emptyToday": "No festivals in {{region}} today",
-    "emptyOn": "No festivals in {{region}} on {{date}}",
     "emptyHint": "Pick another date or browse places in this area.",
-    "browsePlaces": "Browse places"
+    "browsePlaces": "Browse places",
+    "title": "Festivals in {{region}}",
+    "today": "today",
+    "emptyFrom": "No festivals in {{region}} from {{date}} on"
   },
   "places": {
     "title": "Places in {{region}}",
@@ -47,5 +44,7 @@
     "empty": "No courses have been published yet",
     "emptyHint": "Pick another region or browse all courses.",
     "all": "See all courses"
-  }
+  },
+  "titleLine1": "What to do in Jeonnam?",
+  "titleLine2": "Plan a route, from festivals to great food"
 }

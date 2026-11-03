@@ -14,8 +14,7 @@
   },
   "card": {
     "meta_one": "{{regions}} · {{count}} place",
-    "meta_other": "{{regions}} · {{count}} places",
-    "source": "Source: {{name}}"
+    "meta_other": "{{regions}} · {{count}} places"
   },
   "filters": {
     "region": "Region",
@@ -58,7 +57,6 @@
     "networkHint": "Check your network connection and try again.",
     "seoDescription": "A {{regions}} travel course put together by {{name}}",
     "videoTitle": "Video by {{name}}: {{title}}",
-    "source": "Source",
     "viewOriginal": "View original",
     "reviewedAt": "Reviewed by our team on {{date}}",
     "orderBasis": {
