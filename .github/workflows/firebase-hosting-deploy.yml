@@ -21,6 +21,11 @@ jobs:
     # 포크 PR에는 시크릿이 없음 — 같은 레포 PR만 preview 배포
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
+    # action-hosting-deploy가 PR에 체크를 만들고 preview URL 코멘트를 단다 — 기본 토큰은 읽기 전용이라 명시한다
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
 
