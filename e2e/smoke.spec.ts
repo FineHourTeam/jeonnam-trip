@@ -10,19 +10,22 @@
 import { expect, test } from "@playwright/test";
 
 // src/app/paths.ts와 정합 유지 — 공개(비인증) 라우트만. 인증 필요 라우트는 별도 로그인 픽스처로.
-// live: Firestore를 읽는 화면 — 연결 채널이 열려 있어 networkidle이 오지 않으므로 load 후 문구로 확인한다
-const ROUTES: { path: string; expectText?: RegExp; live?: boolean }[] = [
+// live: Firestore·네이버 지도 등 외부 서비스에 붙는 화면 — 연결 채널이 열려 있어 networkidle이 오지 않으므로 load 후 문구로 확인한다
+// needsData: 문구가 실제 데이터가 있어야 보이는 화면 — CI 스텁 백엔드에서는 문구 대신 마운트·페이지 에러만 본다
+const ROUTES: { path: string; expectText?: RegExp; live?: boolean; needsData?: boolean }[] = [
   { path: "/", expectText: /열리는 축제/, live: true },
   { path: "/login", expectText: /Google 계정으로 로그인/ },
-  { path: "/festivals", expectText: /축제 \d+개/, live: true },
-  { path: "/places", expectText: /장소 [\d,]+곳/, live: true },
-  { path: "/creators", expectText: /코스 \d+개/, live: true },
-  { path: "/trips/new", expectText: /여행 만들기/ },
+  { path: "/festivals", expectText: /축제 \d+개/, live: true, needsData: true },
+  { path: "/places", expectText: /장소 [\d,]+곳/, live: true, needsData: true },
+  { path: "/creators", expectText: /코스 \d+개/, live: true, needsData: true },
+  // 설정 화면 없이 바로 초안 편집기로 넘어간다 (편집기의 지도가 네이버 지도를 부른다)
+  { path: "/trips/new", expectText: /이 브라우저에 자동으로 남아요/, live: true },
   { path: "/trips/draft", expectText: /작성 중인 코스가 없어요/ },
   {
     path: "/s/not-a-real-share",
     expectText: /열 수 없는 코스예요|불러오지 못했어요/,
     live: true,
+    needsData: true,
   },
   // 비회원: 보관함은 로그인 안내, SNS 링크는 폼을 쓰고 저장할 때 로그인
   { path: "/library", expectText: /로그인하면 보관함을 쓸 수 있어요/ },
@@ -34,6 +37,9 @@ const ROUTES: { path: string; expectText?: RegExp; live?: boolean }[] = [
 // 콘솔 에러가 하나라도 있으면 실패로 취급할 때 무시할 알려진 소음(브라우저 확장 등)
 const IGNORED_CONSOLE = [/favicon/i, /Download the React DevTools/i, /\[vite\]/i];
 
+// CI 스모크는 가짜 Firebase·네이버 키로 빌드한다(react-ci.yml) — 외부 서비스가 401·404를 돌려주는 건 예상된 일이다
+const STUB_BACKEND = process.env.VITE_FIREBASE_PROJECT_ID === "smoke";
+
 for (const route of ROUTES) {
   test(`${route.path} — 콘솔 에러 없이 렌더`, async ({ page }) => {
     const errors: string[] = [];
@@ -41,6 +47,7 @@ for (const route of ROUTES) {
       if (msg.type() !== "error") return;
       const text = msg.text();
       if (IGNORED_CONSOLE.some((re) => re.test(text))) return;
+      if (STUB_BACKEND && route.live && text.startsWith("Failed to load resource")) return;
       errors.push(text);
     });
     page.on("pageerror", (err) => errors.push(err.message));
@@ -52,7 +59,7 @@ for (const route of ROUTES) {
 
     // #root가 비어있지 않아야 함 — 마운트 실패(흰 화면)를 잡는다
     await expect(page.locator("#root")).not.toBeEmpty();
-    if (route.expectText) {
+    if (route.expectText && !(STUB_BACKEND && route.needsData)) {
       await expect(page.getByText(route.expectText).first()).toBeVisible();
     }
     expect(errors, `${route.path} 콘솔/페이지 에러`).toEqual([]);
