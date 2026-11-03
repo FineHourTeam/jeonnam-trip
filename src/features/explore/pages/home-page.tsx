@@ -1,4 +1,5 @@
-// S01 탐색 홈 — 첫 화면은 명소 사진 위에 제목·조건 카드를 올린다(HomeHero). 지역·날짜를 고르면 그날 열리는 축제, 그 지역 장소, 크리에이터 코스를 구역별로 보여 준다.
+// S01 탐색 홈 — 첫 화면은 명소 사진 위에 제목·조건 카드를 올린다(HomeHero). 지역·날짜를 고르면 그 지역 축제, 장소, 크리에이터 코스를 구역별로 보여 준다.
+// 축제는 고른 날 이후에도 열리는 것만(이미 끝난 축제 제외) 보여 주고, 그날 열리는 축제를 먼저, 나머지는 시작일 순으로 둔다.
 // 조건은 URL 검색 파라미터(?sigun=&date=)에 둔다. 인기·평점 같은 수치는 데이터가 없어 보여 주지 않는다 (화면설계 S01).
 // 축제가 없으면 그 지역 장소를 둘러보도록 안내한다. 각 구역은 목록 화면(S02·S04·S08)으로 이어진다.
 import { useId } from "react";
@@ -27,12 +28,18 @@ export default function HomePage() {
   const region = sigun ? sigunName(sigun) : "전남";
   const dateLabel = date === today ? "오늘" : formatDateKo(date);
 
-  const festivals = useFestivals({ sigun, from: date, to: date });
+  const festivals = useFestivals({ sigun, from: date });
   // 장소 목록(S04)의 기본 조건과 같은 모양이라 캐시를 함께 쓴다
   const places = usePlaces({ sigun, categories: [], subcategories: [], q: "" });
   const courses = useCreatorCourses();
 
-  const festivalList = festivals.data?.slice(0, HOME_LIMIT) ?? [];
+  const festivalList = [...(festivals.data ?? [])]
+    .sort(
+      (a, b) =>
+        Number(b.startDate <= date) - Number(a.startDate <= date) ||
+        a.startDate.localeCompare(b.startDate),
+    )
+    .slice(0, HOME_LIMIT);
   const placeList = places.data?.pages[0]?.places.slice(0, HOME_LIMIT) ?? [];
   const courseList = (courses.data ?? [])
     .filter((c) => sigun === null || c.siguns.includes(sigun))
@@ -81,8 +88,8 @@ export default function HomePage() {
 
       <div className="mx-auto flex w-full max-w-screen-md flex-col gap-8 px-4 py-8">
         <HomeSection
-          title={`${dateLabel} 열리는 축제`}
-          moreTo={withQuery(paths.festivals, { sigun, date })}
+          title={`${region}에서 열리는 축제`}
+          moreTo={withQuery(paths.festivals, { sigun })}
           isPending={festivals.isPending}
           isError={festivals.isError}
           errorTitle="축제를 불러오지 못했어요"
@@ -90,7 +97,7 @@ export default function HomePage() {
           empty={
             festivalList.length === 0 && (
               <EmptyNotice
-                title={`${region}에서 ${dateLabel} 열리는 축제가 없어요`}
+                title={`${region}에서 ${dateLabel} 이후 열리는 축제가 없어요`}
                 hint="다른 날짜를 고르거나 이 지역 장소를 둘러보세요."
                 action={{ to: placesTo, label: "장소 둘러보기" }}
               />
