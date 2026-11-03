@@ -17,11 +17,12 @@ import {
   type QueryDocumentSnapshot,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import i18n from "@/lib/i18n";
 import { COL, type Place, type PlaceCategory, type SigunCode } from "@/shared/domain";
 
 export class PlaceNotFoundError extends Error {
   constructor() {
-    super("장소를 찾을 수 없어요.");
+    super(i18n.t("error.notFound", { ns: "places" }));
     this.name = "PlaceNotFoundError";
   }
 }

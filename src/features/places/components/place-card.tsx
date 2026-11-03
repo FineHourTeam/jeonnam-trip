@@ -1,7 +1,8 @@
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { paths } from "@/app/paths";
 import { Checkbox } from "@/components/ui/checkbox";
-import { PLACE_CATEGORY_LABEL, sigunName, type Place } from "@/shared/domain";
+import type { Place } from "@/shared/domain";
 
 interface PlaceCardProps {
   place: Place;
@@ -11,6 +12,7 @@ interface PlaceCardProps {
 }
 
 export function PlaceCard({ place, selected = false, onToggle }: PlaceCardProps) {
+  const { t } = useTranslation("places");
   const photo = place.photos[0];
   return (
     <div className="border-border bg-card text-card-foreground has-[a:hover]:bg-background-subtle flex items-center gap-3 rounded-lg border p-3">
@@ -27,23 +29,25 @@ export function PlaceCard({ place, selected = false, onToggle }: PlaceCardProps)
           />
         ) : (
           <div className="bg-background-subtle text-muted-foreground flex size-20 shrink-0 items-center justify-center rounded-md text-xs">
-            사진 없음
+            {t("card.noPhoto")}
           </div>
         )}
         <div className="flex min-w-0 flex-col gap-1">
           <p className="text-muted-foreground text-xs">
-            {PLACE_CATEGORY_LABEL[place.category]}
+            {t(`placeCategory.${place.category}`, { ns: "common" })}
             {place.subcategory ? ` · ${place.subcategory}` : ""}
           </p>
           <p className="line-clamp-2 font-medium text-pretty">{place.name}</p>
-          <p className="text-muted-foreground text-sm">{sigunName(place.sigun)}</p>
+          <p className="text-muted-foreground text-sm">
+            {t(`sigun.${place.sigun}`, { ns: "common" })}
+          </p>
         </div>
       </Link>
       {onToggle && (
         <Checkbox
           checked={selected}
           onCheckedChange={onToggle}
-          aria-label={`${place.name} 선택`}
+          aria-label={t("card.select", { name: place.name })}
           className="size-5"
         />
       )}

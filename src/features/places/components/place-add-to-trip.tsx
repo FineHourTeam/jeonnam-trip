@@ -2,6 +2,7 @@
 // 여러 곳을 한 번에 담을 수 있고, 그 일차에 이미 있는 장소는 빼고 안내한다.
 // 담을 코스가 없으면 고른 장소를 들고 여행 만들기(S09)로 보낸다. 보관함(S06)은 직접 등록한 개인 장소도 함께 넘긴다.
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { paths } from "@/app/paths";
@@ -26,7 +27,7 @@ import {
   visitFromPlace,
 } from "@/features/trips";
 import type { CustomPlace, Place, TripDay } from "@/shared/domain";
-import { formatDateKo } from "@/shared/lib/date";
+import { formatDay } from "@/shared/lib/date";
 import { MAX_PLACES_PARAM } from "../lib/place-filter";
 
 interface PlaceAddToTripProps {
@@ -47,6 +48,7 @@ interface Target {
 }
 
 export function PlaceAddToTrip({ places, customPlaces = [], onAdded }: PlaceAddToTripProps) {
+  const { t, i18n } = useTranslation("places");
   const navigate = useNavigate();
   const draft = useTripDraftStore((s) => s.draft);
   const setDraft = useTripDraftStore((s) => s.setDraft);
@@ -59,7 +61,14 @@ export function PlaceAddToTrip({ places, customPlaces = [], onAdded }: PlaceAddT
   const trips = myTrips.data ?? [];
   const targets: Target[] = [
     ...(draft
-      ? [{ key: DRAFT, label: `${draft.title} (작성 중)`, title: draft.title, days: draft.days }]
+      ? [
+          {
+            key: DRAFT,
+            label: t("addToTrip.drafting", { title: draft.title }),
+            title: draft.title,
+            days: draft.days,
+          },
+        ]
       : []),
     ...trips.map((t) => ({ key: t.id, label: t.title, title: t.title, days: t.days })),
   ];
@@ -76,7 +85,7 @@ export function PlaceAddToTrip({ places, customPlaces = [], onAdded }: PlaceAddT
   const newTripLink = (variant: "outline" | "ghost") => (
     <Button asChild variant={variant} size={variant === "ghost" ? "sm" : "default"}>
       <Link to={newTripHref}>
-        {places.length > 0 ? "이 장소로 새 여행 만들기" : "새 여행 만들기"}
+        {places.length > 0 ? t("addToTrip.newTripWithPlaces") : t("addToTrip.newTrip")}
       </Link>
     </Button>
   );
@@ -89,17 +98,14 @@ export function PlaceAddToTrip({ places, customPlaces = [], onAdded }: PlaceAddT
     return (
       <div className="flex flex-col items-start gap-2">
         <p className="text-muted-foreground text-sm">
-          {myTrips.isError
-            ? "내 여행을 불러오지 못했어요. 다시 시도하거나 새 여행을 만들어 담아 주세요."
-            : "담을 코스가 없어요. 여행을 만들면 고른 장소를 첫째 날에 담아 시작해요."}
-          {customPlaces.length > 0 &&
-            " 직접 등록한 장소는 여행을 만든 뒤 보관함에서 다시 담아 주세요."}
+          {myTrips.isError ? t("addToTrip.loadTripsError") : t("addToTrip.noTarget")}
+          {customPlaces.length > 0 && t("addToTrip.customPlacesNote")}
         </p>
         <div className="flex flex-wrap gap-2">
           {newTripLink("outline")}
           {myTrips.isError && (
             <Button variant="ghost" onClick={() => void myTrips.refetch()}>
-              다시 시도
+              {t("retry", { ns: "common" })}
             </Button>
           )}
         </div>
@@ -111,13 +117,13 @@ export function PlaceAddToTrip({ places, customPlaces = [], onAdded }: PlaceAddT
   const count = places.length + customPlaces.length;
   const multi = count > 1;
   const id = multi ? "place-add-bulk" : "place-add";
-  const day = `${String(dayIndex + 1)}일차`;
+  const day = t("addToTrip.day", { day: dayIndex + 1 });
 
   const notifyAdded = (title: string, added: number, duplicates: number, to: string) => {
-    const skipped = duplicates > 0 ? ` 이미 담긴 ${String(duplicates)}곳은 뺐어요.` : "";
-    toast(`「${title}」 ${day}에 ${String(added)}곳을 담았어요.${skipped}`, {
+    const skipped = duplicates > 0 ? t("addToTrip.skipped", { count: duplicates }) : "";
+    toast(t("addToTrip.added", { title, day, count: added }) + skipped, {
       action: {
-        label: "코스 보기",
+        label: t("addToTrip.viewCourse"),
         onClick: () => {
           void navigate(to);
         },
@@ -126,7 +132,7 @@ export function PlaceAddToTrip({ places, customPlaces = [], onAdded }: PlaceAddT
     onAdded?.();
   };
   const notifyAllDuplicate = () => {
-    toast(multi ? `고른 장소가 모두 이미 ${day}에 담겨 있어요.` : `이미 ${day}에 담긴 장소예요.`);
+    toast(multi ? t("addToTrip.allDuplicateMulti", { day }) : t("addToTrip.allDuplicate", { day }));
   };
 
   const add = () => {
@@ -161,9 +167,9 @@ export function PlaceAddToTrip({ places, customPlaces = [], onAdded }: PlaceAddT
         if (e instanceof VersionConflictError) {
           // 목록을 새로 받아 다음 시도가 최신 버전에 담기게 한다
           void myTrips.refetch();
-          toast("다른 기기에서 먼저 저장된 코스예요. 최신 코스를 불러왔으니 다시 담아 주세요.");
+          toast(t("addToTrip.conflict"));
         } else {
-          toast("코스에 담지 못했어요. 네트워크 연결을 확인한 뒤 다시 시도해 주세요.");
+          toast(t("addToTrip.saveError"));
         }
       },
     });
@@ -174,7 +180,7 @@ export function PlaceAddToTrip({ places, customPlaces = [], onAdded }: PlaceAddT
       <div className="flex flex-wrap items-end gap-2">
         {targets.length > 1 && (
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor={`${id}-trip`}>코스</Label>
+            <Label htmlFor={`${id}-trip`}>{t("addToTrip.course")}</Label>
             <Select
               value={target.key}
               onValueChange={(v) => {
@@ -197,7 +203,9 @@ export function PlaceAddToTrip({ places, customPlaces = [], onAdded }: PlaceAddT
         )}
         <div className="flex flex-col gap-1.5">
           <Label htmlFor={`${id}-day`}>
-            {targets.length > 1 ? "일차" : `「${target.title}」 코스`}
+            {targets.length > 1
+              ? t("addToTrip.dayLabel")
+              : t("addToTrip.courseOf", { title: target.title })}
           </Label>
           <Select value={String(dayIndex)} onValueChange={setPicked}>
             <SelectTrigger id={`${id}-day`} className="w-48">
@@ -206,14 +214,17 @@ export function PlaceAddToTrip({ places, customPlaces = [], onAdded }: PlaceAddT
             <SelectContent>
               {target.days.map((d, i) => (
                 <SelectItem key={d.date} value={String(i)}>
-                  {i + 1}일차 · {formatDateKo(d.date)}
+                  {t("addToTrip.dayOption", {
+                    day: t("addToTrip.day", { day: i + 1 }),
+                    date: formatDay(d.date, i18n.language),
+                  })}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
         <Button onClick={add} disabled={count === 0 || saveTrip.isPending}>
-          {saveTrip.isPending ? "담는 중…" : "일정에 추가"}
+          {saveTrip.isPending ? t("addToTrip.adding") : t("addToTrip.add")}
         </Button>
       </div>
       {newTripLink("ghost")}

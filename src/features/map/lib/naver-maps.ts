@@ -1,6 +1,7 @@
 // 네이버 지도 JS v3 로더 — 스크립트를 한 번만 넣고 같은 Promise를 돌려준다.
 // Client ID는 공개 값(웹 서비스 URL로 제한). 콘솔에 등록된 도메인(jeonnam-trip.web.app)에서만 인증된다.
 import { env } from "@/lib/env";
+import i18n from "@/lib/i18n";
 
 // 쓰는 API만 최소로 선언한다 (공식 타입 패키지를 들이지 않음)
 export interface NLatLng {
@@ -53,13 +54,11 @@ declare global {
 }
 
 export class NaverMapsLoadError extends Error {
+  readonly reason: "network" | "auth";
   constructor(reason: "network" | "auth") {
-    super(
-      reason === "auth"
-        ? "지도 인증에 실패했어요. 등록된 서비스 주소에서만 지도를 볼 수 있어요."
-        : "지도를 불러오지 못했어요. 네트워크 연결을 확인해주세요.",
-    );
+    super(i18n.t(`load.${reason}`, { ns: "map" }));
     this.name = "NaverMapsLoadError";
+    this.reason = reason;
   }
 }
 

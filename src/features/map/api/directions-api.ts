@@ -6,10 +6,11 @@ import type {
   LegRequest,
   LegResult,
 } from "@/shared/domain";
+import i18n from "@/lib/i18n";
 
 export class DirectionsUnavailableError extends Error {
   constructor(status: number) {
-    super(`경로 조회 서버 응답 오류 (${String(status)})`);
+    super(i18n.t("directions.serverError", { ns: "map", status: String(status) }));
     this.name = "DirectionsUnavailableError";
   }
 }
