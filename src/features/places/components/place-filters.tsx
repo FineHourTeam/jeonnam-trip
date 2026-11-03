@@ -14,7 +14,7 @@ import {
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { SIGUNS, isSigunCode } from "@/shared/domain";
 import type { PlaceListQuery } from "../api/places-api";
-import { PLACE_CATEGORIES, subcategoriesOf } from "../lib/place-filter";
+import { PLACE_CATEGORIES, subcategoriesOf, subcategoryLabel } from "../lib/place-filter";
 
 interface PlaceFiltersProps {
   values: PlaceListQuery;
@@ -25,7 +25,7 @@ interface PlaceFiltersProps {
 const ALL = "all";
 
 export function PlaceFilters({ values, onChange, onReset }: PlaceFiltersProps) {
-  const { t } = useTranslation("places");
+  const { t, i18n } = useTranslation("places");
   const dirty = values.sigun !== null || values.categories.length > 0 || values.q !== "";
   const subOptions = subcategoriesOf(values.categories);
   return (
@@ -123,7 +123,7 @@ export function PlaceFilters({ values, onChange, onReset }: PlaceFiltersProps) {
           >
             {subOptions.map((s) => (
               <ToggleGroupItem key={s} value={s}>
-                {s}
+                {subcategoryLabel(s, i18n.language)}
               </ToggleGroupItem>
             ))}
           </ToggleGroup>

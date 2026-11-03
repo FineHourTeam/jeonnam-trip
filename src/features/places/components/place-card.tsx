@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { paths } from "@/app/paths";
 import { Checkbox } from "@/components/ui/checkbox";
+import { subcategoryLabel } from "../lib/place-filter";
 import type { Place } from "@/shared/domain";
 
 interface PlaceCardProps {
@@ -12,7 +13,7 @@ interface PlaceCardProps {
 }
 
 export function PlaceCard({ place, selected = false, onToggle }: PlaceCardProps) {
-  const { t } = useTranslation("places");
+  const { t, i18n } = useTranslation("places");
   const photo = place.photos[0];
   return (
     <div className="border-border bg-card text-card-foreground has-[a:hover]:bg-background-subtle flex items-center gap-3 rounded-lg border p-3">
@@ -35,7 +36,7 @@ export function PlaceCard({ place, selected = false, onToggle }: PlaceCardProps)
         <div className="flex min-w-0 flex-col gap-1">
           <p className="text-muted-foreground text-xs">
             {t(`placeCategory.${place.category}`, { ns: "common" })}
-            {place.subcategory ? ` · ${place.subcategory}` : ""}
+            {place.subcategory ? ` · ${subcategoryLabel(place.subcategory, i18n.language)}` : ""}
           </p>
           <p className="line-clamp-2 font-medium text-pretty">{place.name}</p>
           <p className="text-muted-foreground text-sm">

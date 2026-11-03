@@ -16,6 +16,7 @@ import { PlaceAddToTrip } from "../components/place-add-to-trip";
 import { PlaceBasics, PlaceChecks, PlaceHours } from "../components/place-info";
 import { usePlace } from "../hooks/use-places";
 import { hoursUnknown } from "../lib/hours";
+import { subcategoryLabel } from "../lib/place-filter";
 
 export default function PlaceDetailPage() {
   const { t } = useTranslation("places");
@@ -65,7 +66,7 @@ function LoadError({ notFound, onRetry }: { notFound: boolean; onRetry: () => vo
 }
 
 function PlaceDetail({ place }: { place: Place }) {
-  const { t } = useTranslation("places");
+  const { t, i18n } = useTranslation("places");
   const sigun = t(`sigun.${place.sigun}`, { ns: "common" });
   const category = t(`placeCategory.${place.category}`, { ns: "common" });
   const unverified = Object.values(place.checks).some((c) => c.state !== "verified");
@@ -82,7 +83,9 @@ function PlaceDetail({ place }: { place: Place }) {
       <header className="flex flex-col gap-2">
         <div className="flex flex-wrap gap-2">
           <Badge variant="secondary">{category}</Badge>
-          {place.subcategory && <Badge variant="outline">{place.subcategory}</Badge>}
+          {place.subcategory && (
+            <Badge variant="outline">{subcategoryLabel(place.subcategory, i18n.language)}</Badge>
+          )}
           {unverified && <Badge variant="outline">{t("detail.unverified")}</Badge>}
         </div>
         <h1 className="text-xl font-semibold text-balance">{place.name}</h1>
