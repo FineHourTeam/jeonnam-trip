@@ -37,7 +37,13 @@ import {
   visitFromFestival,
   visitFromPlace,
 } from "@/features/trips";
-import { MAX_TRIP_DAYS, type CreatorCourse, type Festival, type TripDraft } from "@/shared/domain";
+import {
+  MAX_TRIP_DAYS,
+  isSigunCode,
+  type CreatorCourse,
+  type Festival,
+  type TripDraft,
+} from "@/shared/domain";
 import { formatDateKo } from "@/shared/lib/date";
 import { TripSetupForm, type TripSetupValues } from "../components/trip-setup-form";
 
@@ -65,6 +71,8 @@ export default function TripNewPage() {
   const dateParam = params.get("date") ?? "";
   const visitDate = DATE_RE.test(dateParam) ? dateParam : undefined;
   const programId = params.get("program") ?? undefined;
+  const sigunParam = params.get("sigun");
+  const defaultSiguns = sigunParam && isSigunCode(sigunParam) ? [sigunParam] : undefined;
   const festival = useFestival(festivalId);
   const creatorId = festivalId ? null : params.get("creator");
   const course = useCreatorCourse(creatorId);
@@ -180,7 +188,12 @@ export default function TripNewPage() {
         </div>
       )}
 
-      <TripSetupForm onSubmit={onSubmit} defaultDate={visitDate} defaultDays={courseDays} />
+      <TripSetupForm
+        onSubmit={onSubmit}
+        defaultDate={visitDate}
+        defaultDays={courseDays}
+        defaultSiguns={defaultSiguns}
+      />
 
       <AlertDialog
         open={pending !== null}

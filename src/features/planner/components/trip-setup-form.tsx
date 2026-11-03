@@ -42,12 +42,15 @@ export function TripSetupForm({
   onSubmit,
   defaultDate,
   defaultDays,
+  defaultSiguns,
 }: {
   onSubmit: (values: TripSetupValues) => void;
   /** 축제에서 왔을 때 방문일로 시작·종료일을 채운다 */
   defaultDate?: string;
   /** 크리에이터 코스에서 왔을 때 코스 일수 — 종료일을 아직 고치지 않았으면 이 일수에 맞춘다 */
   defaultDays?: number;
+  /** 홈에서 지역을 고르고 왔을 때 처음부터 골라 둘 지역 */
+  defaultSiguns?: SigunCode[];
 }) {
   const today = todayKst();
   const form = useForm<FormValues>({
@@ -56,7 +59,7 @@ export function TripSetupForm({
       title: "",
       startDate: defaultDate ?? today,
       endDate: defaultDate ?? addDays(today, (defaultDays ?? 2) - 1),
-      siguns: [],
+      siguns: defaultSiguns ?? [],
       pace: "none",
     },
   });
@@ -126,7 +129,11 @@ export function TripSetupForm({
               aria-label="여행 지역"
             >
               {SIGUNS.map((s) => (
-                <ToggleGroupItem key={s.code} value={s.code}>
+                <ToggleGroupItem
+                  key={s.code}
+                  value={s.code}
+                  className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:border-primary data-[state=on]:hover:bg-primary/90"
+                >
                   {s.name}
                 </ToggleGroupItem>
               ))}

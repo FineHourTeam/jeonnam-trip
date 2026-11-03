@@ -30,6 +30,14 @@ describe("TripSetupForm", () => {
     );
   });
 
+  it("홈에서 고른 지역을 처음부터 골라 둔다", async () => {
+    const onSubmit = vi.fn();
+    render(<TripSetupForm onSubmit={onSubmit} defaultSiguns={["mokpo"]} />);
+    expect(screen.getByRole("button", { name: "목포시" })).toHaveAttribute("data-state", "on");
+    await userEvent.click(screen.getByRole("button", { name: "코스 만들기" }));
+    expect(onSubmit).toHaveBeenCalledWith(expect.objectContaining({ siguns: ["mokpo"] }));
+  });
+
   it("코스 일수가 늦게 와도 사용자가 고친 값은 지우지 않는다", async () => {
     const onSubmit = vi.fn();
     const { rerender } = render(<TripSetupForm onSubmit={onSubmit} />);

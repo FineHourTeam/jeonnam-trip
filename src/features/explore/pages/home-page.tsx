@@ -75,7 +75,7 @@ export default function HomePage() {
             values={{ sigun, date }}
             today={today}
             onChange={update}
-            tripNewTo={withQuery(paths.tripNew, { date })}
+            tripNewTo={withQuery(paths.tripNew, { date, sigun })}
           />
         </div>
       </HomeHero>
