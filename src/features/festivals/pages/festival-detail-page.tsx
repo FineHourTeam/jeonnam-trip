@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router";
 import { paths } from "@/app/paths";
 import { ChevronLeftIcon } from "@/components/icons";
+import { PhotoCarousel } from "@/components/photo-carousel";
 import { Seo } from "@/components/Seo";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -138,29 +139,12 @@ function FestivalDetail({ festival }: { festival: Festival }) {
 
 function Photos({ festival, name }: { festival: Festival; name: string }) {
   const { t } = useTranslation("festivals");
-  if (festival.photos.length === 0) {
-    return (
-      <div className="bg-background-subtle text-muted-foreground flex aspect-video w-full items-center justify-center rounded-lg text-sm">
-        {t("detail.noPhotos")}
-      </div>
-    );
-  }
   return (
-    <figure className="flex flex-col gap-1">
-      <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto">
-        {festival.photos.map((src, i) => (
-          <img
-            key={src}
-            src={src}
-            alt={t("detail.photoAlt", { name, n: i + 1 })}
-            loading={i === 0 ? "eager" : "lazy"}
-            className="aspect-video w-full shrink-0 snap-start rounded-lg object-cover"
-          />
-        ))}
-      </div>
-      {festival.photoCredit && (
-        <figcaption className="text-muted-foreground text-xs">{festival.photoCredit}</figcaption>
-      )}
-    </figure>
+    <PhotoCarousel
+      photos={festival.photos}
+      alt={(n) => t("detail.photoAlt", { name, n })}
+      emptyLabel={t("detail.noPhotos")}
+      credit={festival.photoCredit}
+    />
   );
 }

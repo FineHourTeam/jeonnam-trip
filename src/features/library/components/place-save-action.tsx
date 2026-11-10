@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { paths } from "@/app/paths";
 import { useAuthState } from "@/app/use-auth-state";
-import { CheckIcon } from "@/components/icons";
+import { AddIcon, CheckIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { useSavePlace, useSavedPlaces, useUnsavePlace } from "../hooks/use-library";
 
@@ -25,12 +25,12 @@ export function PlaceSaveAction({ placeId }: { placeId: string }) {
     return (
       <Button
         variant="outline"
-        className="self-start"
         disabled={authState.status === "loading"}
         onClick={() => {
           void navigate(paths.login, { state: { from: location.pathname + location.search } });
         }}
       >
+        <AddIcon size="sm" />
         {t("saveAction.save")}
       </Button>
     );
@@ -40,7 +40,6 @@ export function PlaceSaveAction({ placeId }: { placeId: string }) {
     return (
       <Button
         variant="outline"
-        className="self-start"
         // 목록을 못 불러와도 저장은 안전하다 — 이미 있으면 그대로 둔다
         disabled={busy || savedList.isPending}
         onClick={() => {
@@ -56,15 +55,18 @@ export function PlaceSaveAction({ placeId }: { placeId: string }) {
           });
         }}
       >
+        <AddIcon size="sm" />
         {t("saveAction.save")}
       </Button>
     );
   }
 
+  // 액션 줄(flex-wrap) 안에 놓인다 — 태그는 다음 줄로 내린다
   return (
-    <div className="flex flex-col items-start gap-2">
+    <>
       <Button
-        variant="secondary"
+        variant="outline"
+        className="border-primary text-primary"
         aria-pressed="true"
         disabled={busy}
         onClick={() => {
@@ -75,10 +77,10 @@ export function PlaceSaveAction({ placeId }: { placeId: string }) {
         {t("saveAction.saved")}
       </Button>
       {saved.tags.length > 0 && (
-        <p className="text-muted-foreground text-sm">
+        <p className="text-muted-foreground basis-full text-sm">
           {t("saveAction.myTags", { tags: saved.tags.map((tag) => `#${tag}`).join(" ") })}
         </p>
       )}
-    </div>
+    </>
   );
 }

@@ -7,6 +7,14 @@ import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { paths } from "@/app/paths";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -36,6 +44,8 @@ interface PlaceAddToTripProps {
   customPlaces?: CustomPlace[];
   /** 담기에 성공한 뒤 (목록에서는 선택을 비운다) */
   onAdded?: () => void;
+  /** 내 여행에 저장하는 동안 true — 팝업은 이 동안 닫히지 않게 막는다 (닫히면 결과 토스트가 사라진다) */
+  onPendingChange?: (pending: boolean) => void;
 }
 
 const DRAFT = "draft";
@@ -47,7 +57,12 @@ interface Target {
   days: TripDay[];
 }
 
-export function PlaceAddToTrip({ places, customPlaces = [], onAdded }: PlaceAddToTripProps) {
+export function PlaceAddToTrip({
+  places,
+  customPlaces = [],
+  onAdded,
+  onPendingChange,
+}: PlaceAddToTripProps) {
   const { t, i18n } = useTranslation("places");
   const navigate = useNavigate();
   const draft = useTripDraftStore((s) => s.draft);
@@ -154,7 +169,11 @@ export function PlaceAddToTrip({ places, customPlaces = [], onAdded }: PlaceAddT
       notifyAllDuplicate();
       return;
     }
+    onPendingChange?.(true);
     saveTrip.mutate(result.trip, {
+      onSettled: () => {
+        onPendingChange?.(false);
+      },
       onSuccess: (saved) => {
         notifyAdded(
           saved.title,
@@ -229,5 +248,38 @@ export function PlaceAddToTrip({ places, customPlaces = [], onAdded }: PlaceAddT
       </div>
       {newTripLink("ghost")}
     </div>
+  );
+}
+
+/** 장소 상세(S05)의 "내 여행에 추가" — 버튼을 누르면 같은 담기 화면을 팝업으로 띄우고, 담으면 닫는다. */
+export function PlaceAddToTripDialog({ place }: { place: Place }) {
+  const { t } = useTranslation("places");
+  const [open, setOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={(next) => {
+        // 저장 중에는 Esc·바깥 클릭·닫기 버튼을 무시한다 — 결과 토스트가 이 팝업 안에서 뜬다
+        if (!saving) setOpen(next);
+      }}
+    >
+      <DialogTrigger asChild>
+        <Button>{t("addToTrip.openDialog")}</Button>
+      </DialogTrigger>
+      <DialogContent showCloseButton={!saving}>
+        <DialogHeader>
+          <DialogTitle>{t("addToTrip.openDialog")}</DialogTitle>
+          <DialogDescription>{t("addToTrip.dialogDescription")}</DialogDescription>
+        </DialogHeader>
+        <PlaceAddToTrip
+          places={[place]}
+          onAdded={() => {
+            setOpen(false);
+          }}
+          onPendingChange={setSaving}
+        />
+      </DialogContent>
+    </Dialog>
   );
 }

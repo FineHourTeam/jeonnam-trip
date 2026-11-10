@@ -107,6 +107,8 @@
     "courseOf": "「{{title}}」コース",
     "dayOption": "{{day}} · {{date}}",
     "adding": "追加中…",
-    "add": "旅行に追加"
+    "add": "旅行に追加",
+    "openDialog": "マイ旅行に追加",
+    "dialogDescription": "追加する旅行と日にちを選んでください。"
   }
 }

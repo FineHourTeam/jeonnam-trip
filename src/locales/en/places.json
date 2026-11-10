@@ -111,6 +111,8 @@
     "courseOf": "“{{title}}” course",
     "dayOption": "{{day}} · {{date}}",
     "adding": "Adding…",
-    "add": "Add to trip"
+    "add": "Add to trip",
+    "openDialog": "Add to my trip",
+    "dialogDescription": "Choose the trip and day to add it to."
   }
 }

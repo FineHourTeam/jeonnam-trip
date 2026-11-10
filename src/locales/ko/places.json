@@ -107,6 +107,8 @@
     "courseOf": "「{{title}}」 코스",
     "dayOption": "{{day}} · {{date}}",
     "adding": "담는 중…",
-    "add": "일정에 추가"
+    "add": "일정에 추가",
+    "openDialog": "내 여행에 추가",
+    "dialogDescription": "담을 여행과 일차를 골라 주세요."
   }
 }

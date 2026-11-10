@@ -1,8 +1,9 @@
-// S05 장소 상세 — 사진·소개·영업시간·이용 정보·위치·출처와 "보관함에 저장"·"일정에 추가".
+// S05 장소 상세 — 사진·소개·영업시간·이용 정보·위치·출처와 "보관함에 저장"·"내 여행에 추가"(팝업).
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router";
 import { paths } from "@/app/paths";
 import { ChevronLeftIcon } from "@/components/icons";
+import { PhotoCarousel } from "@/components/photo-carousel";
 import { Seo } from "@/components/Seo";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -12,7 +13,7 @@ import { PlaceSaveAction } from "@/features/library";
 import { CourseMap } from "@/features/map";
 import type { Place } from "@/shared/domain";
 import { PlaceNotFoundError } from "../api/places-api";
-import { PlaceAddToTrip } from "../components/place-add-to-trip";
+import { PlaceAddToTripDialog } from "../components/place-add-to-trip";
 import { PlaceBasics, PlaceChecks, PlaceHours } from "../components/place-info";
 import { usePlace } from "../hooks/use-places";
 import { hoursUnknown } from "../lib/hours";
@@ -95,13 +96,15 @@ function PlaceDetail({ place }: { place: Place }) {
           {sigun}
           {place.area ? ` · ${place.area}` : ""}
         </p>
-        <PlaceSaveAction placeId={place.id} />
       </header>
 
       {summary && <p className="leading-relaxed text-pretty whitespace-pre-line">{summary}</p>}
 
-      <div className="border-border flex flex-col gap-3 rounded-lg border p-4">
-        <PlaceAddToTrip places={[place]} />
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-wrap gap-2">
+          <PlaceAddToTripDialog place={place} />
+          <PlaceSaveAction placeId={place.id} />
+        </div>
         {noHours && <p className="text-muted-foreground text-sm">{t("detail.noHoursNote")}</p>}
         {!place.location && (
           <p className="text-muted-foreground text-sm">{t("detail.noLocationRoute")}</p>
@@ -131,24 +134,11 @@ function PlaceDetail({ place }: { place: Place }) {
 
 function Photos({ place, name }: { place: Place; name: string }) {
   const { t } = useTranslation("places");
-  if (place.photos.length === 0) {
-    return (
-      <div className="bg-background-subtle text-muted-foreground flex aspect-video w-full items-center justify-center rounded-lg text-sm">
-        {t("detail.noPhotos")}
-      </div>
-    );
-  }
   return (
-    <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto">
-      {place.photos.map((src, i) => (
-        <img
-          key={src}
-          src={src}
-          alt={t("detail.photoAlt", { name, n: i + 1 })}
-          loading={i === 0 ? "eager" : "lazy"}
-          className="aspect-video w-full shrink-0 snap-start rounded-lg object-cover"
-        />
-      ))}
-    </div>
+    <PhotoCarousel
+      photos={place.photos}
+      alt={(n) => t("detail.photoAlt", { name, n })}
+      emptyLabel={t("detail.noPhotos")}
+    />
   );
 }
