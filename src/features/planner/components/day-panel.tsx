@@ -1,9 +1,10 @@
-// 일차 하나 — 요약·시간표(모바일은 일정/지도 전환, PC는 2단).
+// 일차 하나 — 경고 한 줄·시간표(모바일은 일정/지도 전환, PC는 2단).
 import { useMemo, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { toast } from "sonner";
 import { paths } from "@/app/paths";
+import { ErrorIcon, WarningIcon } from "@/components/icons";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { CourseMap, type CourseMapPoint } from "@/features/map";
@@ -14,6 +15,7 @@ import type { LatLng, TripDay, TripDraft } from "@/shared/domain";
 import { formatDay } from "@/shared/lib/date";
 import type { TripEdit } from "../hooks/use-trip-editor";
 import { useDaySchedule } from "../hooks/use-day-schedule";
+import { CONFLICT_KINDS } from "../lib/schedule";
 import {
   insertItem,
   moveItem,
@@ -56,6 +58,12 @@ export function DayPanel({ trip, day, dayIndex, update }: DayPanelProps) {
   const [near, setNear] = useState(true);
   const [radiusKm, setRadiusKm] = useState<NearRadius>(3);
 
+  const conflictCount = schedule.items.filter((s) =>
+    s.issues.some((i) => CONFLICT_KINDS.has(i.kind)),
+  ).length;
+  const checkCount = schedule.items.filter((s) =>
+    s.issues.some((i) => i.kind !== "route_pending"),
+  ).length;
   const nameOf = (id: string) => day.items.find((x) => x.id === id)?.snapshot.name;
   const otherDays = trip.days
     .map((d, index) => ({
@@ -123,14 +131,20 @@ export function DayPanel({ trip, day, dayIndex, update }: DayPanelProps) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="bg-background-subtle text-foreground flex flex-col gap-1 rounded-lg p-4 text-sm">
-        <p className="font-medium">
-          {t("day.summary", { count: day.items.length, drive: schedule.driveMin })}
-          {!schedule.routesComplete && day.items.length > 1 && t("day.routesIncomplete")} ·{" "}
-          {t(`status.${schedule.status}`)}
+      {/* 정상이면 아무것도 보이지 않는다 — 충돌·확인 필요(경로 실패 포함)가 있을 때만 한 줄로 알린다 */}
+      {conflictCount > 0 ? (
+        <p role="status" className="text-destructive flex items-center gap-1 text-sm">
+          <ErrorIcon size="sm" />
+          {t("day.conflictWarning", { count: conflictCount })}
         </p>
-        <p className="text-muted-foreground">{t("day.estimateNote")}</p>
-      </div>
+      ) : (
+        checkCount > 0 && (
+          <p role="status" className="flex items-center gap-1 text-sm">
+            <WarningIcon size="sm" />
+            {t("day.checkWarning", { count: checkCount })}
+          </p>
+        )
+      )}
 
       <ToggleGroup
         type="single"
@@ -248,16 +262,18 @@ export function DayPanel({ trip, day, dayIndex, update }: DayPanelProps) {
               <TabsTrigger value="route">{t("day.tabRoute")}</TabsTrigger>
               <TabsTrigger value="search">{t("day.tabSearch")}</TabsTrigger>
             </TabsList>
-            <TabsContent value="route" className="h-96 lg:h-160">
+            {/* TabsContent 기본 flex-1(기준 0%)은 높이 없는 세로 flex 안에서 h-*를 무시해 지도가 0 높이가 된다 —
+                flex-none으로 높이를 살리고, 지도에도 직접 높이를 준다. 비활성 탭은 언마운트돼 탭을 바꾸면 새로 그린다 */}
+            <TabsContent value="route" className="flex-none">
               <CourseMap
                 points={points}
                 paths={paths_}
                 selectedId={selectedId}
                 onSelect={setSelectedId}
-                className="h-full"
+                className="h-96 lg:h-160"
               />
             </TabsContent>
-            <TabsContent value="search" className="flex h-160 min-h-0 flex-col">
+            <TabsContent value="search" className="flex h-160 min-h-0 flex-none flex-col">
               <RouteSearchPanel
                 filters={search}
                 onFiltersChange={(next) => {

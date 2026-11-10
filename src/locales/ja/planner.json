@@ -3,12 +3,6 @@
   "dayWithDate": "{{day}}日目 · {{date}}",
   "minutes": "{{n}}分",
   "listSeparator": "、",
-  "status": {
-    "calculating": "ルート計算中",
-    "conflict": "重なりあり",
-    "unconfirmed": "要確認",
-    "ok": "計算完了"
-  },
   "issue": {
     "label": {
       "closed": "この日は休業日です",
@@ -39,9 +33,8 @@
     "lateForNamed": "次の予定（{{name}}）に間に合いません"
   },
   "day": {
-    "summary": "訪問 {{count}}か所 · 移動合計 {{drive}}分",
-    "routesIncomplete": "（一部区間は未確認）",
-    "estimateNote": "移動時間は検索した時点の交通状況にもとづく目安です。",
+    "conflictWarning": "訪問が難しい場所が{{count}}か所あります。日程カードで確認してください。",
+    "checkWarning": "確認が必要な場所が{{count}}か所あります。日程カードで確認してください。",
     "viewMode": "表示方法",
     "viewList": "旅程",
     "viewMap": "地図",
@@ -152,7 +145,7 @@
     "leave": "保存せずに移動",
     "startDate": "旅行の開始日",
     "periodFrom": "から{{count}}日間 · {{end}}まで · 車",
-    "addDay": "日程を追加"
+    "addNight": "1泊追加"
   },
   "new": {
     "outOfRange": "訪問日が旅行の期間外です。",

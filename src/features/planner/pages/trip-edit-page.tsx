@@ -144,9 +144,10 @@ export default function TripEditPage() {
       </div>
 
       <Tabs value={dayTab} onValueChange={setDayTab}>
-        <div className="flex items-center gap-2">
-          {/* 일차가 많으면 탭 줄만 가로로 넘긴다 — 브라우저 스크롤바 대신 넘길 때만 보이는 얇은 막대 */}
-          <ScrollArea type="scroll" className="min-w-0 flex-1">
+        {/* 일차가 많으면 탭 줄만 가로로 넘긴다 — 브라우저 스크롤바 대신 넘길 때만 보이는 얇은 막대.
+            "1박 추가"는 마지막 일차 탭 바로 옆에 붙어 함께 넘어간다 */}
+        <ScrollArea type="scroll" className="min-w-0">
+          <div className="flex w-max items-center gap-2">
             <TabsList>
               {trip.days.map((d, i) => (
                 <TabsTrigger key={d.date} value={String(i)}>
@@ -154,24 +155,22 @@ export default function TripEditPage() {
                 </TabsTrigger>
               ))}
             </TabsList>
-            <ScrollBar orientation="horizontal" />
-          </ScrollArea>
-          {trip.days.length < MAX_TRIP_DAYS && (
-            <Button
-              variant="outline"
-              size="sm"
-              className="shrink-0"
-              aria-label={t("edit.addDay")}
-              onClick={() => {
-                editor.update(addDay);
-                setDayTab(String(trip.days.length));
-              }}
-            >
-              <AddIcon size="sm" />
-              {t("edit.addDay")}
-            </Button>
-          )}
-        </div>
+            {trip.days.length < MAX_TRIP_DAYS && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  editor.update(addDay);
+                  setDayTab(String(trip.days.length));
+                }}
+              >
+                <AddIcon size="sm" />
+                {t("edit.addNight")}
+              </Button>
+            )}
+          </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
         {trip.days.map((d, i) => (
           <TabsContent key={d.date} value={String(i)} className="pt-2">
             <DayPanel trip={trip} day={d} dayIndex={i} update={editor.update} />

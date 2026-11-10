@@ -3,12 +3,6 @@
   "dayWithDate": "Day {{day}} · {{date}}",
   "minutes": "{{n}} min",
   "listSeparator": ", ",
-  "status": {
-    "calculating": "Calculating routes",
-    "conflict": "Has conflicts",
-    "unconfirmed": "Needs checking",
-    "ok": "All set"
-  },
   "issue": {
     "label": {
       "closed": "Closed on this day",
@@ -39,10 +33,10 @@
     "lateForNamed": "You'll be late for the next stop ({{name}})"
   },
   "day": {
-    "summary_one": "{{count}} stop · {{drive}} min driving",
-    "summary_other": "{{count}} stops · {{drive}} min driving",
-    "routesIncomplete": " (some routes unconfirmed)",
-    "estimateNote": "Travel times are estimates based on traffic when they were looked up.",
+    "conflictWarning_one": "{{count}} stop can't be visited as planned. Check the cards below.",
+    "conflictWarning_other": "{{count}} stops can't be visited as planned. Check the cards below.",
+    "checkWarning_one": "{{count}} stop needs checking. See the cards below.",
+    "checkWarning_other": "{{count}} stops need checking. See the cards below.",
     "viewMode": "View",
     "viewList": "Schedule",
     "viewMap": "Map",
@@ -155,7 +149,7 @@
     "startDate": "Trip start date",
     "periodFrom_one": "· {{count}} day · until {{end}} · By car",
     "periodFrom_other": "· {{count}} days · until {{end}} · By car",
-    "addDay": "Add a day"
+    "addNight": "Add a night"
   },
   "new": {
     "outOfRange": "The visit date is outside your trip dates.",
