@@ -1,0 +1,71 @@
+{
+  "save": "저장",
+  "delete": "삭제",
+  "edit": "수정",
+  "close": "닫기",
+  "back": "뒤로",
+  "next": "다음",
+  "loading": "불러오는 중...",
+  "retry": "다시 시도",
+  "error": {
+    "unknown": "문제가 발생했어요. 잠시 후 다시 시도해주세요.",
+    "network": "네트워크 연결을 확인해주세요.",
+    "permission": "접근 권한이 없어요.",
+    "notFound": "찾을 수 없는 페이지예요."
+  },
+  "nav": {
+    "explore": "탐색",
+    "library": "보관함",
+    "myTrips": "내 여행",
+    "newTrip": "여행 만들기",
+    "account": "내 계정",
+    "login": "로그인",
+    "main": "주 메뉴",
+    "bottom": "하단 메뉴"
+  },
+  "language": {
+    "label": "언어 선택"
+  },
+  "page": {
+    "notFoundBody": "주소가 바뀌었거나 삭제된 페이지일 수 있어요.",
+    "goExplore": "탐색으로 가기",
+    "errorTitle": "문제가 발생했어요",
+    "errorBody": "잠시 후 다시 시도해 주세요.",
+    "placeholder": "이 화면은 준비 중이에요."
+  },
+  "carousel": {
+    "prev": "이전 슬라이드",
+    "next": "다음 슬라이드"
+  },
+  "placeCategory": {
+    "cafe": "카페",
+    "restaurant": "식당",
+    "shop": "상점",
+    "attraction": "관광지",
+    "lodging": "숙소"
+  },
+  "sigun": {
+    "mokpo": "목포시",
+    "yeosu": "여수시",
+    "suncheon": "순천시",
+    "naju": "나주시",
+    "gwangyang": "광양시",
+    "damyang": "담양군",
+    "gokseong": "곡성군",
+    "gurye": "구례군",
+    "goheung": "고흥군",
+    "boseong": "보성군",
+    "hwasun": "화순군",
+    "jangheung": "장흥군",
+    "gangjin": "강진군",
+    "haenam": "해남군",
+    "yeongam": "영암군",
+    "muan": "무안군",
+    "hampyeong": "함평군",
+    "yeonggwang": "영광군",
+    "jangseong": "장성군",
+    "wando": "완도군",
+    "jindo": "진도군",
+    "sinan": "신안군"
+  }
+}

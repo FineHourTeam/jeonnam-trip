@@ -1,0 +1,74 @@
+{
+  "duration": {
+    "dayTrip": "Day trip",
+    "nights_one": "{{count}} night, {{days}} days",
+    "nights_other": "{{count}} nights, {{days}} days"
+  },
+  "closedOn": "Closed {{days}}",
+  "weekdaySeparator": ", ",
+  "regionSeparator": " · ",
+  "unplacedReason": "From day {{day}} of the original course.",
+  "dayLabel": "Day {{day}}",
+  "error": {
+    "notFound": "We couldn't find this course."
+  },
+  "card": {
+    "meta_one": "{{regions}} · {{count}} place",
+    "meta_other": "{{regions}} · {{count}} places"
+  },
+  "filters": {
+    "region": "Region",
+    "allRegions": "All regions",
+    "days": "Length",
+    "allDays": "Any length",
+    "tags": "Tags",
+    "allTags": "All",
+    "reset": "Clear filters"
+  },
+  "map": {
+    "title": "Course map",
+    "dayPicker": "Day to show on the map",
+    "unavailablePlace": "Unavailable place",
+    "legend": "Numbers follow the list order, and lines show the driving route in that order.",
+    "loadingRoutes": "Loading routes",
+    "failedLegs_one": "{{count}} leg couldn't be loaded, so it isn't drawn on the map.",
+    "failedLegs_other": "{{count}} legs couldn't be loaded, so they aren't drawn on the map.",
+    "unlocated_one": "{{count}} place without a confirmed location is left off the map.",
+    "unlocated_other": "{{count}} places without a confirmed location are left off the map."
+  },
+  "list": {
+    "seoTitle": "Creator courses",
+    "seoDescription": "Browse Jeollanam-do travel courses from travel editors by region, length and theme, and bring them into your plan.",
+    "title": "Creator courses",
+    "intro": "Bring in a course someone else put together, fit it to your travel dates and edit it as you like.",
+    "count_one": "{{count}} course",
+    "count_other": "{{count}} courses",
+    "loadError": "We couldn't load the courses",
+    "networkHint": "Check your network connection and try again.",
+    "emptyFiltered": "No courses match these filters",
+    "empty": "No courses have been published yet",
+    "emptyFilteredHint": "Try a different region or length."
+  },
+  "detail": {
+    "backToList": "Courses",
+    "notFoundTitle": "We couldn't find this course",
+    "loadErrorTitle": "We couldn't load this course",
+    "notFoundBody": "It may no longer be public, or the link may be wrong.",
+    "networkHint": "Check your network connection and try again.",
+    "seoDescription": "A {{regions}} travel course put together by {{name}}",
+    "videoTitle": "Video by {{name}}: {{title}}",
+    "viewOriginal": "View original",
+    "reviewedAt": "Reviewed by our team on {{date}}",
+    "orderBasis": {
+      "editor_suggested": "An editor arranged this order. It isn't a record of an actual trip taken in this order.",
+      "video_order": "This is the order shown in the video. The actual visiting order may differ.",
+      "verified_trip": "This is the order the creator actually visited."
+    },
+    "importHint": "Pick your travel dates to bring this course's places and order into your own plan. It becomes your personal copy, so your edits won't change the original.",
+    "import": "Add to my plan",
+    "placesError": "We couldn't load the place details",
+    "unavailablePlace": "This place isn't available right now. It will be left out when you bring in the course.",
+    "noPhoto": "No photo",
+    "hoursUnknown": "Hours not confirmed"
+  }
+}

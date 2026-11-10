@@ -1,0 +1,80 @@
+# REACT_FIREBASE_SETUP.md 3단계 참조 — .github/workflows/firebase-hosting-deploy.yml로 복사해서 사용
+# PR = preview 채널(7일 만료, PR에 URL 자동 코멘트), main push = live 배포.
+# 필요 시크릿: FIREBASE_SERVICE_ACCOUNT (Firebase 콘솔 → 프로젝트 설정 → 서비스 계정 JSON)
+# jeonnam-trip / 22 치환할 것.
+#
+# ⚠️ preview 채널 주의:
+# - 무료(Spark) 플랜은 동시 preview 채널 7개 제한 — expires로 자동 정리
+# - Auth 로그인 테스트하려면 Firebase 콘솔 → Auth → 승인된 도메인에 web.app 프리뷰 도메인 추가
+# - VITE_* 환경변수는 빌드 시점에 박제됨 — preview가 프로덕션 DB를 봐도 되는지 확인
+
+name: Firebase Hosting Deploy
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    # 포크 PR에는 시크릿이 없음 — 같은 레포 PR만 preview 배포
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    # action-hosting-deploy가 PR에 체크를 만들고 preview URL 코멘트를 단다 — 기본 토큰은 읽기 전용이라 명시한다
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+        env:
+          # 배포 빌드는 웹 에셋 검사를 엄격 모드로 — 파비콘·앱 아이콘·OG 누락 시 배포 중단 (scripts/check-web-assets.mjs)
+          WEB_ASSETS_STRICT: "1"
+          # VITE_* 값이 CI에 없으면 undefined로 빌드되어 흰 화면 — 저장소 Variables에 등록해 주입
+          VITE_FIREBASE_API_KEY: ${{ vars.VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ vars.VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID: ${{ vars.VITE_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_STORAGE_BUCKET: ${{ vars.VITE_FIREBASE_STORAGE_BUCKET }}
+          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ vars.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_FIREBASE_APP_ID: ${{ vars.VITE_FIREBASE_APP_ID }}
+          VITE_NAVER_MAP_CLIENT_ID: ${{ vars.VITE_NAVER_MAP_CLIENT_ID }}
+          VITE_KAKAO_JS_KEY: ${{ vars.VITE_KAKAO_JS_KEY }}
+          VITE_SENTRY_DSN: ${{ vars.VITE_SENTRY_DSN }}
+
+      - name: Deploy preview (PR)
+        if: github.event_name == 'pull_request'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: "jeonnam-trip"
+          expires: 7d
+
+      - name: Deploy live (main)
+        if: github.event_name == 'push'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: "jeonnam-trip"
+          channelId: live
+
+      # firestore.rules / functions 배포는 hosting과 분리 — 규칙 변경 커밋에서만 수동/별도 잡으로:
+      # firebase deploy --only firestore:rules,storage:rules
+
+      # 배포된 사이트를 Googlebot처럼 확인 — 파비콘·OG가 실제로 200으로 나가는지, robots/noindex가 막지 않는지.
+      # 저장소 Variables에 SITE_URL(예: https://example.com)을 등록하면 동작, 없으면 건너뜀.
+      - name: 배포 후 웹 에셋 확인 (Googlebot 기준)
+        if: github.event_name == 'push' && vars.SITE_URL != ''
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: node scripts/check-web-assets.mjs --url "$SITE_URL"

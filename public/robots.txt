@@ -1,0 +1,16 @@
+# robots.txt — 프로덕션 기본값.
+#
+# ⚠️ 스테이징/프리뷰 채널(*.web.app)·미출시 서비스는 아래를 통째로 아래 "차단" 블록으로 바꿔
+#    검색 노출을 막는다 (스테이징이 색인되면 프로덕션과 중복 콘텐츠 SEO 사고).
+#
+#   User-agent: *
+#   Disallow: /
+#
+# 인증 뒤 앱(대시보드 등)은 공개 랜딩만 Allow하고 앱 경로는 Disallow하거나,
+# 라우트별 <Seo noindex /> 로 개별 제외한다.
+
+User-agent: *
+Allow: /
+
+# 사이트맵을 생성하면 아래 주석을 해제하고 절대 URL로 (프로덕션 도메인 확정 후):
+# Sitemap: https://[도메인]/sitemap.xml

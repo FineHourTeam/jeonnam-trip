@@ -1,0 +1,81 @@
+# REACT_FIREBASE_SETUP.md 3단계 참조 — .github/workflows/react-ci.yml로 복사해서 사용
+# 22은 프로젝트 Node 버전에 맞춰 고정할 것 (예: 22)
+# 검증 목록은 로컬 검증 명령(lint·typecheck·test·build)과 같아야 한다 (로컬 통과 = CI 통과)
+
+name: React CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22" # 예: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Format check
+        run: npx prettier --check .
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm run test -- --run --coverage
+
+      - name: Build
+        run: npm run build
+
+      - name: Audit (high 이상만 실패)
+        run: npm audit --audit-level=high
+        continue-on-error: true # 도입 초기엔 경고만 — 안정화 후 이 줄 제거해 강제
+
+  # 스모크 — "렌더는 되는데 안 연결된 UI"(Potemkin) 탐지. build → preview → Playwright.
+  # e2e/smoke.spec.ts + playwright.config.ts가 설치돼 있어야 동작 (없으면 이 잡을 지운다).
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - name: Playwright 브라우저 설치
+        run: npx playwright install --with-deps chromium
+      - name: 스모크 (build+preview는 playwright webServer가 기동)
+        run: npx playwright test e2e/
+        env:
+          # 스모크는 에뮬레이터/스텁 대상 — 프로덕션 Firebase를 건드리지 않는다
+          VITE_FIREBASE_API_KEY: smoke
+          VITE_FIREBASE_AUTH_DOMAIN: smoke.local
+          VITE_FIREBASE_PROJECT_ID: smoke
+          VITE_FIREBASE_STORAGE_BUCKET: smoke
+          VITE_FIREBASE_MESSAGING_SENDER_ID: "0"
+          VITE_FIREBASE_APP_ID: smoke
+          VITE_NAVER_MAP_CLIENT_ID: smoke
+          VITE_KAKAO_JS_KEY: smoke
+          VITE_USE_EMULATORS: "false"
+
+  # Firestore 보안규칙 테스트 — rules 테스트 suite가 생기면 주석 해제
+  # rules-test:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-node@v4
+  #       with: { node-version: "22", cache: npm }
+  #     - run: npm ci
+  #     - run: npx firebase-tools emulators:exec --only firestore "npx vitest run tests/rules"

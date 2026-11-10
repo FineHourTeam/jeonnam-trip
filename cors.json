@@ -1,0 +1,13 @@
+[
+  {
+    "_comment": "Firebase Storage 버킷 CORS — 브라우저에서 getDownloadURL() 결과를 fetch/canvas/crossorigin 이미지로 쓸 때 필요. origin에 실제 도메인만 넣고(와일드카드 * 금지 — 아무 사이트나 우리 스토리지를 읽게 됨), 적용법은 docs/CORS.md 참조.",
+    "origin": [
+      "http://localhost:5173",
+      "https://jeonnam-trip.web.app",
+      "https://jeonnam-trip.firebaseapp.com"
+    ],
+    "method": ["GET", "HEAD"],
+    "maxAgeSeconds": 3600,
+    "responseHeader": ["Content-Type", "Content-Length", "Content-Range", "Authorization"]
+  }
+]

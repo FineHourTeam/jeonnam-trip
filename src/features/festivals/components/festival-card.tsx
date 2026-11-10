@@ -1,0 +1,40 @@
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router";
+import { paths } from "@/app/paths";
+import type { Festival } from "@/shared/domain";
+import { placeText } from "@/shared/lib/content-text";
+import { formatPeriod } from "../lib/format";
+import { FestivalStateBadge } from "./festival-state-badge";
+
+export function FestivalCard({ festival, today }: { festival: Festival; today: string }) {
+  const { t, i18n } = useTranslation("festivals");
+  const photo = festival.photos[0];
+  const { name } = placeText(festival, i18n.language);
+  return (
+    <Link
+      to={paths.festivalDetail(festival.id)}
+      className="border-border bg-card text-card-foreground hover:bg-background-subtle focus-visible:ring-ring flex gap-3 rounded-lg border p-3 focus-visible:ring-2 focus-visible:outline-none"
+    >
+      {photo ? (
+        <img
+          src={photo}
+          alt=""
+          loading="lazy"
+          className="size-20 shrink-0 rounded-md object-cover"
+        />
+      ) : (
+        <div className="bg-background-subtle text-muted-foreground flex size-20 shrink-0 items-center justify-center rounded-md text-xs">
+          {t("card.noPhoto")}
+        </div>
+      )}
+      <div className="flex min-w-0 flex-col gap-1">
+        <FestivalStateBadge festival={festival} today={today} />
+        <p className="line-clamp-2 font-medium text-pretty">{name}</p>
+        <p className="text-muted-foreground text-sm">
+          {t(`sigun.${festival.sigun}`, { ns: "common" })} ·{" "}
+          {formatPeriod(festival.startDate, festival.endDate, i18n.language)}
+        </p>
+      </div>
+    </Link>
+  );
+}

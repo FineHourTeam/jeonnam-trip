@@ -1,0 +1,51 @@
+{
+  "seoTitle": "전남 여행지 둘러보기",
+  "seoDescription": "전남 축제·식당·크리에이터 추천 코스를 모아 당일부터 3박 4일까지 여행 계획을 짜 보세요.",
+  "jeonnam": "전남",
+  "hero": {
+    "carousel": "전남 명소 사진",
+    "photoAlt": "{{name}} 풍경",
+    "credit": "사진: {{credit}}",
+    "goTo": "{{n}}번째 사진 보기: {{name}}",
+    "pause": "사진 자동 넘김 멈추기",
+    "play": "사진 자동 넘김 다시 시작하기",
+    "subtitle": "전남 여행 추천 플랫폼",
+    "tagline": "축제·식당·크리에이터 추천 코스까지 한 번에",
+    "cta": "계획짜기",
+    "places": {
+      "suncheon": "순천만습지",
+      "boseong": "보성 녹차밭",
+      "jindo": "진도 갯벌 일출",
+      "mokpo": "유달산에서 본 목포대교",
+      "damyang": "담양 죽녹원",
+      "yeosu": "여수 밤바다"
+    }
+  },
+  "section": {
+    "more": "전체 보기",
+    "moreLabel": "{{title}} 전체 보기",
+    "errorBody": "네트워크 연결을 확인한 뒤 다시 시도해 주세요."
+  },
+  "festivals": {
+    "error": "축제를 불러오지 못했어요",
+    "emptyHint": "그동안 전남 장소를 둘러보세요.",
+    "browsePlaces": "장소 둘러보기",
+    "title": "{{region}}에서 열리는 축제",
+    "empty": "{{region}}에서 앞으로 열릴 축제가 아직 없어요"
+  },
+  "places": {
+    "title": "{{region}} 장소",
+    "error": "장소를 불러오지 못했어요",
+    "empty": "아직 공개된 장소가 없어요"
+  },
+  "courses": {
+    "title": "{{region}} 크리에이터 코스",
+    "error": "코스를 불러오지 못했어요",
+    "empty": "공개된 코스가 아직 없어요"
+  },
+  "card": {
+    "noPhoto": "사진 없음",
+    "regionMore": "{{region}} 외"
+  },
+  "brand": "머물전남"
+}
