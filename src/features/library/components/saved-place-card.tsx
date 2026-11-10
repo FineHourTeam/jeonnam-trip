@@ -1,4 +1,4 @@
-// S06 저장한 장소 카드 — 종류·지역, 확인 필요 상태, 개인 태그·메모, 이 장소를 연결한 SNS 원문, 선택·고치기·저장 해제.
+// S06 저장한 장소 카드 — 대표 사진(없으면 자리표시), 종류·지역, 확인 필요 상태, 개인 태그·메모, 이 장소를 연결한 SNS 원문, 선택·고치기·저장 해제.
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { paths } from "@/app/paths";
@@ -37,9 +37,30 @@ export function SavedPlaceCard({
   const name = entryName(entry, i18n.language);
   const location = place?.location ?? custom?.location ?? null;
   const noHours = place ? hoursUnknown(place.hours) : true;
+  // 개인 장소·볼 수 없는 장소는 사진이 없다 — 장소 목록 카드(PlaceCard)와 같은 자리표시를 쓴다
+  const photo = place?.photos[0];
+  const thumb = photo ? (
+    <img src={photo} alt="" loading="lazy" className="size-20 shrink-0 rounded-md object-cover" />
+  ) : (
+    <div className="bg-background-subtle text-muted-foreground flex size-20 shrink-0 items-center justify-center rounded-md p-1 text-center text-xs">
+      {t("card.noPhoto")}
+    </div>
+  );
 
   return (
     <div className="border-border bg-card text-card-foreground flex items-start gap-3 rounded-lg border p-3">
+      {place ? (
+        <Link
+          to={paths.placeDetail(place.id)}
+          tabIndex={-1}
+          aria-hidden
+          className="shrink-0 rounded-md"
+        >
+          {thumb}
+        </Link>
+      ) : (
+        thumb
+      )}
       <div className="flex min-w-0 flex-1 flex-col gap-1.5">
         <p className="text-muted-foreground text-xs">
           {[

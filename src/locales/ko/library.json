@@ -104,6 +104,7 @@
     "confirm": "저장 해제하기"
   },
   "card": {
+    "noPhoto": "사진 없음",
     "noCategory": "종류 미분류",
     "missing": "공개가 끝났거나 지워진 장소예요. 일정에는 담을 수 없어요.",
     "hoursUnknown": "영업시간 확인 필요",

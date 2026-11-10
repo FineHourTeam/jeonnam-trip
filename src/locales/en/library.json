@@ -41,8 +41,8 @@
     "saveFailed": "We couldn't add it to Saved. Check your network connection and try again."
   },
   "saveAction": {
-    "save": "Save",
-    "saved": "Saved",
+    "save": "Add to Saved",
+    "saved": "In Saved",
     "myTags": "My tags {{tags}}"
   },
   "login": "Log in",
@@ -104,6 +104,7 @@
     "confirm": "Remove"
   },
   "card": {
+    "noPhoto": "No photo",
     "noCategory": "No type",
     "missing": "This place is no longer public or was deleted. You can't add it to a trip.",
     "hoursUnknown": "Check opening hours",
