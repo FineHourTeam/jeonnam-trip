@@ -99,7 +99,8 @@
       "more": "{{title}}のその他のメニュー",
       "open": "開く・編集",
       "duplicate": "コピー",
-      "shareSettings": "共有設定"
+      "shareSettings": "共有設定",
+      "morePlaces": "+{{n}}"
     }
   },
   "days": {

@@ -99,7 +99,8 @@
       "more": "{{title}} 더보기",
       "open": "열기·편집",
       "duplicate": "복사",
-      "shareSettings": "공유 설정"
+      "shareSettings": "공유 설정",
+      "morePlaces": "+{{n}}"
     }
   },
   "days": {

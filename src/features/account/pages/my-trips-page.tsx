@@ -1,6 +1,6 @@
 // S11 내 여행 — 저장한 코스 카드(제목·날짜·지역·수정일·공개 상태)와 열기·복사·공유·삭제.
 // 삭제는 공유본을 먼저 막고 코스를 지운다. 저장·삭제가 실제로 성공하기 전에는 완료로 표시하지 않는다.
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
@@ -26,11 +26,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useFestival } from "@/features/festivals";
+import { usePlacesByIds } from "@/features/places";
 import { useCreateTrip, useDeleteTrip, useMyTrips } from "@/features/trips";
 import type { Trip } from "@/shared/domain";
 import { formatDay, kstDateOf } from "@/shared/lib/date";
 import { useDeactivateTripShares } from "../hooks/use-shares";
 import { draftFromTrip } from "../lib/share-copy";
+import { type TripThumb, tripThumbs, tripsPlaceIds } from "../lib/trip-thumbs";
 
 export default function MyTripsPage() {
   const { t } = useTranslation("account");
@@ -40,6 +43,13 @@ export default function MyTripsPage() {
   const remove = useDeleteTrip();
   const unshare = useDeactivateTripShares();
   const [deleting, setDeleting] = useState<Trip | null>(null);
+  // 모든 카드의 등록 장소 사진을 한 번에 읽는다. 못 읽어도 카드는 글자 썸네일로 그대로 보인다
+  const placeIds = useMemo(() => tripsPlaceIds(trips.data ?? []), [trips.data]);
+  const places = usePlacesByIds(placeIds);
+  const photos: PlacePhotos = {
+    of: (id) => places.data?.find((p) => p.id === id)?.photos[0],
+    loading: places.isLoading,
+  };
 
   const duplicate = (trip: Trip) => {
     create.mutate(
@@ -108,6 +118,7 @@ export default function MyTripsPage() {
             <TripCard
               key={t.id}
               trip={t}
+              photos={photos}
               busy={create.isPending || remove.isPending}
               onDuplicate={() => {
                 duplicate(t);
@@ -147,14 +158,20 @@ export default function MyTripsPage() {
   );
 }
 
+interface PlacePhotos {
+  of: (placeId: string) => string | undefined;
+  loading: boolean;
+}
+
 interface TripCardProps {
   trip: Trip;
+  photos: PlacePhotos;
   busy: boolean;
   onDuplicate: () => void;
   onDelete: () => void;
 }
 
-function TripCard({ trip, busy, onDuplicate, onDelete }: TripCardProps) {
+function TripCard({ trip, photos, busy, onDuplicate, onDelete }: TripCardProps) {
   const { t, i18n } = useTranslation("account");
   const places = trip.days.reduce((n, d) => n + d.items.length, 0);
   const regions =
@@ -180,6 +197,7 @@ function TripCard({ trip, busy, onDuplicate, onDelete }: TripCardProps) {
             {t(trip.shareId ? "myTrips.card.shared" : "myTrips.card.private")}
           </Badge>
         </span>
+        <TripThumbs trip={trip} photos={photos} />
       </Link>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -207,5 +225,66 @@ function TripCard({ trip, busy, onDuplicate, onDelete }: TripCardProps) {
         </DropdownMenuContent>
       </DropdownMenu>
     </li>
+  );
+}
+
+/** 카드 폭(375px 화면 기준)에 들어가는 개수 — 넘치면 마지막 칸을 남은 개수로 */
+const MAX_THUMBS = 5;
+
+// 장소 수는 위 날짜 줄이 읽어 주므로 썸네일 줄은 장식으로 둔다
+function TripThumbs({ trip, photos }: { trip: Trip; photos: PlacePhotos }) {
+  const { t } = useTranslation("account");
+  const thumbs = tripThumbs(trip);
+  if (thumbs.length === 0) return null;
+  const overflow = thumbs.length > MAX_THUMBS;
+  const shown = overflow ? thumbs.slice(0, MAX_THUMBS - 1) : thumbs;
+  return (
+    <ul className="mt-2 flex gap-1" aria-hidden>
+      {shown.map((x) => (
+        <li key={x.key}>
+          {x.ref.kind === "festival" ? (
+            <FestivalThumb festivalId={x.ref.festivalId} name={x.name} />
+          ) : x.ref.kind === "place" ? (
+            <Thumb photo={photos.of(x.ref.placeId)} loading={photos.loading} name={x.name} />
+          ) : (
+            <Thumb photo={undefined} loading={false} name={x.name} />
+          )}
+        </li>
+      ))}
+      {overflow && (
+        <li className="bg-background-subtle text-muted-foreground flex size-12 items-center justify-center rounded-md text-sm font-semibold">
+          {t("myTrips.card.morePlaces", { n: thumbs.length - shown.length })}
+        </li>
+      )}
+    </ul>
+  );
+}
+
+// 같은 축제는 쿼리 캐시가 묶어 카드가 여럿이어도 한 번만 읽는다
+function FestivalThumb({ festivalId, name }: { festivalId: string; name: string }) {
+  const festival = useFestival(festivalId);
+  return <Thumb photo={festival.data?.photos[0]} loading={festival.isLoading} name={name} />;
+}
+
+function Thumb({
+  photo,
+  loading,
+  name,
+}: Pick<TripThumb, "name"> & { photo: string | undefined; loading: boolean }) {
+  if (loading) return <Skeleton className="size-12 rounded-md" />;
+  if (photo)
+    return (
+      <img
+        src={photo}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        className="size-12 rounded-md object-cover"
+      />
+    );
+  return (
+    <span className="bg-background-subtle text-muted-foreground flex size-12 items-center justify-center rounded-md text-sm font-semibold">
+      {Array.from(name)[0] ?? ""}
+    </span>
   );
 }

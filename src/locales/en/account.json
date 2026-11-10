@@ -100,7 +100,8 @@
       "more": "More options for {{title}}",
       "open": "Open and edit",
       "duplicate": "Copy",
-      "shareSettings": "Share settings"
+      "shareSettings": "Share settings",
+      "morePlaces": "+{{n}}"
     }
   },
   "days": {
