@@ -108,6 +108,8 @@
     "noCategory": "종류 미분류",
     "missing": "공개가 끝났거나 지워진 장소예요. 일정에는 담을 수 없어요.",
     "hoursUnknown": "영업시간 확인 필요",
+    "today": "오늘 {{ranges}}",
+    "todayClosed": "오늘 휴무",
     "noLocation": "위치 미확인 · 경로 계산 제외",
     "viewSource": "{{platform}} 원문 보기",
     "badUrl": "열 수 없는 주소예요",

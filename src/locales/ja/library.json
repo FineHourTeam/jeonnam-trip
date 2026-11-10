@@ -108,6 +108,8 @@
     "noCategory": "種類未分類",
     "missing": "公開が終了したか、削除された場所です。旅程には入れられません。",
     "hoursUnknown": "営業時間の確認が必要",
+    "today": "本日 {{ranges}}",
+    "todayClosed": "本日休業",
     "noLocation": "位置未確認・ルート計算対象外",
     "viewSource": "{{platform}}で元の投稿を見る",
     "badUrl": "開けないアドレスです",

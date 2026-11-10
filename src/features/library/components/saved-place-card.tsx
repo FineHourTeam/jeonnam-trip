@@ -1,4 +1,4 @@
-// S06 저장한 장소 카드 — 대표 사진(없으면 자리표시), 종류·지역, 확인 필요 상태, 개인 태그·메모, 이 장소를 연결한 SNS 원문, 선택·고치기·저장 해제.
+// S06 저장한 장소 카드 — 대표 사진(없으면 자리표시), 종류·지역, 한 줄 소개·오늘 영업·짧은 주소, 확인 필요 상태, 개인 태그·메모, 이 장소를 연결한 SNS 원문, 선택·고치기·저장 해제.
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { paths } from "@/app/paths";
@@ -13,8 +13,27 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { hoursUnknown } from "@/features/places";
+import type { OpeningHours, TimeRange } from "@/shared/domain";
+import { placeText } from "@/shared/lib/content-text";
+import { dayOfWeek, todayKst } from "@/shared/lib/date";
 import { safeHttpUrl } from "@/shared/lib/format";
 import { entryName, type LibraryEntry } from "../lib/library";
+
+/** 오늘(KST) 영업 구간 — 날짜 예외 우선. null = 미확인, [] = 휴무 */
+function todayRanges(hours: OpeningHours): TimeRange[] | null {
+  const today = todayKst();
+  return hours.exceptions.find((e) => e.date === today)?.ranges ?? hours.weekly[dayOfWeek(today)];
+}
+
+/** 한국어 주소의 시군 다음 읍·면·동까지 ("전라남도 영광군 영광읍 …" → "영광군 영광읍"). 못 찾으면 null */
+function shortAddress(address: string | undefined): string | null {
+  const words = (address ?? "")
+    .trim()
+    .split(/\s+/)
+    .filter((w) => !/^(전라남도|전남|전남도)$/.test(w));
+  const end = words.findIndex((w) => /[읍면동]$/.test(w));
+  return end > 0 && end <= 2 ? words.slice(0, end + 1).join(" ") : null;
+}
 
 interface SavedPlaceCardProps {
   entry: LibraryEntry;
@@ -37,6 +56,14 @@ export function SavedPlaceCard({
   const name = entryName(entry, i18n.language);
   const location = place?.location ?? custom?.location ?? null;
   const noHours = place ? hoursUnknown(place.hours) : true;
+  const text = place ? placeText(place, i18n.language) : null;
+  const ranges = place && !noHours ? todayRanges(place.hours) : null;
+  const todayHours = ranges
+    ? ranges.length === 0
+      ? t("card.todayClosed")
+      : t("card.today", { ranges: ranges.map((r) => `${r.open}~${r.close}`).join(", ") })
+    : null;
+  const address = shortAddress(text ? text.address : custom?.address);
   // 개인 장소·볼 수 없는 장소는 사진이 없다 — 장소 목록 카드(PlaceCard)와 같은 자리표시를 쓴다
   const photo = place?.photos[0];
   const thumb = photo ? (
@@ -82,6 +109,16 @@ export function SavedPlaceCard({
           </Link>
         ) : (
           <p className="font-medium text-pretty">{name}</p>
+        )}
+        {text?.summary && (
+          <p className="text-muted-foreground line-clamp-2 text-sm leading-relaxed">
+            {text.summary}
+          </p>
+        )}
+        {(todayHours ?? address) && (
+          <p className="text-muted-foreground text-xs">
+            {[todayHours, address].filter(Boolean).join(" · ")}
+          </p>
         )}
         {missing ? (
           <p className="text-muted-foreground text-sm">{t("card.missing")}</p>

@@ -108,6 +108,8 @@
     "noCategory": "No type",
     "missing": "This place is no longer public or was deleted. You can't add it to a trip.",
     "hoursUnknown": "Check opening hours",
+    "today": "Today {{ranges}}",
+    "todayClosed": "Closed today",
     "noLocation": "Location unknown · Not in routes",
     "viewSource": "View on {{platform}}",
     "badUrl": "This address can't be opened",
