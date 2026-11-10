@@ -1,6 +1,6 @@
 // S12 공유 설정 — 공개될 내용을 미리 보여 주고 링크 만들기·업데이트·해제를 한다.
 // 개인 메모·출발/종료 위치는 빠진다. 직접 입력한 장소는 공개 대상이라 미리 알린다 (기능명세 §8).
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router";
 import { toast } from "sonner";
@@ -63,7 +63,11 @@ function ShareSettings({ trip }: { trip: Trip }) {
   const shareUnknown = trip.shareId !== null && (share.isPending || share.isError);
   const link = active ? `${window.location.origin}${paths.sharedTrip(current.id)}` : "";
   const outdated = active && trip.updatedAt > current.publishedAt;
-  const preview = toSharedTrip(trip, { id: "preview", publishedVersion: 0, publishedAt: "" });
+  // 렌더마다 새 사본을 만들면 일차 지도가 매번 다시 그려진다 — 코스가 바뀔 때만 만든다
+  const preview = useMemo(
+    () => toSharedTrip(trip, { id: "preview", publishedVersion: 0, publishedAt: "" }),
+    [trip],
+  );
   const customs = customPlaceCount(trip);
 
   const onPublish = () => {

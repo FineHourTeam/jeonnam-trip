@@ -107,8 +107,21 @@
     "empty": "この日に追加した場所はありません。",
     "festival": "お祭り",
     "fixed": "{{time}} 固定",
-    "stay": "{{min}}分滞在",
-    "noLocation": "位置未確認"
+    "stay": "滞在",
+    "noLocation": "位置未確認",
+    "legend": "番号はリストの順番で、線はその順番でつないだ車のルートです。",
+    "loadingRoutes": "ルートを読み込んでいます",
+    "failedLegs": "ルートを読み込めなかった{{count}}区間は地図に表示していません。",
+    "unlocated": "位置を確認できなかった{{count}}か所は地図に表示していません。",
+    "tab": "{{n}}日目",
+    "tabs": "日程を選ぶ",
+    "minutes": "{{n}}分",
+    "arrive": "到着",
+    "depart": "出発",
+    "wait": "待ち{{n}}分",
+    "notCalculated": "未計算",
+    "cardLabel": "{{order}}番目の訪問 {{name}}",
+    "showOnMap": "地図で{{name}}を見る"
   },
   "sharedTrip": {
     "goneTitle": "開けないコースです",

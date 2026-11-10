@@ -64,7 +64,7 @@ export default function SharedTripPage() {
   };
 
   return (
-    <section className="mx-auto flex max-w-screen-md flex-col gap-5 px-4 py-6">
+    <section className="mx-auto flex max-w-screen-xl flex-col gap-5 px-4 py-6">
       <div className="flex flex-col gap-1">
         <p className="text-muted-foreground text-sm">{t("sharedTrip.label")}</p>
         <h1 className="text-xl font-semibold text-balance">{s.title}</h1>

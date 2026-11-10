@@ -107,8 +107,21 @@
     "empty": "이 날은 담은 장소가 없어요.",
     "festival": "축제",
     "fixed": "{{time}} 고정",
-    "stay": "{{min}}분 머물기",
-    "noLocation": "위치 미확인"
+    "stay": "체류",
+    "noLocation": "위치 미확인",
+    "legend": "번호는 목록 순서이고, 선은 그 순서로 이은 자동차 경로예요.",
+    "loadingRoutes": "경로를 불러오고 있어요",
+    "failedLegs": "경로를 불러오지 못한 구간 {{count}}개는 지도에 그리지 않았어요.",
+    "unlocated": "위치를 확인하지 못한 장소 {{count}}곳은 지도에서 빠졌어요.",
+    "tab": "{{n}}일차",
+    "tabs": "일차 선택",
+    "minutes": "{{n}}분",
+    "arrive": "도착",
+    "depart": "출발",
+    "wait": "대기 {{n}}분",
+    "notCalculated": "계산 전",
+    "cardLabel": "{{order}}번째 방문 {{name}}",
+    "showOnMap": "지도에서 {{name}} 보기"
   },
   "sharedTrip": {
     "goneTitle": "열 수 없는 코스예요",
