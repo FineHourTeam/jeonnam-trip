@@ -2,8 +2,26 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ReactNode } from "react";
 import { MemoryRouter } from "react-router";
-import { describe, expect, it, vi } from "vitest";
-import { HomeSection } from "./home-section";
+import { beforeAll, describe, expect, it, vi } from "vitest";
+import { HomeSection, HomeSectionItem } from "./home-section";
+
+// jsdom에는 embla가 쓰는 브라우저 API가 없다
+beforeAll(() => {
+  const noopObserver = class {
+    observe = vi.fn();
+    unobserve = vi.fn();
+    disconnect = vi.fn();
+  };
+  vi.stubGlobal("ResizeObserver", noopObserver);
+  vi.stubGlobal("IntersectionObserver", noopObserver);
+  vi.stubGlobal("matchMedia", () => ({
+    matches: false,
+    addListener: () => undefined,
+    removeListener: () => undefined,
+    addEventListener: () => undefined,
+    removeEventListener: () => undefined,
+  }));
+});
 
 const base = {
   title: "오늘 열리는 축제",
@@ -19,7 +37,7 @@ const renderSection = (props: Partial<typeof base>) =>
   render(
     <MemoryRouter>
       <HomeSection {...base} {...props}>
-        <li>카드</li>
+        <HomeSectionItem>카드</HomeSectionItem>
       </HomeSection>
     </MemoryRouter>,
   );
@@ -32,6 +50,13 @@ describe("HomeSection", () => {
       "/festivals?date=2026-10-20",
     );
     expect(screen.getByText("카드")).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "오늘 열리는 축제" })).toBeInTheDocument();
+  });
+
+  it("불러오는 중에는 카드 대신 자리표시를 보여 준다", () => {
+    const { container } = renderSection({ isPending: true });
+    expect(container.querySelector('[aria-busy="true"]')).toBeInTheDocument();
+    expect(screen.queryByText("카드")).not.toBeInTheDocument();
   });
 
   it("실패하면 안내와 다시 시도를 보여 주고, 누르면 다시 부른다", async () => {

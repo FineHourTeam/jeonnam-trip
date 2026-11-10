@@ -1,93 +1,55 @@
-// S01 탐색 홈 — 첫 화면은 명소 사진 위에 제목·조건 카드를 올린다(HomeHero). 지역·날짜를 고르면 그 지역 축제, 장소, 크리에이터 코스를 구역별로 보여 준다.
-// 축제는 고른 날 이후에도 열리는 것만(이미 끝난 축제 제외) 보여 주고, 그날 열리는 축제를 먼저, 나머지는 시작일 순으로 둔다.
-// 조건은 URL 검색 파라미터(?sigun=&date=)에 둔다. 인기·평점 같은 수치는 데이터가 없어 보여 주지 않는다 (화면설계 S01).
+// S01 탐색 홈 — 첫 화면은 명소 사진 위에 브랜드 제목과 "계획짜기" 버튼을 올린다(HomeHero). 아래로 전남 전체의 축제, 장소, 크리에이터 코스를 구역별로 보여 준다.
+// 축제는 오늘 이후에도 열리는 것만(이미 끝난 축제 제외) 보여 주고, 오늘 열리는 축제를 먼저, 나머지는 시작일 순으로 둔다.
+// 지역·날짜 고르기는 각 목록 화면에서 한다. 인기·평점 같은 수치는 데이터가 없어 보여 주지 않는다 (화면설계 S01).
 // 축제가 없으면 그 지역 장소를 둘러보도록 안내한다. 각 구역은 목록 화면(S02·S04·S08)으로 이어진다.
 import { useId } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useSearchParams } from "react-router";
+import { Link } from "react-router";
 import { paths } from "@/app/paths";
 import { Seo } from "@/components/Seo";
 import { Button } from "@/components/ui/button";
-import { CourseCard, useCourseCovers, useCreatorCourses } from "@/features/creators";
-import { FestivalCard, useFestivals } from "@/features/festivals";
-import { PlaceCard, usePlaces } from "@/features/places";
-import { formatDay, todayKst } from "@/shared/lib/date";
-import { HomeFilters } from "../components/home-filters";
+import { useCourseCovers, useCreatorCourses } from "@/features/creators";
+import { useFestivals } from "@/features/festivals";
+import { usePlaces } from "@/features/places";
+import { todayKst } from "@/shared/lib/date";
+import { CourseHomeCard, FestivalHomeCard, PlaceHomeCard } from "../components/home-card";
 import { HomeHero } from "../components/home-hero";
-import { HomeSection } from "../components/home-section";
-import { readHomeFilter, withQuery } from "../lib/home-filter";
+import { HomeSection, HomeSectionItem } from "../components/home-section";
 
 /** 구역마다 보여 줄 카드 수 — 나머지는 "전체 보기"에서 */
 const HOME_LIMIT = 4;
 
 export default function HomePage() {
-  const { t, i18n } = useTranslation("explore");
+  const { t } = useTranslation("explore");
   const titleId = useId();
   const today = todayKst();
-  const [params, setParams] = useSearchParams();
-  const { sigun, date } = readHomeFilter(params, today);
-  const region = sigun ? t(`sigun.${sigun}`, { ns: "common" }) : t("jeonnam");
-  const dateLabel = date === today ? t("festivals.today") : formatDay(date, i18n.language);
+  const region = t("jeonnam");
 
-  const festivals = useFestivals({ sigun, from: date });
+  const festivals = useFestivals({ sigun: null, from: today });
   // 장소 목록(S04)의 기본 조건과 같은 모양이라 캐시를 함께 쓴다
-  const places = usePlaces({ sigun, categories: [], subcategories: [], q: "" });
+  const places = usePlaces({ sigun: null, categories: [], subcategories: [], q: "" });
   const courses = useCreatorCourses();
 
   const festivalList = [...(festivals.data ?? [])]
     .sort(
       (a, b) =>
-        Number(b.startDate <= date) - Number(a.startDate <= date) ||
+        Number(b.startDate <= today) - Number(a.startDate <= today) ||
         a.startDate.localeCompare(b.startDate),
     )
     .slice(0, HOME_LIMIT);
   const placeList = places.data?.pages[0]?.places.slice(0, HOME_LIMIT) ?? [];
-  const courseList = (courses.data ?? [])
-    .filter((c) => sigun === null || c.siguns.includes(sigun))
-    .slice(0, HOME_LIMIT);
+  const courseList = (courses.data ?? []).slice(0, HOME_LIMIT);
   const coverOf = useCourseCovers(courseList);
-
-  const update = (next: { sigun?: string | null; date?: string | null }) => {
-    setParams(
-      (prev) => {
-        const p = new URLSearchParams(prev);
-        for (const [k, v] of Object.entries(next)) {
-          if (v) p.set(k, v);
-          else p.delete(k);
-        }
-        return p;
-      },
-      { replace: true },
-    );
-  };
-
-  const placesTo = withQuery(paths.places, { sigun });
 
   return (
     <div className="-mt-14 flex flex-col">
       <Seo title={t("seoTitle")} description={t("seoDescription")} />
-      <HomeHero labelledBy={titleId}>
-        <div className="flex flex-col gap-2">
-          <h1 id={titleId} className="text-3xl font-bold text-balance md:text-5xl">
-            {t("titleLine1")}
-            <br />
-            {t("titleLine2")}
-          </h1>
-        </div>
-        <div className="bg-card text-card-foreground rounded-xl p-4 shadow-lg">
-          <HomeFilters
-            values={{ sigun, date }}
-            today={today}
-            onChange={update}
-            tripNewTo={withQuery(paths.tripNew, { date, sigun })}
-          />
-        </div>
-      </HomeHero>
+      <HomeHero labelledBy={titleId} />
 
       <div className="mx-auto flex w-full max-w-screen-md flex-col gap-8 px-4 py-8">
         <HomeSection
           title={t("festivals.title", { region })}
-          moreTo={withQuery(paths.festivals, { sigun })}
+          moreTo={paths.festivals}
           isPending={festivals.isPending}
           isError={festivals.isError}
           errorTitle={t("festivals.error")}
@@ -95,65 +57,57 @@ export default function HomePage() {
           empty={
             festivalList.length === 0 && (
               <EmptyNotice
-                title={t("festivals.emptyFrom", { region, date: dateLabel })}
+                title={t("festivals.empty", { region })}
                 hint={t("festivals.emptyHint")}
-                action={{ to: placesTo, label: t("festivals.browsePlaces") }}
+                action={{ to: paths.places, label: t("festivals.browsePlaces") }}
               />
             )
           }
         >
           {festivalList.map((f) => (
-            <li key={f.id}>
-              <FestivalCard festival={f} today={today} />
-            </li>
+            <HomeSectionItem key={f.id}>
+              <FestivalHomeCard festival={f} today={today} />
+            </HomeSectionItem>
           ))}
         </HomeSection>
 
         <HomeSection
           title={t("places.title", { region })}
-          moreTo={placesTo}
+          moreTo={paths.places}
           isPending={places.isPending}
           isError={places.isError}
           errorTitle={t("places.error")}
           onRetry={() => void places.refetch()}
           empty={
             placeList.length === 0 && (
-              <EmptyNotice
-                title={sigun ? t("places.emptyRegion") : t("places.empty")}
-                hint={sigun ? t("places.emptyHint") : null}
-                action={sigun ? { to: paths.places, label: t("places.all") } : null}
-              />
+              <EmptyNotice title={t("places.empty")} hint={null} action={null} />
             )
           }
         >
           {placeList.map((p) => (
-            <li key={p.id}>
-              <PlaceCard place={p} />
-            </li>
+            <HomeSectionItem key={p.id}>
+              <PlaceHomeCard place={p} />
+            </HomeSectionItem>
           ))}
         </HomeSection>
 
         <HomeSection
           title={t("courses.title", { region })}
-          moreTo={withQuery(paths.creators, { sigun })}
+          moreTo={paths.creators}
           isPending={courses.isPending}
           isError={courses.isError}
           errorTitle={t("courses.error")}
           onRetry={() => void courses.refetch()}
           empty={
             courseList.length === 0 && (
-              <EmptyNotice
-                title={sigun ? t("courses.emptyRegion") : t("courses.empty")}
-                hint={sigun ? t("courses.emptyHint") : null}
-                action={sigun ? { to: paths.creators, label: t("courses.all") } : null}
-              />
+              <EmptyNotice title={t("courses.empty")} hint={null} action={null} />
             )
           }
         >
           {courseList.map((c) => (
-            <li key={c.id}>
-              <CourseCard course={c} cover={coverOf(c)} />
-            </li>
+            <HomeSectionItem key={c.id}>
+              <CourseHomeCard course={c} cover={coverOf(c)} />
+            </HomeSectionItem>
           ))}
         </HomeSection>
       </div>

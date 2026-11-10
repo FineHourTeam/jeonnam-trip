@@ -1,20 +1,25 @@
 {
   "seoTitle": "Explore Jeonnam",
-  "seoDescription": "Pick a date and region to see the Jeonnam festivals held that day, plus places and creator courses in the area.",
+  "seoDescription": "Gather Jeonnam festivals, restaurants and creator courses, and plan a trip from a day out to four days.",
   "jeonnam": "Jeonnam",
-  "filters": {
-    "region": "Region",
-    "allRegions": "All regions",
-    "date": "Date",
-    "startTrip": "Plan a trip for this date"
-  },
   "hero": {
     "carousel": "Photos of Jeonnam landmarks",
     "photoAlt": "View of {{name}}",
-    "credit": "Photo: Namdo Travel Guide (남도여행길잡이) · KOGL Type 4",
+    "credit": "Photo: {{credit}}",
     "goTo": "Show photo {{n}}: {{name}}",
     "pause": "Pause photo slideshow",
-    "play": "Resume photo slideshow"
+    "play": "Resume photo slideshow",
+    "subtitle": "Plan your Jeonnam trip",
+    "tagline": "Festivals, restaurants and creator courses, all in one place",
+    "cta": "Start planning",
+    "places": {
+      "suncheon": "Suncheonman Bay Wetland",
+      "boseong": "Boseong green tea fields",
+      "jindo": "Sunrise over the Jindo tidal flats",
+      "mokpo": "Mokpo Bridge from Yudalsan",
+      "damyang": "Juknokwon bamboo forest, Damyang",
+      "yeosu": "Yeosu at night"
+    }
   },
   "section": {
     "more": "See all",
@@ -23,28 +28,24 @@
   },
   "festivals": {
     "error": "We couldn't load festivals",
-    "emptyHint": "Pick another date or browse places in this area.",
+    "emptyHint": "In the meantime, browse places in Jeonnam.",
     "browsePlaces": "Browse places",
     "title": "Festivals in {{region}}",
-    "today": "today",
-    "emptyFrom": "No festivals in {{region}} from {{date}} on"
+    "empty": "No upcoming festivals in {{region}} yet"
   },
   "places": {
     "title": "Places in {{region}}",
     "error": "We couldn't load places",
-    "emptyRegion": "No places have been published in this region yet",
-    "empty": "No places have been published yet",
-    "emptyHint": "Pick another region or browse all places.",
-    "all": "See all places"
+    "empty": "No places have been published yet"
   },
   "courses": {
     "title": "Creator courses in {{region}}",
     "error": "We couldn't load courses",
-    "emptyRegion": "No courses pass through this region yet",
-    "empty": "No courses have been published yet",
-    "emptyHint": "Pick another region or browse all courses.",
-    "all": "See all courses"
+    "empty": "No courses have been published yet"
   },
-  "titleLine1": "What to do in Jeonnam?",
-  "titleLine2": "Plan a route, from festivals to great food"
+  "card": {
+    "noPhoto": "No photo",
+    "regionMore": "{{region}} +"
+  },
+  "brand": "머물전남"
 }

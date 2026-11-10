@@ -1,34 +1,29 @@
+import { existsSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import { buildHeroSlides } from "./hero-slides";
+import { isSigunCode } from "@/shared/domain";
+import ko from "@/locales/ko/explore.json";
+import en from "@/locales/en/explore.json";
+import ja from "@/locales/ja/explore.json";
+import { HERO_SLIDES } from "./hero-slides";
 
-const place = (id: string, photos: string[]) => ({
-  id,
-  name: `장소 ${id}`,
-  sigun: "mokpo" as const,
-  photos,
-});
-
-describe("buildHeroSlides", () => {
-  const config = [
-    { placeId: "a", photo: 1 },
-    { placeId: "b", photo: 0 },
-    { placeId: "c", photo: 2 },
-  ];
-
-  it("고른 순서를 따르고 고른 번째 사진을 쓴다", () => {
-    const slides = buildHeroSlides(
-      [place("b", ["b0"]), place("a", ["a0", "a1"]), place("c", ["c0", "c1", "c2"])],
-      config,
-    );
-    expect(slides.map((s) => s.src)).toEqual(["a1", "b0", "c2"]);
+describe("HERO_SLIDES", () => {
+  it("사진 파일이 public/에 있고 키가 겹치지 않는다", () => {
+    for (const s of HERO_SLIDES) expect(existsSync(resolve("public", `.${s.src}`))).toBe(true);
+    expect(new Set(HERO_SLIDES.map((s) => s.key)).size).toBe(HERO_SLIDES.length);
   });
 
-  it("고른 번째 사진이 없으면 첫 사진을 쓴다", () => {
-    expect(buildHeroSlides([place("c", ["c0"])], config)[0]?.src).toBe("c0");
+  it("시군 코드가 실제 값이고 출처가 비어 있지 않다", () => {
+    for (const s of HERO_SLIDES) {
+      expect(isSigunCode(s.sigun)).toBe(true);
+      expect(s.credit.trim()).not.toBe("");
+    }
   });
 
-  it("불러오지 못한 장소와 사진 없는 장소는 뺀다", () => {
-    const slides = buildHeroSlides([place("a", []), place("c", ["c0", "c1", "c2"])], config);
-    expect(slides.map((s) => s.id)).toEqual(["c"]);
+  it("캡션 이름이 세 언어 모두 있다", () => {
+    for (const locale of [ko, en, ja]) {
+      const names: Record<string, string> = locale.hero.places;
+      for (const s of HERO_SLIDES) expect(names[s.key]).toBeTruthy();
+    }
   });
 });

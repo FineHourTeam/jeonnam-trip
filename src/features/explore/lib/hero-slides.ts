@@ -1,39 +1,62 @@
-// S01 첫 화면 사진 — 전남 대표 명소를 골라 장소 문서의 사진을 그대로 쓴다.
-// 고른 장소는 모두 남도여행길잡이에서 받은 사진이라 공공누리 제4유형 조건(출처 표시·변경 금지)을 따른다:
-// 사진 파일은 손대지 않고, 출처는 사진 위에 늘 보여 준다. 다른 출처 사진을 고르면 locales/*/explore.json의 hero.credit도 함께 고친다.
-import type { Place } from "@/shared/domain";
+// S01 첫 화면 사진 — public/hero/ 에 올려 둔 고화질 WebP(가로 2560px)를 정해 둔 순서대로 넘긴다.
+// 사진마다 출처가 달라 슬라이드마다 출처(credit)를 사진 위에 늘 보여 준다. CC BY 사진은 라이선스 링크(license)도 함께 단다.
+// 사진을 바꾸거나 더하면 출처·라이선스를 여기서 같이 고치고, 캡션 이름은 locales/*/explore.json의 hero.places에 넣는다.
+import type { SigunCode } from "@/shared/domain";
 
-export interface HeroSlideConfig {
-  placeId: string;
-  /** 장소 사진 중 몇 번째를 쓸지 — 없으면 첫 사진 */
-  photo: number;
-}
-
-export const HERO_SLIDES: readonly HeroSlideConfig[] = [
-  { placeId: "nd-p-0000007968", photo: 2 }, // 순천만습지 — 노을
-  { placeId: "nd-p-0000012898", photo: 0 }, // 목포 해상케이블카 — 해 질 녘
-  { placeId: "nd-p-0000008432", photo: 1 }, // 보성 대한다원 — 차밭
-  { placeId: "nd-p-0000010700", photo: 1 }, // 담양 메타세쿼이아 가로수길 — 단풍
-  { placeId: "nd-p-0000010291", photo: 2 }, // 신안 홍도 — 바다
-  { placeId: "nd-p-0000010555", photo: 0 }, // 담양 죽녹원 — 대숲
-];
+/** explore.json(ko·en·ja)의 hero.places 키 — 캡션 이름 */
+export type HeroPlaceKey = "suncheon" | "boseong" | "jindo" | "mokpo" | "damyang" | "yeosu";
 
 export interface HeroSlide {
-  id: string;
-  name: string;
-  sigun: Place["sigun"];
+  key: HeroPlaceKey;
   src: string;
+  sigun: SigunCode;
+  /** 출처 문구 — 고유명사라 번역하지 않는다 ("Photo:" 접두는 화면에서 hero.credit으로 붙인다) */
+  credit: string;
+  /** CC BY 등 표시 의무가 있는 라이선스 */
+  license?: { label: string; url: string };
+  /** 캡션을 이어 줄 장소 상세 — 없으면 링크 없이 글자만 */
+  placeId?: string;
 }
 
-/** 고른 순서대로, 불러온 장소(공개 중) 가운데 사진이 있는 것만 슬라이드로 만든다 */
-export function buildHeroSlides(
-  places: readonly Pick<Place, "id" | "name" | "sigun" | "photos">[],
-  config: readonly HeroSlideConfig[] = HERO_SLIDES,
-): HeroSlide[] {
-  const byId = new Map(places.map((p) => [p.id, p]));
-  return config.flatMap(({ placeId, photo }) => {
-    const place = byId.get(placeId);
-    const src = place?.photos[photo] ?? place?.photos[0];
-    return place && src ? [{ id: place.id, name: place.name, sigun: place.sigun, src }] : [];
-  });
-}
+export const HERO_SLIDES: readonly HeroSlide[] = [
+  {
+    key: "suncheon",
+    src: "/hero/suncheon.webp",
+    sigun: "suncheon",
+    credit: "정규송 Nui MALAMA / Pexels",
+    placeId: "nd-p-0000007968",
+  },
+  {
+    key: "boseong",
+    src: "/hero/boseong.webp",
+    sigun: "boseong",
+    credit: "lumoplank / Wikimedia Commons (CC0)",
+    placeId: "nd-p-0000008432",
+  },
+  {
+    key: "jindo",
+    src: "/hero/jindo.webp",
+    sigun: "jindo",
+    credit: "martin bennie / Unsplash",
+  },
+  {
+    key: "mokpo",
+    src: "/hero/mokpo.webp",
+    sigun: "mokpo",
+    credit: "Sung Jin Cho / Unsplash",
+  },
+  {
+    key: "damyang",
+    src: "/hero/damyang.webp",
+    sigun: "damyang",
+    credit: "Sung Jin Cho / Unsplash",
+    placeId: "nd-p-0000010555",
+  },
+  {
+    key: "yeosu",
+    src: "/hero/yeosu.webp",
+    sigun: "yeosu",
+    credit: "\u201cYeosu by night\u201d by thomas park",
+    license: { label: "CC BY 2.0", url: "https://creativecommons.org/licenses/by/2.0/" },
+  },
+];

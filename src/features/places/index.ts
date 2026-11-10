@@ -4,4 +4,4 @@ export { PlaceAddToTrip } from "./components/place-add-to-trip";
 export { PlaceCard } from "./components/place-card";
 export { placeKeys, usePlace, usePlaceCount, usePlaces, usePlacesByIds } from "./hooks/use-places";
 export { hoursUnknown } from "./lib/hours";
-export { PLACE_CATEGORIES, readPlaceIds } from "./lib/place-filter";
+export { PLACE_CATEGORIES, readPlaceIds, subcategoryLabel } from "./lib/place-filter";
