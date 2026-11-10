@@ -18,7 +18,7 @@ import {
 import { cn } from "@/lib/utils";
 import { HERO_SLIDES, type HeroPlaceKey } from "../lib/hero-slides";
 
-const AUTOPLAY_MS = 6000;
+const AUTOPLAY_MS = 1500;
 
 interface HomeHeroProps {
   /** 제목(h1)의 id — 구역 이름으로 쓴다 */
@@ -40,8 +40,8 @@ export function HomeHero({ labelledBy }: HomeHeroProps) {
       />
       {/* 버튼 밖에서는 사진을 밀어 넘길 수 있게 글 틀은 포인터를 통과시킨다. 위 여백 pt-20 = 겹친 헤더(h-14) + 6 */}
       <div className="text-scrim-foreground pointer-events-none relative mx-auto flex w-full max-w-screen-lg flex-1 flex-col items-center justify-center gap-3 px-4 pt-20 pb-8 text-center md:gap-5">
-        <h1 id={labelledBy} className="text-6xl font-extrabold tracking-tight md:text-8xl">
-          {t("brand")}
+        <h1 id={labelledBy}>
+          <img src="/brand/wordmark-white.svg" alt={t("brand")} className="h-14 w-auto md:h-24" />
         </h1>
         <p className="text-xl font-bold text-balance md:text-4xl">{t("hero.subtitle")}</p>
         <p className="text-base text-balance md:text-xl">{t("hero.tagline")}</p>
@@ -64,9 +64,9 @@ function HeroPhotos() {
   const captionId = useId();
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
-  // null = 사용자가 아직 고르지 않음 → 움직임 줄이기 설정을 따른다
-  const [autoplayChoice, setAutoplayChoice] = useState<boolean | null>(null);
-  const autoplay = (autoplayChoice ?? !reduceMotion) && slides.length > 1;
+  // 기본은 자동 넘김 — 멈춤 버튼으로 세울 수 있다. 움직임 줄이기 설정이면 미끄러지지 않고 바로 바뀐다
+  const [autoplayChoice, setAutoplayChoice] = useState(true);
+  const autoplay = autoplayChoice && slides.length > 1;
 
   useEffect(() => {
     if (!api) return;
@@ -83,12 +83,12 @@ function HeroPhotos() {
   useEffect(() => {
     if (!api || !autoplay) return;
     const timer = window.setInterval(() => {
-      api.scrollNext();
+      api.scrollNext(reduceMotion);
     }, AUTOPLAY_MS);
     return () => {
       window.clearInterval(timer);
     };
-  }, [api, autoplay, current]);
+  }, [api, autoplay, current, reduceMotion]);
 
   // 못 불러온 사진은 숨겨 브랜드색 바탕이 보이게 한다 (깨진 그림 표시 대신)
   const [failed, setFailed] = useState<ReadonlySet<HeroPlaceKey>>(new Set());

@@ -3,7 +3,7 @@
 // 탐색 홈 맨 위에서는 헤더를 투명하게 두고 사진(HomeHero) 위에 흰 글자로 얹는다 — 스크롤하면 흰 헤더로 돌아온다.
 import { useSyncExternalStore } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, NavLink, Outlet, useLocation } from "react-router";
+import { Link, NavLink, Outlet, matchPath, useLocation } from "react-router";
 import { AddIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LANGUAGES } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
-import { paths } from "./paths";
+import { paths, patterns } from "./paths";
 import { useAuthState } from "./use-auth-state";
 
 const NAV = [
@@ -87,11 +87,14 @@ export function AppLayout() {
   const scrolled = useScrolled();
   const overHero = location.pathname === paths.home && !scrolled;
   const showTabs = TAB_PATHS.includes(location.pathname);
+  // 일정 편집(/trips/new·draft·:id)은 자체 상단 줄(뒤로·제목·저장)이 있어 사이트 헤더를 숨긴다. 공유 설정(/share)은 제외
+  const editingTrip = matchPath(patterns.tripEdit, location.pathname) !== null;
   return (
     <div className="bg-background text-foreground flex min-h-dvh flex-col">
       <header
         className={cn(
           "sticky top-0 z-40 h-14 border-b transition-colors",
+          editingTrip && "hidden",
           overHero
             ? "text-scrim-foreground border-transparent"
             : "border-border bg-background text-foreground",
@@ -106,7 +109,11 @@ export function AppLayout() {
             )}
           >
             <img src="/logo-mark.png" alt="" className="size-8" />
-            <span>머물전남</span>
+            <img
+              src={overHero ? "/brand/wordmark-white.svg" : "/brand/wordmark.svg"}
+              alt="머물전남"
+              className="h-5 w-auto"
+            />
           </Link>
           <nav aria-label={t("nav.main")} className="hidden gap-1 md:flex">
             {NAV.map((item) => (
