@@ -10,22 +10,29 @@ import {
   query,
   runTransaction,
   setDoc,
-  updateDoc,
   where,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import i18n from "@/lib/i18n";
 import { COL, type Trip, type TripDraft } from "@/shared/domain";
 
 export class VersionConflictError extends Error {
   constructor() {
-    super("다른 기기에서 먼저 저장된 코스예요.");
+    super(i18n.t("errors.versionConflict", { ns: "trips" }));
     this.name = "VersionConflictError";
+  }
+}
+
+export class ShareLinkConflictError extends Error {
+  constructor() {
+    super(i18n.t("errors.shareLinkConflict", { ns: "trips" }));
+    this.name = "ShareLinkConflictError";
   }
 }
 
 export class TripNotFoundError extends Error {
   constructor() {
-    super("코스를 찾을 수 없어요.");
+    super(i18n.t("errors.notFound", { ns: "trips" }));
     this.name = "TripNotFoundError";
   }
 }
@@ -90,12 +97,24 @@ export async function saveTrip(trip: Trip): Promise<Trip> {
   });
 }
 
-/** 공유본 id 연결/해제 — 공유 기능이 사용. 버전도 함께 올린다 */
-export async function setTripShareId(trip: Trip, shareId: string | null): Promise<void> {
-  await updateDoc(doc(db, COL.trips, trip.id), {
-    shareId,
-    version: trip.version + 1,
-    updatedAt: new Date().toISOString(),
+/**
+ * 공유본 id 연결/해제 — 공유 기능이 사용. 서버의 현재 shareId가 expected일 때만 바꾼다(compare-and-set).
+ * 다른 기기에서 이미 다른 공유본을 연결했는데 이 화면의 오래된 값으로 덮어쓰면, 덮인 공유본은 켜진 채
+ * 어디에서도 해제할 수 없게 된다. 규칙상 버전을 1 올려야 해서 서버 버전을 읽고 쓰고, 코스 내용은 그대로라
+ * updatedAt은 건드리지 않는다 (공유 화면이 "공개 뒤에 코스를 고쳤어요"를 updatedAt으로 판단한다).
+ */
+export async function setTripShareId(
+  tripId: string,
+  expected: string | null,
+  next: string | null,
+): Promise<void> {
+  const ref = doc(db, COL.trips, tripId);
+  await runTransaction(db, async (tx) => {
+    const snap = await tx.get(ref);
+    if (!snap.exists()) throw new TripNotFoundError();
+    const server = snap.data() as TripDoc;
+    if (server.shareId !== expected) throw new ShareLinkConflictError();
+    tx.update(ref, { shareId: next, version: server.version + 1 });
   });
 }
 

@@ -11,5 +11,8 @@ docs/
 knowledge/
 .claude/
 
+# 스크립트가 만들고 읽는 콘텐츠 데이터(번역·사진 출처) — 사람이 고치지 않는다
+scripts/data/
+
 # 폰트 등 정적 에셋
 public/fonts/

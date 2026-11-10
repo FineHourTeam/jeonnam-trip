@@ -3,6 +3,7 @@ import type { Place } from "@/shared/domain";
 import {
   addItemsToDay,
   dayIndexOf,
+  emptyDay,
   newTripDraft,
   TripTooLongError,
   visitFromPlace,
@@ -79,5 +80,9 @@ describe("trip builders", () => {
     });
     expect(dayIndexOf(draft, "2026-10-17")).toBe(1);
     expect(dayIndexOf(draft, "2026-10-18")).toBe(-1);
+  });
+
+  test("새 일차는 10:00에 시작한다 (종료 21:00은 화면에 보이지 않는 영업 경고용)", () => {
+    expect(emptyDay("2026-10-16")).toMatchObject({ startTime: "10:00", endTime: "21:00" });
   });
 });

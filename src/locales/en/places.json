@@ -1,0 +1,118 @@
+{
+  "error": {
+    "notFound": "We couldn't find this place.",
+    "network": "Please check your network connection and try again."
+  },
+  "needsCheck": "Needs checking",
+  "card": {
+    "noPhoto": "No photo",
+    "select": "Select {{name}}"
+  },
+  "filters": {
+    "nameLabel": "Place name",
+    "namePlaceholder": "e.g. Yudalsan",
+    "search": "Search",
+    "nameHint": "Finds places whose name starts with what you type.",
+    "region": "Area",
+    "allRegions": "All areas",
+    "categories": "Type (choose any)",
+    "reset": "Clear filters",
+    "subHint": "Subtype (places matching any of your choices)",
+    "subcategories": "Subtype (choose any)"
+  },
+  "hours": {
+    "closed": "Closed",
+    "lastOrder": "last order {{time}}",
+    "weekday": "{{day}}"
+  },
+  "info": {
+    "hoursTitle": "Opening hours",
+    "hoursUnknown": "Opening hours need checking. Please contact the venue before you visit. If you add it to a trip, you'll set the time yourself.",
+    "basicsTitle": "Visitor info",
+    "address": "Address",
+    "phone": "Phone",
+    "parking": "Parking",
+    "reservation": "Booking",
+    "pets": "Pets",
+    "available": "Available",
+    "unavailable": "Not available",
+    "noReservation": "Not accepted",
+    "petsAllowed": "Allowed",
+    "petsNotAllowed": "Not allowed",
+    "checksTitle": "Sources and checks",
+    "state": {
+      "verified": "Verified",
+      "unverified": "Unverified",
+      "conflict": "Conflicting info"
+    },
+    "check": {
+      "location": "Location",
+      "hours": "Opening hours",
+      "info": "Basic info"
+    },
+    "collectedOn": "Collected {{date}}",
+    "checkedOn": "Checked {{date}}",
+    "viewSource": "View source on {{label}}",
+    "sources": "Source: {{sources}}",
+    "disclaimer": "This info was collected automatically or reflects when it was checked. Please confirm with the venue before you visit."
+  },
+  "detail": {
+    "back": "All places",
+    "notFoundTitle": "We couldn't find this place",
+    "loadErrorTitle": "We couldn't load this place",
+    "notFoundBody": "It's no longer listed, or the address is wrong.",
+    "seoFallback": "{{category}} in {{sigun}}",
+    "unverified": "Includes unverified info",
+    "noHoursNote": "Opening hours aren't confirmed, so your course will show them as needing a check.",
+    "noLocationRoute": "The location isn't confirmed, so it's left out of route calculations.",
+    "locationTitle": "Location",
+    "noLocationMap": "The location isn't confirmed, so it's not shown on the map.",
+    "noPhotos": "No photos yet",
+    "photoAlt": "{{name}} photo {{n}}"
+  },
+  "list": {
+    "seoTitle": "Places",
+    "seoDescription": "Find attractions, restaurants, cafes and stays across Jeollanam-do's 22 cities and counties by area and type, and add them to your trip.",
+    "title": "Places in Jeollanam-do",
+    "intro": "Pick the places you want to go and add them to any day of the course you're planning.",
+    "subcategoryCleared": "We cleared subtypes that don't belong to the types you chose.",
+    "count_one": "{{formatted}} place",
+    "count_other": "{{formatted}} places",
+    "loadErrorTitle": "We couldn't load places",
+    "emptyFiltered": "No places match your filters",
+    "emptyAll": "No places are listed yet",
+    "emptyHint": "Try a different area or type, or search by the start of the name.",
+    "nextPageError": "We couldn't load more places. Please try again.",
+    "loadingMore": "Loading…",
+    "more": "Show more places",
+    "selected_one": "{{count}} place selected",
+    "selected_other": "{{count}} places selected",
+    "clearSelection": "Clear selection"
+  },
+  "addToTrip": {
+    "drafting": "{{title}} (draft)",
+    "newTripWithPlaces": "Plan a new trip with these places",
+    "newTrip": "Plan a new trip",
+    "loadTripsError": "We couldn't load your trips. Try again, or plan a new trip to add these places.",
+    "noTarget": "You don't have a course to add to yet. Plan a trip and it will start with these places on day 1.",
+    "customPlacesNote": " Places you added yourself can be added from Saved after you create the trip.",
+    "day": "Day {{day}}",
+    "added_one": "Added {{count}} place to {{day}} of “{{title}}”.",
+    "added_other": "Added {{count}} places to {{day}} of “{{title}}”.",
+    "skipped_one": " Skipped {{count}} place that was already there.",
+    "skipped_other": " Skipped {{count}} places that were already there.",
+    "viewCourse": "View course",
+    "allDuplicateMulti": "All the places you picked are already in {{day}}.",
+    "allDuplicate": "This place is already in {{day}}.",
+    "conflict": "This course was saved on another device first. We loaded the latest version, so please add the places again.",
+    "saveError": "We couldn't add to the course. Please check your network connection and try again.",
+    "course": "Course",
+    "dayLabel": "Day",
+    "courseOf": "“{{title}}” course",
+    "dayOption": "{{day}} · {{date}}",
+    "adding": "Adding…",
+    "add": "Add to trip",
+    "openDialog": "Add to my trip",
+    "dialogDescription": "Choose the trip and day to add it to."
+  }
+}

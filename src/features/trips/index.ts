@@ -1,5 +1,10 @@
 // 개인 코스 공개 API — 코스 편집·내 여행·공유·축제/장소/크리에이터의 "일정에 추가"가 함께 쓴다.
-export { TripNotFoundError, VersionConflictError, setTripShareId } from "./api/trips-api";
+export {
+  ShareLinkConflictError,
+  TripNotFoundError,
+  VersionConflictError,
+  setTripShareId,
+} from "./api/trips-api";
 export {
   tripKeys,
   useCreateTrip,

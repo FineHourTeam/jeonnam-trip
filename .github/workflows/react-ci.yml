@@ -67,6 +67,7 @@ jobs:
           VITE_FIREBASE_MESSAGING_SENDER_ID: "0"
           VITE_FIREBASE_APP_ID: smoke
           VITE_NAVER_MAP_CLIENT_ID: smoke
+          VITE_KAKAO_JS_KEY: smoke
           VITE_USE_EMULATORS: "false"
 
   # Firestore 보안규칙 테스트 — rules 테스트 suite가 생기면 주석 해제

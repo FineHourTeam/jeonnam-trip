@@ -4,6 +4,20 @@
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
+        "source": "/api/auth/kakao",
+        "function": {
+          "functionId": "authKakao",
+          "region": "asia-northeast3"
+        }
+      },
+      {
+        "source": "/api/**",
+        "function": {
+          "functionId": "api",
+          "region": "asia-northeast3"
+        }
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }
@@ -34,7 +48,7 @@
           },
           {
             "key": "Content-Security-Policy",
-            "value": "default-src 'self'; script-src 'self' https://oapi.map.naver.com https://*.pstatic.net https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data: https://cdn.jsdelivr.net; connect-src 'self' https://*.naver.com https://*.pstatic.net https://*.googleapis.com https://*.firebaseio.com https://*.cloudfunctions.net wss://*.firebaseio.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io; frame-src 'self' https://*.firebaseapp.com; object-src 'none'; base-uri 'self'"
+            "value": "default-src 'self'; script-src 'self' https://oapi.map.naver.com https://*.pstatic.net https://www.gstatic.com https://apis.google.com https://t1.kakaocdn.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data: https://cdn.jsdelivr.net; connect-src 'self' https://*.naver.com https://*.navercorp.com https://*.pstatic.net https://*.googleapis.com https://*.firebaseio.com https://*.cloudfunctions.net wss://*.firebaseio.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io; frame-src 'self' https://*.firebaseapp.com https://www.youtube-nocookie.com; object-src 'none'; base-uri 'self'"
           }
         ]
       },
@@ -59,6 +73,14 @@
     ],
     "site": "jeonnam-trip"
   },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": ["node_modules", ".git", "*.local", "src", "tsconfig.json"],
+      "predeploy": ["npm --prefix functions run build"]
+    }
+  ],
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
@@ -69,6 +91,9 @@
   "emulators": {
     "auth": {
       "port": 9099
+    },
+    "functions": {
+      "port": 5001
     },
     "firestore": {
       "port": 8080

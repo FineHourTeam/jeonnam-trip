@@ -15,6 +15,8 @@ const envSchema = z.object({
   VITE_FIREBASE_APP_ID: z.string().min(1),
   // 네이버 지도 JS용 Client ID — 공개 값(웹 서비스 URL로 제한). Client Secret은 Functions 시크릿 NAVER_MAP_CLIENT_SECRET에만
   VITE_NAVER_MAP_CLIENT_ID: z.string().min(1),
+  // 카카오 JavaScript 키 — 공개 값(카카오 콘솔의 JavaScript SDK 도메인으로 제한). 클라이언트 시크릿은 Functions 시크릿 KAKAO_CLIENT_SECRET에만
+  VITE_KAKAO_JS_KEY: z.string().min(1),
   VITE_SENTRY_DSN: z.string().optional(), // DSN은 공개 가능 값 — 미설정이면 Sentry 비활성
   VITE_USE_EMULATORS: z
     .string()

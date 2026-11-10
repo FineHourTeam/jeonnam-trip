@@ -1,0 +1,71 @@
+{
+  "save": "保存",
+  "delete": "削除",
+  "edit": "編集",
+  "close": "閉じる",
+  "back": "戻る",
+  "next": "次へ",
+  "loading": "読み込み中...",
+  "retry": "もう一度試す",
+  "error": {
+    "unknown": "問題が発生しました。しばらくしてからもう一度お試しください。",
+    "network": "ネットワーク接続を確認してください。",
+    "permission": "アクセス権限がありません。",
+    "notFound": "ページが見つかりません。"
+  },
+  "nav": {
+    "explore": "さがす",
+    "library": "保存リスト",
+    "myTrips": "マイ旅行",
+    "newTrip": "旅行をつくる",
+    "account": "マイアカウント",
+    "login": "ログイン",
+    "main": "メインメニュー",
+    "bottom": "下部メニュー"
+  },
+  "language": {
+    "label": "言語を選ぶ"
+  },
+  "page": {
+    "notFoundBody": "アドレスが変わったか、削除されたページの可能性があります。",
+    "goExplore": "さがすへ移動",
+    "errorTitle": "問題が発生しました",
+    "errorBody": "しばらくしてからもう一度お試しください。",
+    "placeholder": "この画面は準備中です。"
+  },
+  "carousel": {
+    "prev": "前のスライド",
+    "next": "次のスライド"
+  },
+  "placeCategory": {
+    "cafe": "カフェ",
+    "restaurant": "飲食店",
+    "shop": "ショップ",
+    "attraction": "観光スポット",
+    "lodging": "宿泊"
+  },
+  "sigun": {
+    "mokpo": "木浦市",
+    "yeosu": "麗水市",
+    "suncheon": "順天市",
+    "naju": "羅州市",
+    "gwangyang": "光陽市",
+    "damyang": "潭陽郡",
+    "gokseong": "谷城郡",
+    "gurye": "求礼郡",
+    "goheung": "高興郡",
+    "boseong": "宝城郡",
+    "hwasun": "和順郡",
+    "jangheung": "長興郡",
+    "gangjin": "康津郡",
+    "haenam": "海南郡",
+    "yeongam": "霊岩郡",
+    "muan": "務安郡",
+    "hampyeong": "咸平郡",
+    "yeonggwang": "霊光郡",
+    "jangseong": "長城郡",
+    "wando": "莞島郡",
+    "jindo": "珍島郡",
+    "sinan": "新安郡"
+  }
+}

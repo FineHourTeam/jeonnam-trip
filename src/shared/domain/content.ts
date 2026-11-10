@@ -101,6 +101,8 @@ export interface Place {
     pets: boolean | null;
   };
   phone?: string;
+  /** 소개 글 (출처 원문 요약) */
+  summary?: string;
   photos: string[];
   sources: SourceLink[];
   checks: {
@@ -108,8 +110,32 @@ export interface Place {
     hours: FieldCheck;
     info: FieldCheck;
   };
+  /** 영어·일본어 번역 (scripts/apply-translations.mjs가 쓴다) — ko는 번역 당시 원문 */
+  i18n?: PlaceTranslations;
   status: ContentStatus;
   updatedAt: string;
+}
+
+export interface PlaceText {
+  name?: string;
+  summary?: string;
+  address?: string;
+}
+
+/** 콘텐츠 번역 — ko는 번역 당시 원문 (지금 원문과 다르면 그 필드는 번역을 안 쓴다) */
+export interface Translations<T> {
+  ko: T;
+  en?: T;
+  ja?: T;
+}
+
+export type PlaceTranslations = Translations<PlaceText>;
+
+/** 코스 번역 필드 — notes 키는 "d{일차}-{순서}" (0부터) */
+export interface CourseText {
+  title?: string;
+  summary?: string;
+  notes?: Record<string, string>;
 }
 
 export interface FestivalProgram {
@@ -144,6 +170,8 @@ export interface Festival {
   contact?: string;
   officialUrl?: string;
   photos: string[];
+  /** 사진 출처 표시 (예: "사진: 신안군청 · 공공누리 제4유형") — 이용 조건상 사진 아래에 그대로 보여 준다 */
+  photoCredit?: string;
   /** 변경·취소 상태 — 취소는 상세 열람 가능, 신규 일정 추가 차단 */
   state: FestivalState;
   stateNote?: string;
@@ -154,6 +182,8 @@ export interface Festival {
   };
   status: ContentStatus;
   updatedAt: string;
+  /** 이름·소개·주소 번역 (장소와 같은 모양) */
+  i18n?: PlaceTranslations;
 }
 
 /** 크리에이터 코스 순서 기준 — 영상 등장 순서만 확인됐으면 실제 여행 순서로 표현하지 않는다 */
@@ -162,7 +192,11 @@ export type CourseOrderBasis = "video_order" | "verified_trip" | "editor_suggest
 export interface CreatorCourse {
   id: string;
   title: string;
-  creator: { name: string; channelUrl?: string };
+  creator: {
+    name: string;
+    channelUrl?: string;
+    /** 유튜브 채널 프로필 사진 주소 */ avatarUrl?: string;
+  };
   sourceUrl: string;
   siguns: SigunCode[];
   tags: string[];
@@ -172,4 +206,5 @@ export interface CreatorCourse {
   days: { day: number; items: { placeId: string; note?: string }[] }[];
   status: ContentStatus;
   updatedAt: string;
+  i18n?: Translations<CourseText>;
 }

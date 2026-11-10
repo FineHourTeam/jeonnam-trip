@@ -64,6 +64,8 @@ const PAIRS: [string, string][] = [
   ["destructive", "destructive-foreground"],
   ["success", "success-foreground"],
   ["warning", "warning-foreground"],
+  ["kakao", "kakao-foreground"],
+  ["google", "google-foreground"],
 ];
 
 describe.each([

@@ -1,0 +1,102 @@
+{
+  "state": {
+    "cancelled": "中止",
+    "changed": "日程変更",
+    "ongoing": "開催中",
+    "upcoming": "開催予定",
+    "ended": "終了"
+  },
+  "hours": {
+    "unknown": "営業時間 要確認",
+    "closed": "休業"
+  },
+  "card": {
+    "noPhoto": "写真なし"
+  },
+  "calendar": {
+    "hint": "点のある日にお祭りが開かれます。"
+  },
+  "filters": {
+    "region": "地域",
+    "allRegions": "すべての地域",
+    "date": "日付",
+    "phase": "開催状況",
+    "all": "すべて",
+    "reset": "条件をリセット"
+  },
+  "list": {
+    "seoTitle": "お祭り",
+    "seoDescription": "全羅南道22の市・郡で開かれるお祭りを、日付と地域で探せます。",
+    "title": "全南のお祭り",
+    "intro": "開催中または開催予定のお祭りです。日付を選ぶと、その日に開かれるお祭りだけを表示します。",
+    "count": "お祭り {{count}}件",
+    "tabList": "リスト",
+    "tabCalendar": "カレンダー",
+    "errorTitle": "お祭りの一覧を読み込めませんでした",
+    "errorBody": "ネットワーク接続を確認してから、もう一度お試しください。",
+    "emptyFiltered": "条件に合うお祭りがありません",
+    "empty": "開催中・開催予定のお祭りはまだありません",
+    "emptyHint": "地域や日付を変えて、もう一度探してみてください。"
+  },
+  "detail": {
+    "backToList": "お祭り一覧",
+    "notFoundTitle": "お祭りが見つかりません",
+    "notFoundBody": "公開が終了したか、アドレスが正しくありません。",
+    "errorTitle": "お祭りの情報を読み込めませんでした",
+    "errorBody": "ネットワーク接続を確認してから、もう一度お試しください。",
+    "seoDescription": "{{sigun}}のお祭り",
+    "unverified": "未確認",
+    "cancelledTitle": "中止になったお祭りです",
+    "changedTitle": "日程が変更されたお祭りです",
+    "cancelledBody": "詳細は見られますが、旅行に新しく追加することはできません。",
+    "changedBody": "変更後の期間と営業時間を確認してから、旅行に追加してください。",
+    "location": "場所",
+    "noLocation": "場所が確認できていないため、地図には表示しません。",
+    "noPhotos": "登録された写真はありません",
+    "photoAlt": "{{name}}の写真 {{n}}"
+  },
+  "info": {
+    "hoursTitle": "日付ごとの営業時間",
+    "hoursAllUnknown": "営業時間 要確認 · 主催者の案内で日付ごとの時間を確認してください。",
+    "programsTitle": "プログラム",
+    "basicsTitle": "利用案内",
+    "address": "住所",
+    "parking": "駐車場",
+    "contact": "お問い合わせ",
+    "official": "公式案内",
+    "openSite": "{{host}}を開く",
+    "basicsEmpty": "住所・お問い合わせ情報はまだありません。",
+    "checksTitle": "情報の出典と確認",
+    "checkState": {
+      "verified": "確認済み",
+      "unverified": "未確認",
+      "conflict": "情報に食い違い"
+    },
+    "checkRow": {
+      "schedule": "期間・営業時間",
+      "location": "場所",
+      "info": "基本情報"
+    },
+    "collectedOn": "{{date}} 収集",
+    "checkedOn": "{{date}} 確認",
+    "sources": "出典：{{sources}}",
+    "disclaimer": "自動収集した情報、または確認時点の情報です。お出かけ前に主催者の公式案内をもう一度ご確認ください。"
+  },
+  "plan": {
+    "cancelled": "中止になったお祭りのため、旅行に追加できません。",
+    "ended": "開催期間が過ぎたため、旅行に追加できません。",
+    "alreadyAdded": "このお祭りはすでにその日に入っています。",
+    "added": "「{{title}}」の{{day}}日目に追加しました。",
+    "viewCourse": "コースを見る",
+    "visitDate": "訪問日",
+    "program": "プログラム（任意）",
+    "noProgram": "選ばない",
+    "hoursUnknown": "この日の営業時間は確認できていません。追加すると、コースに「営業時間の確認が必要です」と表示されます。",
+    "startTrip": "このお祭りで旅行をつくる",
+    "addToDraft": "今の旅行に追加",
+    "outOfRange": "作成中の「{{title}}」は{{period}}の日程のため、この訪問日は追加できません。"
+  },
+  "error": {
+    "notFound": "お祭りが見つかりません。"
+  }
+}

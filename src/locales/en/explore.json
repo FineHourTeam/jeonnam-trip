@@ -1,0 +1,51 @@
+{
+  "seoTitle": "Explore Jeonnam",
+  "seoDescription": "Gather Jeonnam festivals, restaurants and creator courses, and plan a trip from a day out to four days.",
+  "jeonnam": "Jeonnam",
+  "hero": {
+    "carousel": "Photos of Jeonnam landmarks",
+    "photoAlt": "View of {{name}}",
+    "credit": "Photo: {{credit}}",
+    "goTo": "Show photo {{n}}: {{name}}",
+    "pause": "Pause photo slideshow",
+    "play": "Resume photo slideshow",
+    "subtitle": "Your Jeonnam travel recommendation platform",
+    "tagline": "Festivals, restaurants and creator courses, all in one place",
+    "cta": "Start planning",
+    "places": {
+      "suncheon": "Suncheonman Bay Wetland",
+      "boseong": "Boseong green tea fields",
+      "jindo": "Sunrise over the Jindo tidal flats",
+      "mokpo": "Mokpo Bridge from Yudalsan",
+      "damyang": "Juknokwon bamboo forest, Damyang",
+      "yeosu": "Yeosu at night"
+    }
+  },
+  "section": {
+    "more": "See all",
+    "moreLabel": "See all: {{title}}",
+    "errorBody": "Check your network connection and try again."
+  },
+  "festivals": {
+    "error": "We couldn't load festivals",
+    "emptyHint": "In the meantime, browse places in Jeonnam.",
+    "browsePlaces": "Browse places",
+    "title": "Festivals in {{region}}",
+    "empty": "No upcoming festivals in {{region}} yet"
+  },
+  "places": {
+    "title": "Places in {{region}}",
+    "error": "We couldn't load places",
+    "empty": "No places have been published yet"
+  },
+  "courses": {
+    "title": "Creator courses in {{region}}",
+    "error": "We couldn't load courses",
+    "empty": "No courses have been published yet"
+  },
+  "card": {
+    "noPhoto": "No photo",
+    "regionMore": "{{region}} +"
+  },
+  "brand": "머물전남"
+}

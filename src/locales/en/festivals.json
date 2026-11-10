@@ -1,0 +1,103 @@
+{
+  "state": {
+    "cancelled": "Cancelled",
+    "changed": "Schedule changed",
+    "ongoing": "On now",
+    "upcoming": "Upcoming",
+    "ended": "Ended"
+  },
+  "hours": {
+    "unknown": "Hours not confirmed",
+    "closed": "Closed"
+  },
+  "card": {
+    "noPhoto": "No photo"
+  },
+  "calendar": {
+    "hint": "Festivals are held on days with a dot."
+  },
+  "filters": {
+    "region": "Region",
+    "allRegions": "All regions",
+    "date": "Date",
+    "phase": "Status",
+    "all": "All",
+    "reset": "Clear filters"
+  },
+  "list": {
+    "seoTitle": "Festivals",
+    "seoDescription": "Find festivals across the 22 cities and counties of Jeollanam-do by date and region.",
+    "title": "Jeonnam festivals",
+    "intro": "Festivals that are on now or coming up. Pick a date to see only the festivals held that day.",
+    "count_one": "{{count}} festival",
+    "count_other": "{{count}} festivals",
+    "tabList": "List",
+    "tabCalendar": "Calendar",
+    "errorTitle": "We couldn't load the festival list",
+    "errorBody": "Check your network connection and try again.",
+    "emptyFiltered": "No festivals match these filters",
+    "empty": "There are no current or upcoming festivals yet",
+    "emptyHint": "Try a different region or date."
+  },
+  "detail": {
+    "backToList": "Festival list",
+    "notFoundTitle": "We couldn't find this festival",
+    "notFoundBody": "It's no longer public, or the address is wrong.",
+    "errorTitle": "We couldn't load the festival details",
+    "errorBody": "Check your network connection and try again.",
+    "seoDescription": "Festival in {{sigun}}",
+    "unverified": "Unverified",
+    "cancelledTitle": "This festival is cancelled",
+    "changedTitle": "This festival's schedule has changed",
+    "cancelledBody": "You can still view the details, but you can't add it to a trip.",
+    "changedBody": "Check the new dates and hours before adding it to a trip.",
+    "location": "Location",
+    "noLocation": "The location isn't confirmed, so it isn't shown on the map.",
+    "noPhotos": "No photos yet",
+    "photoAlt": "{{name}} photo {{n}}"
+  },
+  "info": {
+    "hoursTitle": "Hours by date",
+    "hoursAllUnknown": "Hours not confirmed · Check the organizer's guide for the hours on each date.",
+    "programsTitle": "Programs",
+    "basicsTitle": "Visitor info",
+    "address": "Address",
+    "parking": "Parking",
+    "contact": "Contact",
+    "official": "Official site",
+    "openSite": "Open {{host}}",
+    "basicsEmpty": "No address or contact details yet.",
+    "checksTitle": "Sources and verification",
+    "checkState": {
+      "verified": "Verified",
+      "unverified": "Unverified",
+      "conflict": "Conflicting info"
+    },
+    "checkRow": {
+      "schedule": "Dates and hours",
+      "location": "Location",
+      "info": "Basic info"
+    },
+    "collectedOn": "Collected {{date}}",
+    "checkedOn": "Checked {{date}}",
+    "sources": "Sources: {{sources}}",
+    "disclaimer": "This info was collected automatically or reflects when it was checked. Please confirm with the organizer's official guide before you visit."
+  },
+  "plan": {
+    "cancelled": "This festival is cancelled, so it can't be added to a trip.",
+    "ended": "This festival has ended, so it can't be added to a trip.",
+    "alreadyAdded": "This festival is already on that day.",
+    "added": "Added to Day {{day}} of “{{title}}”.",
+    "viewCourse": "View course",
+    "visitDate": "Visit date",
+    "program": "Program (optional)",
+    "noProgram": "None",
+    "hoursUnknown": "Hours for this day aren't confirmed. If you add it, the course will show “Check opening hours”.",
+    "startTrip": "Plan a trip with this festival",
+    "addToDraft": "Add to current trip",
+    "outOfRange": "Your draft “{{title}}” runs {{period}}, so this visit date can't be added."
+  },
+  "error": {
+    "notFound": "We couldn't find this festival."
+  }
+}

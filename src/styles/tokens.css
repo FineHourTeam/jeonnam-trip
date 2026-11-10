@@ -5,6 +5,7 @@
  * 색상 위계 (shadcn/ui 관례, OKLCH):
  *   background/foreground · background-subtle · card · popover · primary · secondary · muted · accent ·
  *   destructive · success · warning · border · input · ring (+ chart-1~5 · sidebar-*: shadcn chart·sidebar용)
+ *   용도 토큰: kakao · google(소셜 로그인 버튼 — 각 브랜드 가이드 고정값) · scrim(사진 위 글자 막)
  * 새 색: 맞는 위계가 있으면 값 조정, 없으면 용도 토큰(--cta + --cta-foreground) 추가 — 화면에서 hex·arbitrary value 금지 (훅 차단).
  * 모든 색은 :root(라이트)와 .dark(다크) 쌍으로 정의 필수.
  */
@@ -13,14 +14,22 @@
 @import "tw-animate-css"; /* shadcn 컴포넌트 열림·닫힘 애니메이션 (bootstrap이 설치) */
 
 @custom-variant dark (&:where(.dark, .dark *));
+/* shadcn 4.x 컴포넌트의 data-horizontal:/data-vertical: 변형을 Radix의 data-orientation 속성에 연결한다
+ * (없으면 [data-horizontal] 속성을 찾아 탭·구분선·스크롤 영역의 방향 스타일이 적용되지 않는다) */
+@custom-variant data-horizontal (&[data-orientation="horizontal"]);
+@custom-variant data-vertical (&[data-orientation="vertical"]);
 
 :root {
   /* ── 브랜드 ──
    * 기본값은 의도적 무채색 플레이스홀더 — 설치 H단계에서 반드시 브랜드색으로 치환한다
    * (소스 "없음"이어도 브랜드색 질문 필수). 보라·인디고·기본 블루를 기본값으로 두면
    * 모든 프로젝트가 "AI가 만든 티"가 나는 색으로 시작한다 (rules.md § 팔레트 정량 상한). */
-  --primary: oklch(0.475 0.095 65); /* #805117 황토 갈색 — 시드 브랜드색 */
+  /* 로고(머물전남.png) 파랑 #306ff5에서 명도만 낮춘 #2a64e0 — 흰 글자 대비 5.25:1로 AA를 맞춘다 (2026-11-03) */
+  --primary: oklch(0.541 0.199 262.8);
   --primary-foreground: oklch(0.985 0 0);
+  /* 로고의 주황 반짝임 #ef9d49 — 워드마크 마침표 등 작은 포인트만. 흰 글자와 대비가 낮아 글자 배경으로 쓰지 않는다 */
+  --point: oklch(0.763 0.139 63.5);
+  --point-foreground: oklch(0.205 0 0);
 
   /* ── 표면 ──
    * 페이지·섹션 배경은 흰색이 기본. 회색 배경이 필요하면 background-subtle(#f9f9f9)만 쓴다 —
@@ -70,13 +79,32 @@
   --sidebar-border: var(--border);
   --sidebar-ring: var(--ring);
 
+  /* ── 소셜 로그인 (브랜드 가이드 고정값 — 우리 브랜드색을 바꿔도 그대로 둔다) ──
+   * 카카오: 카카오 로그인 디자인 가이드 — 컨테이너 #FEE500, 레이블 #000000 85%(d9). 다크도 같은 값.
+   * Google: Google Identity 브랜딩 가이드 — 라이트 #FFFFFF·테두리 #747775·글자 #1F1F1F */
+  --kakao: #fee500;
+  --kakao-foreground: #000000d9;
+  --google: #ffffff;
+  --google-foreground: #1f1f1f;
+  --google-border: #747775;
+
+  /* ── 사진 위 글자 (탐색 홈 히어로) ──
+   * 사진 위에 깔아 흰 글자를 읽히게 하는 반투명 막. 그라디언트 대신 단색 막 하나만 쓴다 (rules.md § 금지 비주얼).
+   * 사진은 테마와 무관하게 같으므로 다크도 같은 값 */
+  --scrim: oklch(0 0 0 / 50%);
+  --scrim-foreground: oklch(0.985 0 0);
+
   /* ── 형태 ── */
   --radius: 0.625rem;
+  /* 소셜 로그인 버튼 모서리 — 카카오 가이드 12px 고정(--radius 파생 아님). 두 버튼이 같은 모양을 쓴다 */
+  --radius-social: 12px;
 }
 
 .dark {
-  --primary: oklch(0.74 0.11 68);
+  --primary: oklch(0.72 0.14 262.8);
   --primary-foreground: oklch(0.205 0 0);
+  --point: oklch(0.8 0.13 63.5);
+  --point-foreground: oklch(0.205 0 0);
 
   --background: oklch(0.145 0 0);
   --background-subtle: oklch(0.18 0 0);
@@ -109,6 +137,16 @@
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
+
+  /* Google 다크 테마 — #131314·테두리 #8E918F·글자 #E3E3E3 */
+  --kakao: #fee500;
+  --kakao-foreground: #000000d9;
+  --google: #131314;
+  --google-foreground: #e3e3e3;
+  --google-border: #8e918f;
+
+  --scrim: oklch(0 0 0 / 50%);
+  --scrim-foreground: oklch(0.985 0 0);
 }
 
 @theme inline {
@@ -121,6 +159,8 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-point: var(--point);
+  --color-point-foreground: var(--point-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
@@ -149,6 +189,13 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --color-kakao: var(--kakao);
+  --color-kakao-foreground: var(--kakao-foreground);
+  --color-google: var(--google);
+  --color-google-foreground: var(--google-foreground);
+  --color-google-border: var(--google-border);
+  --color-scrim: var(--scrim);
+  --color-scrim-foreground: var(--scrim-foreground);
 
   /* 폰트 — 교체는 이 변수 하나. Pretendard Variable은 index.html에서 프리로드 */
   --font-sans:
@@ -190,4 +237,14 @@
 /* iOS 홈 인디케이터 영역 — 하단 고정 내비게이션용 */
 @utility pb-safe {
   padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 탐색 홈 첫 화면 히어로 높이 — 투명 헤더가 위에 겹치므로 화면 높이 전체를 쓴다. 모바일은 하단 탭(h-14)과 홈 인디케이터만 뺀다.
+ * 제목·조건 카드가 잘리지 않게 최소 높이를 둔다 (가로로 눕힌 휴대전화 등) */
+@utility h-hero {
+  min-height: --spacing(120);
+  height: calc(100svh - --spacing(14) - env(safe-area-inset-bottom));
+  @variant md {
+    height: 100svh;
+  }
 }
