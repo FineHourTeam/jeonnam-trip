@@ -190,9 +190,14 @@
     "radius": "ルートからの距離",
     "radiusKm": "{{km}}km",
     "fromRoute": "ルートから{{km}}km",
-    "addToDay": "この日に追加",
+    "addToDay": "{{day}}に追加",
     "emptyNear": "ルートから{{km}}km以内に条件に合うスポットがありません。距離を広げるか種類を変えてみてください。",
-    "showOnMap": "地図で{{name}}を表示",
-    "partialError": "一部の地域のスポットを読み込めませんでした。"
+    "partialError": "一部の地域のスポットを読み込めませんでした。",
+    "addTo": "に追加",
+    "addedToDay": "{{day}}に追加済み",
+    "pickDay": "追加する日",
+    "hint": "地図でスポットをタップしてください。",
+    "count": "スポット{{count}}か所",
+    "more": "結果をもっと読み込む"
   }
 }

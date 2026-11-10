@@ -81,6 +81,10 @@ describe("DayPanel", () => {
     renderPanel();
     await userEvent.click(screen.getByRole("tab", { name: "검색" }));
     expect(screen.getByText("검색 패널")).toBeInTheDocument();
+    // 검색 탭 지도는 탭 내용의 높이를 채우므로 탭 내용이 명시적 높이 + flex-none이어야 한다
+    const search = screen.getByText("검색 패널").closest('[role="tabpanel"]');
+    expect(search).toHaveClass("h-160", "flex-none");
+    expect(search).not.toHaveClass("flex-1");
     expect(screen.queryByTestId("course-map")).not.toBeInTheDocument();
     await userEvent.click(screen.getByRole("tab", { name: "내 경로" }));
     expect(screen.getByTestId("course-map")).toHaveClass("h-96", "lg:h-160");

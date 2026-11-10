@@ -190,9 +190,14 @@
     "radius": "경로에서 거리",
     "radiusKm": "{{km}}km",
     "fromRoute": "경로에서 {{km}}km",
-    "addToDay": "이 일차에 담기",
+    "addToDay": "{{day}}에 추가",
     "emptyNear": "경로 {{km}}km 안에 조건에 맞는 장소가 없어요. 거리를 넓히거나 종류를 바꿔 보세요.",
-    "showOnMap": "지도에서 {{name}} 보기",
-    "partialError": "일부 지역의 장소를 불러오지 못했어요."
+    "partialError": "일부 지역의 장소를 불러오지 못했어요.",
+    "addTo": "에 추가",
+    "addedToDay": "{{day}}에 담겨 있어요",
+    "pickDay": "담을 일차",
+    "hint": "지도에서 장소를 눌러 보세요.",
+    "count": "장소 {{count}}곳",
+    "more": "결과 더 불러오기"
   }
 }

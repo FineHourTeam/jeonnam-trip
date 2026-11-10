@@ -30,7 +30,7 @@ import {
 import { AddPlaceDialog } from "./add-place-dialog";
 import { LegRow } from "./leg-row";
 import { type PlaceSearchFilters } from "./place-search-panel";
-import { RouteSearchPanel, type NearRadius } from "./route-search-panel";
+import { RouteSearchPanel, type NearRadius, type SearchDay } from "./route-search-panel";
 import { StayDialog } from "./stay-dialog";
 import { VisitCard } from "./visit-card";
 
@@ -71,6 +71,16 @@ export function DayPanel({ trip, day, dayIndex, update }: DayPanelProps) {
       label: t("dayWithDate", { day: index + 1, date: formatDay(d.date, i18n.language) }),
     }))
     .filter((d) => d.index !== dayIndex);
+  // 검색 탭에서 담을 일차 고르기 — 일차마다 이미 담긴 등록 장소를 함께 넘긴다
+  const searchDays = useMemo<SearchDay[]>(
+    () =>
+      trip.days.map((d, index) => ({
+        label: t("dayLabel", { day: index + 1 }),
+        fullLabel: t("dayWithDate", { day: index + 1, date: formatDay(d.date, i18n.language) }),
+        placeIds: new Set(d.items.flatMap((x) => (x.ref.kind === "place" ? [x.ref.placeId] : []))),
+      })),
+    [trip.days, t, i18n.language],
+  );
   const points = useMemo<CourseMapPoint[]>(
     () =>
       day.items.map((x, i) => ({
@@ -263,7 +273,8 @@ export function DayPanel({ trip, day, dayIndex, update }: DayPanelProps) {
               <TabsTrigger value="search">{t("day.tabSearch")}</TabsTrigger>
             </TabsList>
             {/* TabsContent 기본 flex-1(기준 0%)은 높이 없는 세로 flex 안에서 h-*를 무시해 지도가 0 높이가 된다 —
-                flex-none으로 높이를 살리고, 지도에도 직접 높이를 준다. 비활성 탭은 언마운트돼 탭을 바꾸면 새로 그린다 */}
+                flex-none으로 높이를 살리고, 지도(검색 탭은 탭 내용)에 직접 높이를 준다. 검색 탭 지도는 그 안에서 조건 줄을 뺀
+                나머지를 채운다. 비활성 탭은 언마운트돼 탭을 바꾸면 새로 그린다 */}
             <TabsContent value="route" className="flex-none">
               <CourseMap
                 points={points}
@@ -287,7 +298,7 @@ export function DayPanel({ trip, day, dayIndex, update }: DayPanelProps) {
                 points={points}
                 paths={paths_}
                 dayIndex={dayIndex}
-                dayLabel={t("dayLabel", { day: dayIndex + 1 })}
+                days={searchDays}
                 addedIds={addedIds}
                 update={update}
               />

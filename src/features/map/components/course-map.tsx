@@ -1,7 +1,7 @@
 // 코스 지도 — 방문 순서 번호 마커 + 실제 조회된 경로 선. 직선으로 잇지 않는다 (기능명세 §7).
 // 지도 인스턴스·오버레이는 외부 시스템이라 Effect로 동기화한다.
 // 경로 선을 누르면 그 구간과 시작·끝 지점만 강조하고 나머지는 흐리게 둔다. 지도 빈 곳이나 마커를 누르면 풀린다.
-// 후보(candidates)를 주면 번호 없는 흰 마커로 함께 그린다 — 일정 편집의 "검색" 탭이 찾은 장소를 보여 줄 때 쓴다.
+// 후보(candidates)를 주면 번호 없는 흰 마커(+이름)로 함께 그린다 — 일정 편집의 "검색" 탭이 찾은 장소를 보여 줄 때 쓴다.
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -68,15 +68,12 @@ function markerHtml(order: number, label: string, selected: boolean, dimmed: boo
   return `<div class="${dimmed ? "opacity-30" : ""} flex items-center gap-1"><div class="${tone} flex size-7 shrink-0 items-center justify-center rounded-full border-2 border-background text-xs font-semibold shadow-md">${String(order)}</div><span class="bg-background text-foreground max-w-32 truncate rounded-full px-2 py-0.5 text-xs font-medium shadow-md">${escapeHtml(label)}</span></div>`;
 }
 
-// 흰 원 + 글자. 고르면 주조색으로 채우고 이름 알약을 붙인다. anchor(12,12)가 원 중심
+// 흰 원 + 글자 + 이름 알약. 고르면 원을 주조색으로 채운다. anchor(12,12)가 원 중심
 function candidateHtml(glyph: string, label: string, selected: boolean): string {
   const tone = selected
     ? "bg-primary text-primary-foreground border-background"
     : "bg-background text-primary border-primary";
-  const name = selected
-    ? `<span class="bg-background text-foreground max-w-32 truncate rounded-full px-2 py-0.5 text-xs font-medium shadow-md">${escapeHtml(label)}</span>`
-    : "";
-  return `<div class="flex items-center gap-1"><div class="${tone} flex size-6 shrink-0 items-center justify-center rounded-full border-2 text-xs font-semibold shadow-md">${escapeHtml(glyph)}</div>${name}</div>`;
+  return `<div class="flex items-center gap-1"><div class="${tone} flex size-6 shrink-0 items-center justify-center rounded-full border-2 text-xs font-semibold shadow-md">${escapeHtml(glyph)}</div><span class="bg-background text-foreground max-w-32 truncate rounded-full px-2 py-0.5 text-xs font-medium shadow-md">${escapeHtml(label)}</span></div>`;
 }
 
 /** 경로 끝 좌표에 가장 가까운 지점 — 경로는 지점 좌표에서 시작·끝나지만 도로에 붙어 조금 어긋난다 */
@@ -225,7 +222,7 @@ export function CourseMap({
     };
   }, [sdk.data, map, candidates, selectedCandidateId, onSelectCandidate]);
 
-  // 후보를 고르면(목록·마커) 그 마커로 옮긴다 — 후보 목록만 바뀔 때는 움직이지 않는다
+  // 후보를 고르면 그 마커로 옮긴다 — 후보 목록만 바뀔 때는 움직이지 않는다
   const focus = candidates.find((c) => c.id === selectedCandidateId)?.location;
   useEffect(() => {
     const naver = sdk.data;
@@ -284,7 +281,8 @@ export function CourseMap({
     <div className={cn("relative overflow-hidden rounded-lg", className)}>
       {sdk.isPending && <Skeleton className="absolute inset-0" />}
       <div ref={elRef} className="size-full" role="region" aria-label={t("course.label")} />
-      {sdk.isSuccess && framed.length === 0 && (
+      {/* 후보를 고를 수 있는 지도(검색 탭)는 결과 안내를 직접 띄운다 */}
+      {sdk.isSuccess && framed.length === 0 && !onSelectCandidate && (
         <p className="bg-background text-foreground absolute inset-x-4 top-4 rounded-md p-3 text-center text-sm shadow-sm">
           {t("course.noLocation")}
         </p>

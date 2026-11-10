@@ -196,9 +196,15 @@
     "radius": "Distance from route",
     "radiusKm": "{{km}} km",
     "fromRoute": "{{km}} km from route",
-    "addToDay": "Add to this day",
+    "addToDay": "Add to {{day}}",
     "emptyNear": "No matching places within {{km}} km of your route. Try a wider distance or another type.",
-    "showOnMap": "Show {{name}} on the map",
-    "partialError": "Couldn't load places for some areas."
+    "partialError": "Couldn't load places for some areas.",
+    "addTo": "Add",
+    "addedToDay": "Already in {{day}}",
+    "pickDay": "Day to add to",
+    "hint": "Tap a place on the map.",
+    "count_one": "{{count}} place",
+    "count_other": "{{count}} places",
+    "more": "Load more results"
   }
 }

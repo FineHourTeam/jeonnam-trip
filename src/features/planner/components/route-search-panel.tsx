@@ -1,14 +1,21 @@
-// 지도 옆 "검색" 탭 — 찾은 장소를 지도 위 후보 마커로 보여 주고, 마커·목록에서 골라 이 일차에 담는다.
-// "내 경로 근처"를 켜면 그날 방문지가 있는 지역들을 모두 읽어 경로에서 반경 안의 후보만 가까운 순으로 보여 준다.
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+// 지도 옆 "검색" 탭 — 찾은 장소를 지도 위 이름 마커로 보여 주고, 마커를 누르면 지도 아래 카드에서 고른 일차에 담는다.
+// "내 경로 근처"를 켜면 그날 방문지가 있는 지역들을 모두 읽어 경로에서 반경 안의 후보만 보여 준다.
+import { useEffect, useMemo, useState, type ComponentProps, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { toast } from "sonner";
 import { paths as routes } from "@/app/paths";
 import { CloseIcon } from "@/components/icons";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { CourseMap, type CourseMapCandidate, type CourseMapPoint } from "@/features/map";
@@ -23,6 +30,16 @@ import { PlaceSearchFilterBar, type PlaceSearchFilters } from "./place-search-pa
 
 export const NEAR_RADII = [1, 3, 5] as const;
 export type NearRadius = (typeof NEAR_RADII)[number];
+
+/** 담을 수 있는 일차 — 배열 순서가 일차 순서 */
+export interface SearchDay {
+  /** "1일차" */
+  label: string;
+  /** "1일차 · 11월 10일 (화)" */
+  fullLabel: string;
+  /** 그 일차에 이미 담긴 등록 장소 */
+  placeIds: Set<string>;
+}
 
 // ponytail: 근처 모드는 지역마다 이름순 페이지를 끝까지 읽어 거리로 거른다 — 지역당 24×10곳을 넘으면 뒤쪽은 빠진다. 많아지면 geohash 범위 조회로
 const NEAR_MAX_PAGES = 10;
@@ -40,7 +57,7 @@ interface RouteSearchPanelProps {
   points: CourseMapPoint[];
   paths: LatLng[][];
   dayIndex: number;
-  dayLabel: string;
+  days: SearchDay[];
   addedIds: Set<string>;
   update: (edit: TripEdit) => void;
 }
@@ -56,7 +73,7 @@ export function RouteSearchPanel({
   points,
   paths,
   dayIndex,
-  dayLabel,
+  days,
   addedIds,
   update,
 }: RouteSearchPanelProps) {
@@ -124,7 +141,7 @@ export function RouteSearchPanel({
         <SearchBody
           feeds={[{ ...EMPTY_FEED, pending: true }]}
           nearKm={radiusKm}
-          {...{ filters, visits, points, paths, dayIndex, dayLabel, addedIds, update }}
+          {...{ filters, visits, points, paths, dayIndex, days, addedIds, update }}
         />
       ) : (
         <PlaceFeeds queries={queries} fetchAll={nearOn}>
@@ -132,7 +149,7 @@ export function RouteSearchPanel({
             <SearchBody
               feeds={feeds}
               nearKm={nearOn ? radiusKm : null}
-              {...{ filters, visits, points, paths, dayIndex, dayLabel, addedIds, update }}
+              {...{ filters, visits, points, paths, dayIndex, days, addedIds, update }}
             />
           )}
         </PlaceFeeds>
@@ -217,7 +234,6 @@ function PlaceFeed({
 interface Row {
   place: Place;
   km: number | null;
-  added: boolean;
 }
 
 function SearchBody({
@@ -228,7 +244,7 @@ function SearchBody({
   points,
   paths,
   dayIndex,
-  dayLabel,
+  days,
   addedIds,
   update,
 }: {
@@ -240,13 +256,14 @@ function SearchBody({
   points: CourseMapPoint[];
   paths: LatLng[][];
   dayIndex: number;
-  dayLabel: string;
+  days: SearchDay[];
   addedIds: Set<string>;
   update: (edit: TripEdit) => void;
 }) {
   const { t, i18n } = useTranslation("planner");
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const listRef = useRef<HTMLUListElement>(null);
+  // 담을 일차 — 고른 장소마다 따로 기억하고, 다른 장소를 고르면 보고 있는 일차로 돌아간다
+  const [pick, setPick] = useState<{ id: string | null; day: number }>({ id: null, day: dayIndex });
 
   const pending = feeds.some((f) => f.pending);
   const failed = feeds.filter((f) => f.error);
@@ -255,22 +272,19 @@ function SearchBody({
 
   const lines = useMemo(() => routeLines(visits, paths), [visits, paths]);
   const all = feeds.flatMap((f) => f.places);
-  const rows: Row[] = (
+  const rows: Row[] =
     nearKm === null
       ? all.map((place) => ({
           place,
           km: place.location && lines.length > 0 ? distanceToRouteKm(place.location, lines) : null,
         }))
-      : nearRoute(all, lines, nearKm).map(({ item, km }) => ({ place: item, km }))
-  )
-    .map((r) => ({ ...r, added: addedIds.has(r.place.id) }))
-    // 이미 담은 곳은 경로 위(0km)라 맨 위로 오므로 뒤로 보낸다
-    .sort((a, b) => Number(a.added) - Number(b.added));
+      : nearRoute(all, lines, nearKm).map(({ item, km }) => ({ place: item, km }));
 
   const nameOf = (p: Place) => placeText(p, i18n.language).name;
   const categoryOf = (p: Place) => t(`placeCategory.${p.category}`, { ns: "common" });
-  const fresh: CourseMapCandidate[] = rows.flatMap(({ place, added }) =>
-    place.location && !added
+  // 이 일차에 이미 담은 곳은 번호 마커로 보이므로 후보에서 뺀다
+  const fresh: CourseMapCandidate[] = rows.flatMap(({ place }) =>
+    place.location && !addedIds.has(place.id)
       ? [
           {
             id: place.id,
@@ -285,174 +299,169 @@ function SearchBody({
   const candidatesKey = fresh.map((c) => `${c.id}:${c.label}`).join("|");
   // eslint-disable-next-line react-hooks/exhaustive-deps -- candidatesKey가 fresh 내용을 대표한다
   const candidates = useMemo(() => fresh, [candidatesKey]);
-  const onSelectCandidate = useCallback((id: string) => {
-    setSelectedId(id);
-    listRef.current
-      ?.querySelector(`[data-place="${CSS.escape(id)}"]`)
-      ?.scrollIntoView({ block: "nearest" });
-  }, []);
   const selected = rows.find((r) => r.place.id === selectedId);
+  const to = pick.id === selectedId && days[pick.day] ? pick.day : dayIndex;
+  const targetDay = days[to];
 
-  const add = (place: Place) => {
-    update((trip) => addItemsToDay(trip, dayIndex, [visitFromPlace(place)]).trip);
-    toast(t("addPlace.added", { name: nameOf(place), day: dayLabel }));
+  const add = (place: Place, day: SearchDay) => {
+    update((trip) => addItemsToDay(trip, to, [visitFromPlace(place)]).trip);
+    toast(t("addPlace.added", { name: nameOf(place), day: day.label }));
   };
   const distanceText = (km: number | null) =>
     km === null ? null : t("routeSearch.fromRoute", { km: Math.max(0.1, km).toFixed(1) });
 
-  return (
-    <>
-      <div className="relative h-56 shrink-0 lg:h-64">
-        <CourseMap
-          points={points}
-          paths={paths}
-          candidates={candidates}
-          selectedCandidateId={selectedId}
-          onSelectCandidate={onSelectCandidate}
-          className="h-full"
-        />
-        {selected && (
-          <div className="bg-background text-foreground absolute inset-x-2 bottom-2 flex items-center gap-3 rounded-lg p-2 shadow-md">
-            <Thumb photo={selected.place.photos[0]} />
-            <div className="flex min-w-0 flex-1 flex-col">
-              <Link
-                to={routes.placeDetail(selected.place.id)}
-                className="truncate text-sm font-medium underline-offset-4 hover:underline"
-              >
-                {nameOf(selected.place)}
-              </Link>
-              <span className="text-muted-foreground truncate text-xs">
-                {[categoryOf(selected.place), distanceText(selected.km)]
-                  .filter(Boolean)
-                  .join(" · ")}
-              </span>
-            </div>
-            <Button
-              size="sm"
-              variant={selected.added ? "ghost" : "default"}
-              disabled={selected.added}
-              onClick={() => {
-                add(selected.place);
-              }}
-            >
-              {selected.added ? t("addPlace.addedShort") : t("routeSearch.addToDay")}
-            </Button>
-            <Button
-              size="icon"
-              variant="ghost"
-              aria-label={t("close", { ns: "common" })}
-              onClick={() => {
-                setSelectedId(null);
-              }}
-            >
-              <CloseIcon size="sm" />
-            </Button>
-          </div>
-        )}
-      </div>
+  // 목록이 없으므로 불러오는 중·실패·빈 결과는 지도 위 작은 안내로, 평소에는 개수 배지로 알린다
+  const status = pending ? (
+    <Notice aria-busy="true">{t("addPlace.loading")}</Notice>
+  ) : failed.length > 0 ? (
+    <Notice tone="error">
+      {t(candidates.length > 0 ? "routeSearch.partialError" : "addPlace.error")}
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => {
+          for (const f of failed) f.retry();
+        }}
+      >
+        {t("retry", { ns: "common" })}
+      </Button>
+    </Notice>
+  ) : candidates.length === 0 && !loadingMore ? (
+    <Notice>
+      {nearKm !== null
+        ? t("routeSearch.emptyNear", { km: nearKm })
+        : filters.q
+          ? t("addPlace.emptyQuery", { q: filters.q })
+          : t("addPlace.empty")}
+    </Notice>
+  ) : (
+    <Badge variant="outline" className="bg-background shadow-sm">
+      {loadingMore ? t("addPlace.loading") : t("routeSearch.count", { count: candidates.length })}
+    </Badge>
+  );
 
-      {pending ? (
-        <div className="flex flex-col gap-2" aria-busy="true">
-          <Skeleton className="h-14 w-full" />
-          <Skeleton className="h-14 w-full" />
-        </div>
-      ) : failed.length > 0 && rows.length === 0 ? (
-        <div className="flex flex-wrap items-center gap-2">
-          <p className="text-destructive text-sm">{t("addPlace.error")}</p>
+  return (
+    // 검색 조건 줄을 뺀 나머지를 지도가 채운다 — 부모(탭 내용)가 높이를 정해 주므로 flex-1이 0으로 접히지 않는다
+    <div className="relative min-h-64 flex-1">
+      <CourseMap
+        points={points}
+        paths={paths}
+        candidates={candidates}
+        selectedCandidateId={selectedId}
+        onSelectCandidate={setSelectedId}
+        className="h-full"
+      />
+      <div className="pointer-events-none absolute inset-x-2 top-2 flex flex-wrap items-start justify-between gap-2 *:pointer-events-auto">
+        {status}
+        {more && !pending && (
           <Button
             variant="outline"
             size="sm"
-            onClick={() => {
-              for (const f of failed) f.retry();
-            }}
+            className="bg-background shadow-sm"
+            disabled={loadingMore}
+            onClick={more.loadMore}
           >
-            {t("retry", { ns: "common" })}
+            {loadingMore ? t("addPlace.loading") : t("routeSearch.more")}
           </Button>
-        </div>
-      ) : rows.length === 0 && !loadingMore ? (
-        <p className="text-muted-foreground py-6 text-center text-sm">
-          {nearKm !== null
-            ? t("routeSearch.emptyNear", { km: nearKm })
-            : filters.q
-              ? t("addPlace.emptyQuery", { q: filters.q })
-              : t("addPlace.empty")}
-        </p>
-      ) : (
-        <div className="flex min-h-0 flex-1 flex-col gap-2">
-          <ul
-            ref={listRef}
-            className="border-border flex min-h-0 flex-col overflow-y-auto rounded-md border"
-          >
-            {rows.map(({ place, km, added }) => (
-              <li
-                key={place.id}
-                data-place={place.id}
-                className={cn(
-                  "border-border flex items-center gap-2 border-b px-2 py-2 last:border-b-0",
-                  place.id === selectedId && "bg-background-subtle",
-                )}
-              >
-                <button
-                  type="button"
-                  className="flex min-w-0 flex-1 items-center gap-3 rounded-md text-left"
-                  aria-pressed={place.id === selectedId}
-                  aria-label={t("routeSearch.showOnMap", { name: nameOf(place) })}
-                  onClick={() => {
-                    setSelectedId(place.id);
-                  }}
+        )}
+      </div>
+      <div className="absolute inset-x-2 bottom-2">
+        {selected && targetDay ? (
+          <div className="bg-background text-foreground flex flex-col gap-2 rounded-lg p-2 shadow-md">
+            <div className="flex items-center gap-3">
+              <Thumb photo={selected.place.photos[0]} />
+              <div className="flex min-w-0 flex-1 flex-col">
+                <Link
+                  to={routes.placeDetail(selected.place.id)}
+                  className="truncate text-sm font-medium underline-offset-4 hover:underline"
                 >
-                  <Thumb photo={place.photos[0]} />
-                  <span className="flex min-w-0 flex-1 flex-col">
-                    <span className="truncate text-sm font-medium">{nameOf(place)}</span>
-                    <span className="text-muted-foreground truncate text-xs">
-                      {[
-                        t(`sigun.${place.sigun}`, { ns: "common" }),
-                        categoryOf(place),
-                        distanceText(km),
-                      ]
-                        .filter(Boolean)
-                        .join(" · ")}
-                    </span>
-                  </span>
-                </button>
-                <Button
-                  size="sm"
-                  variant={added ? "ghost" : "outline"}
-                  disabled={added}
-                  onClick={() => {
-                    add(place);
-                  }}
-                >
-                  {added ? t("addPlace.addedShort") : t("addPlace.add")}
-                </Button>
-              </li>
-            ))}
-          </ul>
-          {failed.length > 0 && (
-            <div className="flex flex-wrap items-center gap-2">
-              <p className="text-destructive text-sm">{t("routeSearch.partialError")}</p>
+                  {nameOf(selected.place)}
+                </Link>
+                <span className="text-muted-foreground truncate text-xs">
+                  {[
+                    categoryOf(selected.place),
+                    t(`sigun.${selected.place.sigun}`, { ns: "common" }),
+                    distanceText(selected.km),
+                  ]
+                    .filter(Boolean)
+                    .join(" · ")}
+                </span>
+              </div>
               <Button
-                variant="outline"
-                size="sm"
+                size="icon"
+                variant="ghost"
+                aria-label={t("close", { ns: "common" })}
                 onClick={() => {
-                  for (const f of failed) f.retry();
+                  setSelectedId(null);
                 }}
               >
-                {t("retry", { ns: "common" })}
+                <CloseIcon size="sm" />
               </Button>
             </div>
-          )}
-          {loadingMore && !more && (
-            <p className="text-muted-foreground text-center text-xs">{t("addPlace.loading")}</p>
-          )}
-          {more && (
-            <Button variant="ghost" size="sm" disabled={loadingMore} onClick={more.loadMore}>
-              {loadingMore ? t("addPlace.loading") : t("addPlace.more")}
-            </Button>
-          )}
-        </div>
+            {/* [N일차 ▾][에 추가] — 일차를 눌러 이 여행의 다른 일차로 바꿀 수 있다 */}
+            <div className="flex justify-end">
+              <Select
+                value={String(to)}
+                onValueChange={(v) => {
+                  setPick({ id: selectedId, day: Number(v) });
+                }}
+              >
+                <SelectTrigger
+                  size="sm"
+                  className="rounded-r-none"
+                  aria-label={t("routeSearch.pickDay")}
+                >
+                  <SelectValue>{targetDay.label}</SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  {days.map((d, i) => (
+                    <SelectItem key={d.fullLabel} value={String(i)}>
+                      {d.fullLabel}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {targetDay.placeIds.has(selected.place.id) ? (
+                <Button size="sm" variant="outline" className="rounded-l-none" disabled>
+                  {t("routeSearch.addedToDay", { day: targetDay.label })}
+                </Button>
+              ) : (
+                <Button
+                  size="sm"
+                  className="rounded-l-none"
+                  aria-label={t("routeSearch.addToDay", { day: targetDay.label })}
+                  onClick={() => {
+                    add(selected.place, targetDay);
+                  }}
+                >
+                  {t("routeSearch.addTo")}
+                </Button>
+              )}
+            </div>
+          </div>
+        ) : (
+          candidates.length > 0 && (
+            <p className="bg-background text-muted-foreground rounded-md px-3 py-2 text-center text-xs shadow-sm">
+              {t("routeSearch.hint")}
+            </p>
+          )
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Notice({ tone, className, ...props }: { tone?: "error" } & ComponentProps<"div">) {
+  return (
+    <div
+      role="status"
+      className={cn(
+        "bg-background flex max-w-full flex-wrap items-center gap-2 rounded-md px-3 py-2 text-sm shadow-sm",
+        tone === "error" ? "text-destructive" : "text-foreground",
+        className,
       )}
-    </>
+      {...props}
+    />
   );
 }
 
