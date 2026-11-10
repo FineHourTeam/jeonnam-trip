@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TripNotFoundError } from "@/features/trips";
@@ -143,16 +144,23 @@ export default function TripEditPage() {
       </div>
 
       <Tabs value={dayTab} onValueChange={setDayTab}>
-        <TabsList>
-          {trip.days.map((d, i) => (
-            <TabsTrigger key={d.date} value={String(i)}>
-              {t("dayLabel", { day: i + 1 })}
-            </TabsTrigger>
-          ))}
+        <div className="flex items-center gap-2">
+          {/* 일차가 많으면 탭 줄만 가로로 넘긴다 — 브라우저 스크롤바 대신 넘길 때만 보이는 얇은 막대 */}
+          <ScrollArea type="scroll" className="min-w-0 flex-1">
+            <TabsList>
+              {trip.days.map((d, i) => (
+                <TabsTrigger key={d.date} value={String(i)}>
+                  {t("dayWithDate", { day: i + 1, date: formatDay(d.date, i18n.language) })}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
           {trip.days.length < MAX_TRIP_DAYS && (
             <Button
-              variant="ghost"
-              size="icon-sm"
+              variant="outline"
+              size="sm"
+              className="shrink-0"
               aria-label={t("edit.addDay")}
               onClick={() => {
                 editor.update(addDay);
@@ -160,14 +168,12 @@ export default function TripEditPage() {
               }}
             >
               <AddIcon size="sm" />
+              {t("edit.addDay")}
             </Button>
           )}
-        </TabsList>
+        </div>
         {trip.days.map((d, i) => (
           <TabsContent key={d.date} value={String(i)} className="pt-2">
-            <h2 className="mb-3 font-semibold">
-              {t("dayWithDate", { day: i + 1, date: formatDay(d.date, i18n.language) })}
-            </h2>
             <DayPanel trip={trip} day={d} dayIndex={i} update={editor.update} />
           </TabsContent>
         ))}

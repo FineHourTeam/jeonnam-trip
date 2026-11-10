@@ -17,6 +17,7 @@
       "stay_too_short": "영업시간 안에 최소 체류시간이 안 들어가요",
       "late_for_next": "다음 일정에 늦어요",
       "late_for_fixed": "프로그램 시작에 늦어요",
+      "late_for_pinned": "고정한 도착 시각에 못 맞춰요",
       "festival_cancelled": "취소된 축제예요",
       "hours_unknown": "영업시간 확인이 필요해요",
       "no_location": "위치 확인이 필요해요",
@@ -30,22 +31,23 @@
       "stay_too_short": "다른 시간대가 되도록 순서를 바꾸거나 다른 일차로 옮겨 보세요.",
       "late_for_next": "체류시간을 줄이거나, 앞 장소를 빼거나, 다른 일차로 옮겨 보세요.",
       "late_for_fixed": "앞 장소의 체류시간을 줄이거나 순서를 바꿔 보세요.",
+      "late_for_pinned": "도착 시각을 늦추거나 고정을 해제해 보세요.",
       "festival_cancelled": "취소된 축제는 일정에서 빼는 걸 권해요.",
       "route_failed": "구간 아래의 다시 시도를 눌러 주세요."
     },
-    "pastDayEnd": "하루 종료 시각을 넘겨요",
+    "pastDayEnd": "자정을 넘겨요",
     "lateForNamed": "다음 일정({{name}})에 늦어요"
   },
   "day": {
     "summary": "방문 {{count}}곳 · 이동 합계 {{drive}}분",
     "routesIncomplete": " (일부 구간 미확인)",
     "estimateNote": "이동시간은 조회 시점의 교통 상황을 기준으로 한 예상치예요.",
-    "start": "하루 시작",
-    "end": "하루 종료",
-    "timeError": "종료 시각은 시작 시각보다 늦어야 해요.",
     "viewMode": "보기 방식",
     "viewList": "일정 보기",
     "viewMap": "지도 보기",
+    "tabRoute": "내 경로",
+    "tabSearch": "검색",
+    "sideTabs": "지도·장소 검색 전환",
     "empty": "아직 이 날 담은 장소가 없어요.",
     "emptyHint": "<festivals>축제</festivals>나 <places>장소</places>에서 ‘일정에 추가’로 담거나, 아래에서 바로 찾아 담을 수 있어요.",
     "removed": "「{{name}}」 장소를 일정에서 뺐어요.",
@@ -87,7 +89,26 @@
     "stay": "체류",
     "stayDecrease": "체류 {{n}}분 줄이기",
     "stayIncrease": "체류 {{n}}분 늘리기",
-    "stayEdit": "체류 {{n}}분, 직접 입력하기"
+    "stayEdit": "체류 {{n}}분, 직접 입력하기",
+    "arriveFixedBadge": "도착 {{time}} 고정",
+    "arriveEarlier": "도착 {{n}}분 당기기",
+    "arriveLater": "도착 {{n}}분 늦추기",
+    "departEarlier": "출발 {{n}}분 당기기",
+    "departLater": "출발 {{n}}분 늦추기",
+    "unpinArrive": "도착 시각 고정 해제"
+  },
+  "memo": {
+    "add": "메모 남기기",
+    "edit": "메모 고치기",
+    "addTitle": "메모 남기기",
+    "editTitle": "메모 고치기",
+    "description": "{{name}}에 남기는 나만 보는 메모예요. 공유한 일정에는 보이지 않아요.",
+    "label": "메모",
+    "placeholder": "예: 주차는 건물 뒤편, 창가 자리 추천",
+    "count": "{{n}}/{{max}}자",
+    "errorMax": "메모는 {{max}}자까지 쓸 수 있어요.",
+    "cancel": "취소",
+    "save": "저장"
   },
   "stay": {
     "title": "체류시간 수정",
@@ -170,5 +191,15 @@
     "add": "담기",
     "loading": "불러오는 중…",
     "more": "더 보기"
+  },
+  "routeSearch": {
+    "near": "내 경로 근처",
+    "radius": "경로에서 거리",
+    "radiusKm": "{{km}}km",
+    "fromRoute": "경로에서 {{km}}km",
+    "addToDay": "이 일차에 담기",
+    "emptyNear": "경로 {{km}}km 안에 조건에 맞는 장소가 없어요. 거리를 넓히거나 종류를 바꿔 보세요.",
+    "showOnMap": "지도에서 {{name}} 보기",
+    "partialError": "일부 지역의 장소를 불러오지 못했어요."
   }
 }

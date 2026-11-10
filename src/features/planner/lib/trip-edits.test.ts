@@ -5,9 +5,13 @@ import {
   insertItem,
   moveItem,
   moveItemToDay,
+  nudgeArrive,
+  nudgeDepart,
   placeUnplaced,
   removeItem,
+  setItemMemo,
   shiftStartDate,
+  unpinArrive,
   updateItem,
 } from "./trip-edits";
 
@@ -92,5 +96,49 @@ describe("일차 늘리기·시작일 옮기기", () => {
     expect([t.startDate, t.endDate]).toEqual(["2026-10-20", "2026-10-21"]);
     expect(t.days.map((d) => d.date)).toEqual(["2026-10-20", "2026-10-21"]);
     expect(t.days[0]?.items.map((x) => x.id)).toEqual(["a", "b", "c"]);
+  });
+});
+
+describe("개인 메모", () => {
+  it("앞뒤 공백을 지워 저장하고, 비우면 memo 필드를 없앤다", () => {
+    const t = setItemMemo(trip(), 0, "b", "  주차는 뒤편  \n");
+    expect(t.days[0]?.items[1]?.memo).toBe("주차는 뒤편");
+    expect(t.days[0]?.items[0]).not.toHaveProperty("memo");
+    const cleared = setItemMemo(t, 0, "b", "   ");
+    expect(cleared.days[0]?.items[1]).not.toHaveProperty("memo");
+  });
+});
+
+describe("도착·출발 ±10분", () => {
+  it("첫 장소 도착은 하루 시작을 옮기고 00:00~23:50 안에 둔다", () => {
+    const t = nudgeArrive(trip(), 0, "a", 540, 10);
+    expect(t.days[0]?.startTime).toBe("09:10");
+    expect(t.days[0]?.items[0]).not.toHaveProperty("fixedStart");
+    const early = { ...trip(), days: [{ ...trip().days[0]!, startTime: "00:00" }] };
+    expect(nudgeArrive(early, 0, "a", 0, -10).days[0]?.startTime).toBe("00:00");
+  });
+
+  it("두 번째 장소부터는 지금 도착 ±10분을 고정 시작 시각으로 두고, 해제하면 지운다", () => {
+    const t = nudgeArrive(trip(), 0, "b", 11 * 60 + 5, -10);
+    expect(t.days[0]?.items[1]?.fixedStart).toBe("10:55");
+    expect(t.days[0]?.startTime).toBe("09:00");
+    expect(nudgeArrive(t, 0, "b", 23 * 60 + 50, 10).days[0]?.items[1]?.fixedStart).toBe("23:50");
+    expect(unpinArrive(t, 0, "b").days[0]?.items[1]).not.toHaveProperty("fixedStart");
+  });
+
+  it("고정된 첫 장소는 하루 시작 대신 고정 시각을 옮긴다", () => {
+    const pinned = nudgeArrive(trip(), 0, "b", 600, 0);
+    const first = moveItem(pinned, 0, "b", -1);
+    const t = nudgeArrive(first, 0, "b", 600, 10);
+    expect(t.days[0]?.items[0]?.fixedStart).toBe("10:10");
+    expect(t.days[0]?.startTime).toBe("09:00");
+  });
+
+  it("출발은 지금 체류를 ±10분 하고 고정하며, 10분보다 줄이지 않는다", () => {
+    expect(nudgeDepart(trip(), 0, "a", 60, 10).days[0]?.items[0]).toMatchObject({
+      stayMin: 70,
+      stayLocked: true,
+    });
+    expect(nudgeDepart(trip(), 0, "a", 10, -10).days[0]?.items[0]?.stayMin).toBe(10);
   });
 });

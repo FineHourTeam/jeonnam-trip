@@ -33,6 +33,7 @@ export type IssueKind =
   | "stay_too_short" // 영업구간 안에 최소 체류가 안 들어감 (브레이크타임 등)
   | "late_for_next" // 다음 고정 일정·하루 종료에 늦음 (blockedBy)
   | "late_for_fixed" // 고정 프로그램 시작(준비 여유 포함)에 늦게 도착
+  | "late_for_pinned" // 사용자가 고정한 도착 시각보다 이동이 늦음
   | "festival_cancelled"
   // 미확정 — 계산은 했지만 확인이 필요해요
   | "hours_unknown"
@@ -47,6 +48,7 @@ export const CONFLICT_KINDS: ReadonlySet<IssueKind> = new Set<IssueKind>([
   "stay_too_short",
   "late_for_next",
   "late_for_fixed",
+  "late_for_pinned",
   "festival_cancelled",
 ]);
 
@@ -148,8 +150,21 @@ function requiredStay(item: VisitItem): number {
   return Math.min(item.stayMin, MIN_STAY_MIN[item.snapshot.category]);
 }
 
+/** 하루 종료는 화면에서 고르지 않으므로 계산에서는 자정 직전까지 연다 (저장된 endTime은 쓰지 않는다) */
+export const OPEN_DAY_END = "23:59";
+
+/** 사용자가 카드에서 고정한 도착 — 운영 시각이 정해진 축제 프로그램(fixedEnd·programId)이 아닌 fixedStart */
+export function isPinnedArrive(item: VisitItem): item is VisitItem & { fixedStart: string } {
+  return (
+    item.fixedStart !== undefined &&
+    item.fixedEnd === undefined &&
+    !(item.ref.kind === "festival" && item.ref.programId)
+  );
+}
+
+/** 시작 시각이 정해진 프로그램 — 영업 구간 배정 없이 그 시각에 시작한다 */
 function isFixed(item: VisitItem): item is VisitItem & { fixedStart: string } {
-  return item.fixedStart !== undefined;
+  return item.fixedStart !== undefined && !isPinnedArrive(item);
 }
 
 function fixedStay(item: VisitItem & { fixedStart: string }): number {
@@ -230,7 +245,7 @@ export function computeDaySchedule(input: ScheduleInput): DaySchedule {
   const access = input.accessMin ?? DEFAULT_ACCESS_MIN;
   const prep = input.prepMin ?? DEFAULT_PREP_MIN;
   const dayStart = toMinutes(day.startTime);
-  const dayEnd = toMinutes(day.endTime);
+  const dayEnd = toMinutes(OPEN_DAY_END);
 
   const entries = day.items.map((item, i) => {
     const ranges = rangesOn(item, day.date);
@@ -260,12 +275,14 @@ export function computeDaySchedule(input: ScheduleInput): DaySchedule {
     // 이 장소 자체가 불가능(휴무 등)하면 앞 장소까지 불가능으로 번지지 않게 출발 한도만 넘긴다
     const latestArrive = isFixed(e.item)
       ? e.latestStart - prep
-      : e.latestStart === -Infinity
-        ? limit
-        : e.latestStart;
+      : isPinnedArrive(e.item)
+        ? toMinutes(e.item.fixedStart)
+        : e.latestStart === -Infinity
+          ? limit
+          : e.latestStart;
     const dur = legDuration(e.legIn);
     limit = dur === null ? Infinity : latestArrive - dur - e.buffer;
-    if (isFixed(e.item)) anchor = e.item.id;
+    if (e.item.fixedStart !== undefined) anchor = e.item.id;
   }
 
   // 순방향: 도착 = 이전 출발 + 경로 시간 + 여유. 경로를 모르면 그 뒤는 고정 항목이 나올 때까지 계산하지 않는다
@@ -290,6 +307,12 @@ export function computeDaySchedule(input: ScheduleInput): DaySchedule {
     }
     if (!item.snapshot.location) issues.push({ kind: "no_location" });
     if (item.snapshot.festivalState === "cancelled") issues.push({ kind: "festival_cancelled" });
+    // 고정한 도착은 그 시각에 도착한 것으로 보고 아래에서 영업조건을 그대로 검사한다
+    if (isPinnedArrive(item)) {
+      const pin = toMinutes(item.fixedStart);
+      if (arrive !== null && arrive > pin) issues.push({ kind: "late_for_pinned" });
+      arrive = pin;
+    }
 
     let start: number | null;
     let stay: number;

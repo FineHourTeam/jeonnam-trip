@@ -18,7 +18,7 @@ import {
 } from "@/shared/domain";
 
 /** 일일 기본 시작·종료 시각 — 계약 전 확정 대상이라 한 곳에서만 정한다 (기능명세 §6) */
-export const DEFAULT_DAY_START = "09:00";
+export const DEFAULT_DAY_START = "10:00";
 export const DEFAULT_DAY_END = "21:00";
 
 function newId(): string {

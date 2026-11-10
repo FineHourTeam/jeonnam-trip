@@ -17,6 +17,7 @@
       "stay_too_short": "Not enough time for the minimum stay within opening hours",
       "late_for_next": "You'll be late for the next stop",
       "late_for_fixed": "You'll be late for the program start",
+      "late_for_pinned": "You can't make your fixed arrival time",
       "festival_cancelled": "This festival was cancelled",
       "hours_unknown": "Opening hours need checking",
       "no_location": "Location needs checking",
@@ -30,10 +31,11 @@
       "stay_too_short": "Try reordering to hit another time slot, or move it to another day.",
       "late_for_next": "Try a shorter stay, removing an earlier stop, or moving it to another day.",
       "late_for_fixed": "Try a shorter stay at the previous stop or reordering.",
+      "late_for_pinned": "Try a later arrival time or unfix it.",
       "festival_cancelled": "We suggest removing cancelled festivals from your plan.",
       "route_failed": "Tap Try again below the route."
     },
-    "pastDayEnd": "Runs past the end of your day",
+    "pastDayEnd": "Runs past midnight",
     "lateForNamed": "You'll be late for the next stop ({{name}})"
   },
   "day": {
@@ -41,12 +43,12 @@
     "summary_other": "{{count}} stops · {{drive}} min driving",
     "routesIncomplete": " (some routes unconfirmed)",
     "estimateNote": "Travel times are estimates based on traffic when they were looked up.",
-    "start": "Day starts",
-    "end": "Day ends",
-    "timeError": "The end time has to be later than the start time.",
     "viewMode": "View",
     "viewList": "Schedule",
     "viewMap": "Map",
+    "tabRoute": "My route",
+    "tabSearch": "Search",
+    "sideTabs": "Map and place search",
     "empty": "Nothing planned for this day yet.",
     "emptyHint": "Add stops from <festivals>festivals</festivals> or <places>places</places> with ‘Add to trip’, or find one right below.",
     "removed": "Removed “{{name}}” from your plan.",
@@ -88,7 +90,26 @@
     "stay": "Stay",
     "stayDecrease": "Shorten stay by {{n}} min",
     "stayIncrease": "Lengthen stay by {{n}} min",
-    "stayEdit": "Stay {{n}} min, enter it yourself"
+    "stayEdit": "Stay {{n}} min, enter it yourself",
+    "arriveFixedBadge": "Arrive {{time}} fixed",
+    "arriveEarlier": "Arrive {{n}} min earlier",
+    "arriveLater": "Arrive {{n}} min later",
+    "departEarlier": "Leave {{n}} min earlier",
+    "departLater": "Leave {{n}} min later",
+    "unpinArrive": "Unfix arrival time"
+  },
+  "memo": {
+    "add": "Add a note",
+    "edit": "Edit note",
+    "addTitle": "Add a note",
+    "editTitle": "Edit note",
+    "description": "A private note for {{name}}. It won't appear in shared itineraries.",
+    "label": "Note",
+    "placeholder": "e.g. Parking is behind the building, window seats are best",
+    "count": "{{n}}/{{max}} characters",
+    "errorMax": "Notes can be up to {{max}} characters.",
+    "cancel": "Cancel",
+    "save": "Save"
   },
   "stay": {
     "title": "Edit stay time",
@@ -175,5 +196,15 @@
     "add": "Add",
     "loading": "Loading…",
     "more": "Show more"
+  },
+  "routeSearch": {
+    "near": "Near my route",
+    "radius": "Distance from route",
+    "radiusKm": "{{km}} km",
+    "fromRoute": "{{km}} km from route",
+    "addToDay": "Add to this day",
+    "emptyNear": "No matching places within {{km}} km of your route. Try a wider distance or another type.",
+    "showOnMap": "Show {{name}} on the map",
+    "partialError": "Couldn't load places for some areas."
   }
 }

@@ -240,3 +240,61 @@ describe("computeDaySchedule — 경로 조회 상태", () => {
     expect(r.items[1]?.arrive).toBeNull();
   });
 });
+
+describe("computeDaySchedule — 카드에서 고정한 도착", () => {
+  const cafe = place("카페", "cafe", everyDay([{ open: "09:00", close: "21:00" }]), 30, {
+    stayLocked: true,
+  });
+
+  it("영업 전으로 고정하면 그 시각에 도착하고 개점까지 대기한다", () => {
+    const r = computeDaySchedule({
+      day: day([
+        cafe,
+        place("식당", "restaurant", everyDay([{ open: "11:00", close: "21:00" }]), 60, {
+          fixedStart: "10:40",
+        }),
+      ]),
+      legs: [ok(20)],
+    });
+    expect(hhmm(r.items[1]?.arrive ?? null)).toBe("10:40");
+    expect(hhmm(r.items[1]?.start ?? null)).toBe("11:00");
+    expect(r.items[1]?.waitMin).toBe(20);
+    expect(r.status).toBe("ok");
+  });
+
+  it("휴무일에 고정해도 휴무 충돌이 남는다", () => {
+    const closed: OpeningHours = { ...everyDay([]), exceptions: [{ date: DATE, ranges: [] }] };
+    const r = computeDaySchedule({
+      day: day([cafe, place("식당", "restaurant", closed, 60, { fixedStart: "11:00" })]),
+      legs: [ok(20)],
+    });
+    expect(kinds(r.items[1] as never)).toContain("closed");
+    expect(r.status).toBe("conflict");
+  });
+
+  it("이동시간보다 이르게 당기면 고정 도착 충돌이고, 앞 장소의 출발 한도도 그 시각에서 역산한다", () => {
+    const r = computeDaySchedule({
+      day: day([
+        cafe,
+        place("식당", "restaurant", everyDay([{ open: "09:00", close: "21:00" }]), 60, {
+          fixedStart: "09:30",
+        }),
+      ]),
+      legs: [ok(20)],
+    });
+    // 카페 09:00~09:30 → 이동 20 + 접근 10 = 10:00 도착인데 09:30으로 고정
+    expect(kinds(r.items[1] as never)).toContain("late_for_pinned");
+    expect(r.items[0]?.issues).toContainEqual({ kind: "late_for_next", blockedBy: "식당" });
+    expect(hhmm(r.items[1]?.arrive ?? null)).toBe("09:30");
+  });
+
+  it("저장된 하루 종료(17:00)는 계산에 쓰지 않아 저녁 일정이 충돌하지 않는다", () => {
+    const dinner = place("식당", "restaurant", everyDay([{ open: "17:00", close: "23:00" }]), 90);
+    const r = computeDaySchedule({
+      day: { date: DATE, startTime: "20:00", endTime: "17:00", items: [dinner] },
+      legs: [],
+    });
+    expect(r.items[0]?.issues).toEqual([]);
+    expect(hhmm(r.items[0]?.depart ?? null)).toBe("21:30");
+  });
+});

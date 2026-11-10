@@ -17,6 +17,7 @@
       "stay_too_short": "営業時間内に最低滞在時間が収まりません",
       "late_for_next": "次の予定に間に合いません",
       "late_for_fixed": "プログラムの開始に間に合いません",
+      "late_for_pinned": "固定した到着時刻に間に合いません",
       "festival_cancelled": "中止になったお祭りです",
       "hours_unknown": "営業時間の確認が必要です",
       "no_location": "位置の確認が必要です",
@@ -30,22 +31,23 @@
       "stay_too_short": "別の時間帯になるよう順番を変えるか、別の日に移してみてください。",
       "late_for_next": "滞在時間を短くするか、前のスポットを外すか、別の日に移してみてください。",
       "late_for_fixed": "前のスポットの滞在時間を短くするか、順番を変えてみてください。",
+      "late_for_pinned": "到着時刻を遅らせるか、固定を解除してみてください。",
       "festival_cancelled": "中止になったお祭りは旅程から外すことをおすすめします。",
       "route_failed": "区間の下にある「もう一度試す」を押してください。"
     },
-    "pastDayEnd": "1日の終了時刻を過ぎます",
+    "pastDayEnd": "深夜0時を過ぎます",
     "lateForNamed": "次の予定（{{name}}）に間に合いません"
   },
   "day": {
     "summary": "訪問 {{count}}か所 · 移動合計 {{drive}}分",
     "routesIncomplete": "（一部区間は未確認）",
     "estimateNote": "移動時間は検索した時点の交通状況にもとづく目安です。",
-    "start": "1日の開始",
-    "end": "1日の終了",
-    "timeError": "終了時刻は開始時刻より後にしてください。",
     "viewMode": "表示方法",
     "viewList": "旅程",
     "viewMap": "地図",
+    "tabRoute": "マイルート",
+    "tabSearch": "検索",
+    "sideTabs": "地図・スポット検索の切り替え",
     "empty": "この日にはまだスポットがありません。",
     "emptyHint": "<festivals>お祭り</festivals>や<places>スポット</places>から「旅行に追加」で追加するか、下からすぐに探して追加できます。",
     "removed": "「{{name}}」を旅程から外しました。",
@@ -87,7 +89,26 @@
     "stay": "滞在",
     "stayDecrease": "滞在を{{n}}分短くする",
     "stayIncrease": "滞在を{{n}}分長くする",
-    "stayEdit": "滞在{{n}}分、直接入力する"
+    "stayEdit": "滞在{{n}}分、直接入力する",
+    "arriveFixedBadge": "到着 {{time}} 固定",
+    "arriveEarlier": "到着を{{n}}分早める",
+    "arriveLater": "到着を{{n}}分遅らせる",
+    "departEarlier": "出発を{{n}}分早める",
+    "departLater": "出発を{{n}}分遅らせる",
+    "unpinArrive": "到着時刻の固定を解除"
+  },
+  "memo": {
+    "add": "メモを残す",
+    "edit": "メモを編集",
+    "addTitle": "メモを残す",
+    "editTitle": "メモを編集",
+    "description": "{{name}}に残す自分だけのメモです。共有した日程には表示されません。",
+    "label": "メモ",
+    "placeholder": "例：駐車場は建物の裏、窓際の席がおすすめ",
+    "count": "{{n}}/{{max}}文字",
+    "errorMax": "メモは{{max}}文字まで入力できます。",
+    "cancel": "キャンセル",
+    "save": "保存"
   },
   "stay": {
     "title": "滞在時間を変更",
@@ -170,5 +191,15 @@
     "add": "追加",
     "loading": "読み込み中…",
     "more": "もっと見る"
+  },
+  "routeSearch": {
+    "near": "ルートの近く",
+    "radius": "ルートからの距離",
+    "radiusKm": "{{km}}km",
+    "fromRoute": "ルートから{{km}}km",
+    "addToDay": "この日に追加",
+    "emptyNear": "ルートから{{km}}km以内に条件に合うスポットがありません。距離を広げるか種類を変えてみてください。",
+    "showOnMap": "地図で{{name}}を表示",
+    "partialError": "一部の地域のスポットを読み込めませんでした。"
   }
 }

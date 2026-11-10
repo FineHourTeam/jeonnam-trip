@@ -11,6 +11,7 @@ const HINT_KINDS = [
   "stay_too_short",
   "late_for_next",
   "late_for_fixed",
+  "late_for_pinned",
   "festival_cancelled",
   "route_failed",
 ] as const satisfies readonly IssueKind[];

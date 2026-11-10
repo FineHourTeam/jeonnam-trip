@@ -2,7 +2,7 @@
 // Trip·TripDraft 모두 받도록 days·unplaced만 요구한다.
 import { emptyDay } from "@/features/trips";
 import { MAX_TRIP_DAYS, type TripDraft, type VisitItem } from "@/shared/domain";
-import { addDays, diffDays } from "@/shared/lib/date";
+import { addDays, diffDays, fromMinutes, toMinutes } from "@/shared/lib/date";
 
 type Editable = Pick<TripDraft, "days" | "unplaced">;
 
@@ -73,6 +73,23 @@ export function updateItem<T extends Editable>(
   );
 }
 
+/** 개인 메모 — 앞뒤 공백을 지우고, 비면 memo 필드를 없앤다 */
+export function setItemMemo<T extends Editable>(
+  trip: T,
+  dayIndex: number,
+  itemId: string,
+  memo: string,
+): T {
+  const text = memo.trim();
+  return mapDay(trip, dayIndex, (items) =>
+    items.map((x) => {
+      if (x.id !== itemId) return x;
+      const { memo: _memo, ...rest } = x;
+      return text ? { ...rest, memo: text } : rest;
+    }),
+  );
+}
+
 /** 미배치 후보를 일차 끝에 배치한다 (미배치 이유는 지운다) */
 export function placeUnplaced<T extends Editable>(trip: T, itemId: string, dayIndex: number): T {
   const found = trip.unplaced.find((x) => x.id === itemId);
@@ -82,12 +99,61 @@ export function placeUnplaced<T extends Editable>(trip: T, itemId: string, dayIn
   return mapDay(next, dayIndex, (items) => [...items, item]);
 }
 
-export function setDayTimes<T extends Editable>(
+/** 카드에서 도착·출발을 옮기는 단위(분) — 출발을 줄일 때 체류도 이만큼은 남긴다 */
+export const TIME_STEP_MIN = 10;
+/** 도착을 옮길 수 있는 마지막 시각 — 계산의 하루 끝(OPEN_DAY_END 23:59)보다 앞이라 하루 시작이 끝을 넘지 않는다 */
+export const LAST_CLOCK_MIN = 23 * 60 + 50;
+const MAX_STAY_MIN = 600;
+const clamp = (n: number, min: number, max: number) => Math.min(max, Math.max(min, n));
+
+/**
+ * 도착을 delta분 옮긴다. arriveMin은 지금 카드에 보이는 도착.
+ * 고정되지 않은 첫 장소는 하루 시작을, 그 밖은 고정 시작 시각(fixedStart)을 옮긴다 — 재계산이 이 시각을 옮기지 않는다.
+ */
+export function nudgeArrive<T extends Editable>(
   trip: T,
   dayIndex: number,
-  times: { startTime: string; endTime: string },
+  itemId: string,
+  arriveMin: number,
+  delta: number,
 ): T {
-  return { ...trip, days: trip.days.map((d, i) => (i === dayIndex ? { ...d, ...times } : d)) };
+  const day = trip.days[dayIndex];
+  const index = day ? day.items.findIndex((x) => x.id === itemId) : -1;
+  const item = day?.items[index];
+  if (!day || !item) return trip;
+  if (index === 0 && item.fixedStart === undefined) {
+    const startTime = fromMinutes(clamp(toMinutes(day.startTime) + delta, 0, LAST_CLOCK_MIN));
+    return { ...trip, days: trip.days.map((d, i) => (i === dayIndex ? { ...d, startTime } : d)) };
+  }
+  const fixedStart = fromMinutes(clamp(arriveMin + delta, 0, LAST_CLOCK_MIN));
+  return mapDay(trip, dayIndex, (items) =>
+    items.map((x) => (x.id === itemId ? { ...x, fixedStart } : x)),
+  );
+}
+
+/** 사용자가 고정한 도착을 풀어 다시 이동시간대로 계산되게 한다 */
+export function unpinArrive<T extends Editable>(trip: T, dayIndex: number, itemId: string): T {
+  return mapDay(trip, dayIndex, (items) =>
+    items.map((x) => {
+      if (x.id !== itemId) return x;
+      const { fixedStart: _fixedStart, ...rest } = x;
+      return rest;
+    }),
+  );
+}
+
+/** 출발을 delta분 옮긴다 = 지금 보이는 체류(stayMin)를 delta만큼 바꾸고 고정한다 */
+export function nudgeDepart<T extends Editable>(
+  trip: T,
+  dayIndex: number,
+  itemId: string,
+  stayMin: number,
+  delta: number,
+): T {
+  return updateItem(trip, dayIndex, itemId, {
+    stayMin: clamp(stayMin + delta, TIME_STEP_MIN, MAX_STAY_MIN),
+    stayLocked: true,
+  });
 }
 
 type Dated = Editable & Pick<TripDraft, "startDate" | "endDate">;
