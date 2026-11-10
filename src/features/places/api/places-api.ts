@@ -19,6 +19,7 @@ import {
 import { db } from "@/lib/firebase";
 import i18n from "@/lib/i18n";
 import { COL, type Place, type PlaceCategory, type SigunCode } from "@/shared/domain";
+import { withStringDates } from "@/shared/lib/date";
 
 export class PlaceNotFoundError extends Error {
   constructor() {
@@ -32,7 +33,7 @@ export const PLACE_PAGE_SIZE = 24;
 type PlaceDoc = Omit<Place, "id">;
 
 function fromDoc(id: string, data: PlaceDoc): Place {
-  return { ...data, id };
+  return { ...withStringDates(data), id };
 }
 
 export interface PlaceListQuery {

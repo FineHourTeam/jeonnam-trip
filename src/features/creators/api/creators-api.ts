@@ -6,6 +6,7 @@ import { collection, doc, getDoc, getDocs, limit, orderBy, query, where } from "
 import { db } from "@/lib/firebase";
 import i18n from "@/lib/i18n";
 import { COL, type CreatorCourse, type Place } from "@/shared/domain";
+import { withStringDates } from "@/shared/lib/date";
 
 export class CourseNotFoundError extends Error {
   constructor() {
@@ -33,7 +34,7 @@ export async function listCreatorCourses(): Promise<CreatorCourse[]> {
       limit(LIST_LIMIT),
     ),
   );
-  return snap.docs.map((d) => ({ ...(d.data() as CourseDoc), id: d.id }));
+  return snap.docs.map((d) => ({ ...withStringDates(d.data() as CourseDoc), id: d.id }));
 }
 
 export async function getCreatorCourse(id: string): Promise<CreatorCourse> {
@@ -41,7 +42,7 @@ export async function getCreatorCourse(id: string): Promise<CreatorCourse> {
     const snap = await getDoc(doc(db, COL.creatorCourses, id));
     const data = snap.data() as CourseDoc | undefined;
     if (data?.status !== "published") throw new CourseNotFoundError();
-    return { ...data, id: snap.id };
+    return { ...withStringDates(data), id: snap.id };
   } catch (e) {
     // 없는 문서·비공개 문서는 규칙이 permission-denied로 거부한다 → 사용자에게는 같은 "없음"
     if (isDenied(e)) throw new CourseNotFoundError();
@@ -56,7 +57,7 @@ export async function getCoursePlaces(placeIds: string[]): Promise<Record<string
       try {
         const snap = await getDoc(doc(db, COL.places, id));
         const data = snap.data() as Omit<Place, "id"> | undefined;
-        return data?.status === "published" ? { ...data, id: snap.id } : null;
+        return data?.status === "published" ? { ...withStringDates(data), id: snap.id } : null;
       } catch (e) {
         if (isDenied(e)) return null;
         throw e;

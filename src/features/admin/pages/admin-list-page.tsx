@@ -170,7 +170,7 @@ function ContentList({ kind }: { kind: AdminKind }) {
                       {STATUS_LABEL[r.status]}
                     </Badge>
                     <span className="text-muted-foreground text-xs tabular-nums">
-                      {kstDateOf(r.updatedAt)}
+                      {r.updatedAt && kstDateOf(r.updatedAt)}
                     </span>
                   </Link>
                 </li>

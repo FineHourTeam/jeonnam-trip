@@ -15,6 +15,7 @@ import {
 import { db } from "@/lib/firebase";
 import i18n from "@/lib/i18n";
 import { COL, type Festival, type SigunCode } from "@/shared/domain";
+import { withStringDates } from "@/shared/lib/date";
 
 export class FestivalNotFoundError extends Error {
   constructor() {
@@ -29,7 +30,7 @@ const LIST_LIMIT = 300;
 type FestivalDoc = Omit<Festival, "id">;
 
 function fromDoc(id: string, data: FestivalDoc): Festival {
-  return { ...data, id };
+  return { ...withStringDates(data), id };
 }
 
 export interface FestivalListQuery {

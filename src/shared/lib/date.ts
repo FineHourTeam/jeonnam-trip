@@ -22,6 +22,31 @@ export function kstDateOf(iso: string): string {
   return todayKst(new Date(iso));
 }
 
+/** 문자열은 그대로, Firestore Timestamp(toDate 있는 객체)는 ISO 일시로. 그 밖은 undefined */
+function isoOf(v: unknown): string | undefined {
+  if (typeof v === "string") return v;
+  if (typeof v === "object" && v !== null && "toDate" in v && typeof v.toDate === "function") {
+    const d = (v as { toDate: () => unknown }).toDate();
+    if (d instanceof Date && !Number.isNaN(d.getTime())) return d.toISOString();
+  }
+  return undefined;
+}
+
+/**
+ * Firestore 문서의 일시 필드를 문자열로 맞춘다 — 손으로 넣은 문서가 Timestamp로 저장돼 있어도 화면이 깨지지 않게.
+ * updatedAt은 ISO 일시(없거나 못 읽으면 ""), reviewedAt은 KST "YYYY-MM-DD"(못 읽으면 뺀다).
+ */
+export function withStringDates<T extends { updatedAt?: unknown; reviewedAt?: unknown }>(
+  data: T,
+): T {
+  const out = { ...data, updatedAt: isoOf(data.updatedAt) ?? "" };
+  if (data.reviewedAt !== undefined && typeof data.reviewedAt !== "string") {
+    const iso = isoOf(data.reviewedAt);
+    return { ...out, reviewedAt: iso && kstDateOf(iso) };
+  }
+  return out;
+}
+
 /** ISO 일시 → KST "YYYY-MM-DD HH:mm" */
 export function kstDateTimeOf(iso: string): string {
   return new Date(new Date(iso).getTime() + KST_OFFSET_MS)

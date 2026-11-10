@@ -11,7 +11,33 @@ import {
   overlaps,
   todayKst,
   toMinutes,
+  withStringDates,
 } from "./date";
+
+describe("withStringDates", () => {
+  const ts = (iso: string) => ({ toDate: () => new Date(iso) });
+  it("Timestamp는 문자열로 바꾼다 (updatedAt=ISO, reviewedAt=KST 날짜)", () => {
+    expect(
+      withStringDates({
+        id: "a",
+        updatedAt: ts("2026-10-19T16:30:00.000Z"),
+        reviewedAt: ts("2026-10-19T16:30:00.000Z"),
+      }),
+    ).toEqual({ id: "a", updatedAt: "2026-10-19T16:30:00.000Z", reviewedAt: "2026-10-20" });
+  });
+  it("문자열은 그대로 둔다", () => {
+    const doc = { updatedAt: "2026-10-19T00:00:00.000Z", reviewedAt: "2026-10-18" };
+    expect(withStringDates(doc)).toEqual(doc);
+  });
+  it("누락·못 읽는 값은 updatedAt은 빈 문자열, reviewedAt은 뺀다", () => {
+    const noDate: { name: string; updatedAt?: string } = { name: "x" };
+    expect(withStringDates(noDate)).toEqual({ name: "x", updatedAt: "" });
+    expect(withStringDates({ updatedAt: null, reviewedAt: 3 })).toEqual({
+      updatedAt: "",
+      reviewedAt: undefined,
+    });
+  });
+});
 
 describe("date utils (KST)", () => {
   test("todayKst는 UTC 15시 이후를 다음 날로 본다", () => {

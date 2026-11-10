@@ -25,6 +25,7 @@ import {
   type Festival,
   type Place,
 } from "@/shared/domain";
+import { withStringDates } from "@/shared/lib/date";
 
 export interface ContentByKind {
   festivals: Festival;
@@ -62,7 +63,11 @@ export function newContentId(kind: AdminKind): string {
 export async function listContent<K extends AdminKind>(kind: K): Promise<ContentByKind[K][]> {
   const snap = await getDocs(collection(db, COLLECTION[kind]));
   return snap.docs.map(
-    (d) => ({ ...(d.data() as Omit<ContentByKind[K], "id">), id: d.id }) as ContentByKind[K],
+    (d) =>
+      ({
+        ...withStringDates(d.data() as Omit<ContentByKind[K], "id">),
+        id: d.id,
+      }) as ContentByKind[K],
   );
 }
 
@@ -104,8 +109,13 @@ export async function getEditable<K extends AdminKind>(
   ]);
   const d = draft.exists() ? (draft.data() as DraftDoc<ContentByKind[K]>) : null;
   return {
-    saved: main.exists() ? ({ ...main.data(), id } as ContentByKind[K]) : null,
-    draft: d ? { data: { ...d.data, id }, savedAt: d.savedAt } : null,
+    saved: main.exists()
+      ? ({
+          ...withStringDates(main.data() as Omit<ContentByKind[K], "id">),
+          id,
+        } as ContentByKind[K])
+      : null,
+    draft: d ? { data: { ...withStringDates(d.data), id }, savedAt: d.savedAt } : null,
   };
 }
 
