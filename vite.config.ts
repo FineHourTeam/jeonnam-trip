@@ -74,6 +74,22 @@ export default defineConfig(({ mode }) => {
       environment: "jsdom",
       setupFiles: ["./src/test/setup.ts"],
       include: ["src/**/*.test.{ts,tsx}"], // e2e/*.spec.ts는 Playwright 몫
+      // .env는 커밋하지 않는다 — 테스트는 실제 값 없이 돌도록 env.ts 검증을 통과하는 가짜 값을 넣는다.
+      // 로컬 .env가 있으면 그 값이 우선한다(실제 Firebase에 붙지는 않음: 테스트는 api 계층을 모킹)
+      env: {
+        VITE_FIREBASE_API_KEY: "test",
+        VITE_FIREBASE_AUTH_DOMAIN: "test.local",
+        VITE_FIREBASE_PROJECT_ID: "test",
+        VITE_FIREBASE_STORAGE_BUCKET: "test",
+        VITE_FIREBASE_MESSAGING_SENDER_ID: "0",
+        VITE_FIREBASE_APP_ID: "test",
+        VITE_NAVER_MAP_CLIENT_ID: "test",
+        VITE_KAKAO_JS_KEY: "test",
+        VITE_USE_EMULATORS: "false",
+        ...Object.fromEntries(
+          Object.entries(loadEnv(mode, process.cwd(), "VITE_")).filter(([, v]) => v),
+        ),
+      },
 
       coverage: { provider: "v8" },
     },
